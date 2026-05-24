@@ -1,0 +1,852 @@
+<template>
+  <div>
+    <!-- NAVBAR -->
+    <Navbar />
+
+    <!-- CART -->
+    <CartSidebar />
+
+    <!-- HERO -->
+    <section
+      class="min-h-screen bg-[#f8f5f2] px-6 pt-28 pb-20 flex items-center"
+    >
+      <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
+        <!-- HERO CONTENT -->
+        <div>
+          <p class="uppercase tracking-[6px] text-sm mb-6 text-gray-500">
+            Luxury Fashion
+          </p>
+
+          <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-8">
+            Modern Luxury for Everyday Elegance.
+          </h1>
+
+          <p class="max-w-xl text-gray-600 leading-8 mb-10">
+            Discover minimalist fashion pieces crafted for premium aesthetics,
+            refined comfort, and modern lifestyle.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4">
+            <button
+              @click="goToProducts"
+              class="bg-black text-white px-10 py-5 rounded-full hover:scale-105 transition"
+            >
+              Shop Collection
+            </button>
+
+            <button
+              @click="goToCategories"
+              class="border border-black px-10 py-5 rounded-full hover:bg-black hover:text-white transition"
+            >
+              Explore Categories
+            </button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-6 mt-14 max-w-lg">
+            <div>
+              <p class="text-3xl font-bold">10+</p>
+              <p class="text-sm text-gray-500 mt-1">Curated Items</p>
+            </div>
+
+            <div>
+              <p class="text-3xl font-bold">5</p>
+              <p class="text-sm text-gray-500 mt-1">Categories</p>
+            </div>
+
+            <div>
+              <p class="text-3xl font-bold">100%</p>
+              <p class="text-sm text-gray-500 mt-1">Frontend Ready</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- HERO IMAGE -->
+        <div class="relative">
+          <div
+            class="absolute -top-6 -left-6 w-40 h-40 bg-black rounded-full opacity-5"
+          ></div>
+          <div
+            class="absolute -bottom-6 -right-6 w-52 h-52 border border-black/10 rounded-full"
+          ></div>
+
+          <div
+            class="relative overflow-hidden rounded-[2.5rem] bg-white shadow-2xl"
+          >
+            <ProductImage
+              :src="heroProduct.image"
+              :alt="heroProduct.title"
+              class="w-full h-[520px] md:h-[680px] object-cover"
+            />
+
+            <div
+              class="absolute bottom-6 left-6 right-6 bg-white/85 backdrop-blur-xl rounded-3xl p-5 flex items-center justify-between gap-4"
+            >
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Featured Piece</p>
+                <h3 class="font-bold text-lg">
+                  {{ heroProduct.title }}
+                </h3>
+              </div>
+
+              <RouterLink
+                :to="`/product/${heroProduct.id}`"
+                class="bg-black text-white px-5 py-3 rounded-full text-sm hover:scale-105 transition"
+              >
+                View
+              </RouterLink>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROMO STRIP -->
+    <section class="bg-black text-white px-6 py-5">
+      <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-6 text-center">
+        <p class="text-sm tracking-[3px] uppercase">Premium Selection</p>
+
+        <p class="text-sm tracking-[3px] uppercase">Minimalist Luxury Design</p>
+
+        <p class="text-sm tracking-[3px] uppercase">
+          Ready for Backend Integration
+        </p>
+      </div>
+    </section>
+
+    <!-- CATEGORY SPOTLIGHT -->
+    <section id="categories" class="py-24 px-6 bg-white">
+      <div class="max-w-7xl mx-auto">
+        <div
+          class="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
+        >
+          <div>
+            <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-3">
+              Shop By Category
+            </p>
+
+            <h2 class="text-4xl md:text-5xl font-bold">Luxury Essentials</h2>
+          </div>
+
+          <p class="text-gray-500 max-w-md leading-7">
+            Explore refined essentials across jackets, hoodies, t-shirts, pants,
+            and shoes.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+          <button
+            v-for="category in categoryCards"
+            :key="category.name"
+            @click="selectCategoryFromCard(category.name)"
+            class="group relative overflow-hidden rounded-[2rem] h-[320px] text-left"
+          >
+            <ProductImage
+              :src="category.image"
+              :alt="category.name"
+              class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-700"
+            />
+
+            <div
+              class="absolute inset-0 bg-black/35 group-hover:bg-black/45 transition"
+            ></div>
+
+            <div
+              class="relative h-full p-6 flex flex-col justify-end text-white"
+            >
+              <p class="text-sm uppercase tracking-[3px] mb-2">Category</p>
+
+              <h3 class="text-2xl font-bold">
+                {{ category.name }}
+              </h3>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="products" class="pt-28 pb-24 px-6 bg-white">
+      <div class="max-w-7xl mx-auto">
+        <!-- SECTION HEADER -->
+        <div
+          class="mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8"
+        >
+          <div>
+            <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-3">
+              Luxury Collection
+            </p>
+
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">
+              Featured Products
+            </h2>
+
+            <p class="text-gray-500 max-w-xl leading-7">
+              Discover curated premium fashion pieces designed for modern
+              lifestyle.
+            </p>
+          </div>
+
+          <p class="text-sm text-gray-500">
+            Showing
+            <span class="font-semibold text-black">
+              {{ sortedProducts.length }}
+            </span>
+            result from
+            <span class="font-semibold text-black">
+              {{ products.length }}
+            </span>
+            products
+          </p>
+        </div>
+
+        <!-- FILTER BAR -->
+        <div class="mb-10 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6">
+          <!-- SEARCH -->
+          <div class="relative">
+            <label class="block text-sm text-gray-500 mb-2">
+              Find your luxury items
+            </label>
+
+            <input
+              v-model="search"
+              @focus="isSearchFocused = true"
+              @blur="handleSearchBlur"
+              @keyup.enter="handleSearchEnter"
+              type="text"
+              placeholder="Search by product, category, or description..."
+              class="border border-gray-300 px-6 py-4 rounded-full outline-none w-full lg:max-w-[520px] focus:border-black transition"
+            />
+
+            <!-- SEARCH PANEL -->
+            <div
+              v-if="showSearchPanel"
+              class="absolute left-0 right-0 lg:max-w-[520px] mt-3 bg-white border border-gray-100 rounded-3xl shadow-2xl p-4 z-40"
+            >
+              <!-- PRODUCT SUGGESTIONS -->
+              <div v-if="searchSuggestions.length > 0">
+                <p class="text-xs uppercase tracking-[3px] text-gray-400 mb-3">
+                  Suggestions
+                </p>
+
+                <div class="space-y-2">
+                  <button
+                    v-for="product in searchSuggestions"
+                    :key="product.id"
+                    @mousedown.prevent="applyProductSuggestion(product)"
+                    type="button"
+                    class="w-full flex items-center gap-4 p-3 rounded-2xl hover:bg-[#f8f5f2] transition text-left"
+                  >
+                    <ProductImage
+                      :src="product.image"
+                      :alt="product.title"
+                      class="w-14 h-14 object-cover rounded-xl"
+                    />
+
+                    <div class="flex-1">
+                      <p class="font-semibold">
+                        {{ product.title }}
+                      </p>
+
+                      <p class="text-sm text-gray-500">
+                        {{ product.category }} ·
+                        {{ formatCurrency(product.price) }}
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- RECENT SEARCH -->
+              <div
+                v-if="recentSearches.length > 0"
+                :class="
+                  searchSuggestions.length > 0
+                    ? 'mt-5 pt-5 border-t border-gray-100'
+                    : ''
+                "
+              >
+                <div class="flex items-center justify-between mb-3">
+                  <p class="text-xs uppercase tracking-[3px] text-gray-400">
+                    Recent Search
+                  </p>
+
+                  <button
+                    @mousedown.prevent="clearRecentSearches"
+                    type="button"
+                    class="text-xs text-gray-400 hover:text-black transition"
+                  >
+                    Clear
+                  </button>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    v-for="keyword in recentSearches"
+                    :key="keyword"
+                    @mousedown.prevent="applySearchKeyword(keyword)"
+                    type="button"
+                    class="px-4 py-2 rounded-full bg-[#f8f5f2] text-sm text-gray-600 hover:bg-black hover:text-white transition"
+                  >
+                    {{ keyword }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SORT -->
+          <div class="relative">
+            <label class="block text-sm text-gray-500 mb-2">
+              Sort products
+            </label>
+
+            <button
+              @click="isSortOpen = !isSortOpen"
+              type="button"
+              class="w-full lg:w-[280px] border border-gray-300 px-6 py-4 rounded-full bg-white flex items-center justify-between gap-4 hover:border-black transition"
+            >
+              <span class="font-medium">
+                {{ sortLabels[sortOption] }}
+              </span>
+
+              <span
+                :class="isSortOpen ? 'rotate-180' : ''"
+                class="transition-transform duration-300 text-gray-500"
+              >
+                ↓
+              </span>
+            </button>
+
+            <div
+              v-if="isSortOpen"
+              class="absolute right-0 mt-3 w-full lg:w-[280px] bg-white border border-gray-100 rounded-3xl shadow-2xl p-3 z-30"
+            >
+              <button
+                v-for="option in sortOptions"
+                :key="option.value"
+                @click="setSortOption(option.value)"
+                type="button"
+                :class="
+                  sortOption === option.value
+                    ? 'bg-black text-white'
+                    : 'text-gray-600 hover:bg-[#f8f5f2]'
+                "
+                class="w-full text-left px-5 py-3 rounded-2xl transition"
+              >
+                {{ option.label }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILTER SUMMARY -->
+        <div
+          class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+        >
+          <p class="text-sm text-gray-500">
+            {{ activeFilterCount }} active filter
+          </p>
+
+          <button
+            @click="resetFilters"
+            :disabled="activeFilterCount === 0"
+            :class="
+              activeFilterCount > 0
+                ? 'border-black text-black hover:bg-black hover:text-white'
+                : 'border-gray-200 text-gray-300 cursor-not-allowed'
+            "
+            class="text-sm border px-5 py-2 rounded-full transition w-fit"
+          >
+            Clear All Filters
+          </button>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="mb-10">
+          <p class="text-sm text-gray-500 mb-3">Category</p>
+
+          <div class="flex flex-wrap gap-4">
+            <button
+              v-for="cat in categories"
+              :key="cat"
+              @click="activeCategory = cat"
+              :class="
+                activeCategory === cat
+                  ? 'bg-black text-white scale-105 shadow-lg'
+                  : 'border border-black hover:bg-gray-100'
+              "
+              class="px-6 py-2 rounded-full transition"
+            >
+              {{ cat }}
+            </button>
+          </div>
+        </div>
+
+        <!-- ADVANCED FILTERS -->
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+          <!-- PRICE FILTER -->
+          <div>
+            <p class="text-sm text-gray-500 mb-3">Price Range</p>
+
+            <div class="flex flex-wrap gap-3">
+              <button
+                v-for="option in priceOptions"
+                :key="option.value"
+                @click="priceFilter = option.value"
+                :class="
+                  priceFilter === option.value
+                    ? 'bg-black text-white'
+                    : 'bg-[#f8f5f2] text-gray-600 hover:bg-black hover:text-white'
+                "
+                class="px-5 py-3 rounded-full text-sm transition"
+              >
+                {{ option.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- STOCK FILTER -->
+          <div>
+            <p class="text-sm text-gray-500 mb-3">Availability</p>
+
+            <div class="flex flex-wrap gap-3">
+              <button
+                v-for="option in stockOptions"
+                :key="option.value"
+                @click="stockFilter = option.value"
+                :class="
+                  stockFilter === option.value
+                    ? 'bg-black text-white'
+                    : 'bg-[#f8f5f2] text-gray-600 hover:bg-black hover:text-white'
+                "
+                class="px-5 py-3 rounded-full text-sm transition"
+              >
+                {{ option.label }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCT RESULT AREA -->
+        <div>
+          <!-- PRODUCT LOADING -->
+          <div
+            v-if="isLoadingProducts"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          >
+            <ProductCardSkeleton v-for="item in 8" :key="item" />
+          </div>
+
+          <!-- PRODUCT GRID -->
+          <div
+            v-else-if="sortedProducts.length > 0"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          >
+            <ProductCard
+              v-for="product in sortedProducts"
+              :key="product.id"
+              :id="product.id"
+              :title="product.title"
+              :category="product.category"
+              :price="product.price"
+              :image="product.image"
+              :images="product.images"
+              :description="product.description"
+              :sizes="product.sizes"
+              :stock="product.stock"
+            />
+          </div>
+
+          <!-- EMPTY STATE -->
+          <div v-else class="text-center py-24 bg-[#f8f5f2] rounded-3xl">
+            <p class="text-5xl mb-5">🔎</p>
+
+            <h3 class="text-2xl font-bold mb-3">No products found</h3>
+
+            <p class="text-gray-500 mb-8">
+              Try another keyword or select a different category.
+            </p>
+
+            <button
+              @click="resetFilters"
+              class="bg-black text-white px-8 py-4 rounded-full hover:scale-105 transition"
+            >
+              Reset Filters
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDITORIAL BANNER -->
+    <section class="px-6 pb-24 bg-white">
+      <div
+        class="max-w-7xl mx-auto bg-[#f8f5f2] rounded-[2.5rem] overflow-hidden grid lg:grid-cols-2"
+      >
+        <div class="p-10 md:p-16 flex flex-col justify-center">
+          <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-4">
+            Editorial Collection
+          </p>
+
+          <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
+            Built as a scalable frontend for modern fashion commerce.
+          </h2>
+
+          <p class="text-gray-600 leading-8 mb-8">
+            Luxeza Royale is designed with modular components, reusable product
+            cards, Pinia cart state, route-based product rendering, and checkout
+            flow ready for future Spring Boot API integration.
+          </p>
+
+          <button
+            @click="goToProducts"
+            class="bg-black text-white px-8 py-4 rounded-full w-fit hover:scale-105 transition"
+          >
+            Browse Products
+          </button>
+        </div>
+
+        <div class="min-h-[420px]">
+          <ProductImage
+            :src="editorialProduct.image"
+            :alt="editorialProduct.title"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </section>
+
+    <Footer />
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from "vue";
+
+import Navbar from "../components/layout/Navbar.vue";
+import CartSidebar from "../components/layout/CartSidebar.vue";
+import Footer from "../components/layout/Footer.vue";
+import ProductCard from "../components/product/ProductCard.vue";
+import ProductCardSkeleton from "../components/ui/ProductCardSkeleton.vue";
+import ProductImage from "../components/ui/ProductImage.vue";
+import { formatCurrency } from "../utils/formatCurrency";
+
+import { products } from "../data/products";
+
+const search = ref("");
+const activeCategory = ref("All");
+const sortOption = ref("featured");
+const priceFilter = ref("all");
+const stockFilter = ref("all");
+const isSortOpen = ref(false);
+const isLoadingProducts = ref(true);
+
+const isSearchFocused = ref(false);
+const RECENT_SEARCH_KEY = "recentSearches";
+const MAX_RECENT_SEARCH = 5;
+
+const loadRecentSearches = () => {
+  try {
+    const savedSearches = sessionStorage.getItem(RECENT_SEARCH_KEY);
+    return savedSearches ? JSON.parse(savedSearches) : [];
+  } catch (error) {
+    console.error("Failed to load recent searches:", error);
+    return [];
+  }
+};
+
+const recentSearches = ref(loadRecentSearches());
+
+const sortOptions = [
+  {
+    label: "Featured",
+    value: "featured",
+  },
+  {
+    label: "Price: Low to High",
+    value: "price-low",
+  },
+  {
+    label: "Price: High to Low",
+    value: "price-high",
+  },
+  {
+    label: "Name: A to Z",
+    value: "name-az",
+  },
+];
+
+const priceOptions = [
+  {
+    label: "All Price",
+    value: "all",
+  },
+  {
+    label: "Under Rp 500.000",
+    value: "under-500",
+  },
+  {
+    label: "Rp 500.000 - Rp 1.000.000",
+    value: "500-1000",
+  },
+  {
+    label: "Rp 1.000.000 - Rp 1.500.000",
+    value: "1000-1500",
+  },
+  {
+    label: "Above Rp 1.500.000",
+    value: "above-1500",
+  },
+];
+
+const stockOptions = [
+  {
+    label: "All Stock",
+    value: "all",
+  },
+  {
+    label: "In Stock",
+    value: "in-stock",
+  },
+  {
+    label: "Low Stock",
+    value: "low-stock",
+  },
+  {
+    label: "Out of Stock",
+    value: "out-of-stock",
+  },
+];
+
+const sortLabels = {
+  featured: "Featured",
+  "price-low": "Price: Low to High",
+  "price-high": "Price: High to Low",
+  "name-az": "Name: A to Z",
+};
+
+onMounted(() => {
+  setTimeout(() => {
+    isLoadingProducts.value = false;
+  }, 700);
+});
+
+const heroProduct = computed(() => {
+  return products[0];
+});
+
+const editorialProduct = computed(() => {
+  return products[4] || products[0];
+});
+
+const categories = computed(() => {
+  const productCategories = products.map((product) => product.category);
+  return ["All", ...new Set(productCategories)];
+});
+
+const categoryCards = computed(() => {
+  const uniqueCategories = [
+    ...new Set(products.map((product) => product.category)),
+  ];
+
+  return uniqueCategories.map((category) => {
+    const product = products.find((item) => item.category === category);
+
+    return {
+      name: category,
+      image: product?.image,
+    };
+  });
+});
+
+const activeFilterCount = computed(() => {
+  let count = 0;
+
+  if (search.value.trim()) count++;
+  if (activeCategory.value !== "All") count++;
+  if (priceFilter.value !== "all") count++;
+  if (stockFilter.value !== "all") count++;
+  if (sortOption.value !== "featured") count++;
+
+  return count;
+});
+
+const searchSuggestions = computed(() => {
+  const keyword = search.value.toLowerCase().trim();
+
+  if (!keyword) return [];
+
+  return products
+    .filter((product) => {
+      return (
+        product.title.toLowerCase().includes(keyword) ||
+        product.category.toLowerCase().includes(keyword) ||
+        product.description.toLowerCase().includes(keyword)
+      );
+    })
+    .slice(0, 5);
+});
+
+const showSearchPanel = computed(() => {
+  return (
+    isSearchFocused.value &&
+    (searchSuggestions.value.length > 0 || recentSearches.value.length > 0)
+  );
+});
+
+const filteredProducts = computed(() => {
+  const keyword = search.value.toLowerCase().trim();
+
+  return products.filter((product) => {
+    const matchSearch =
+      product.title.toLowerCase().includes(keyword) ||
+      product.category.toLowerCase().includes(keyword) ||
+      product.description.toLowerCase().includes(keyword);
+
+    const matchCategory =
+      activeCategory.value === "All"
+        ? true
+        : product.category === activeCategory.value;
+
+    const matchPrice =
+      priceFilter.value === "all"
+        ? true
+        : priceFilter.value === "under-500"
+          ? product.price < 500000
+          : priceFilter.value === "500-1000"
+            ? product.price >= 500000 && product.price <= 1000000
+            : priceFilter.value === "1000-1500"
+              ? product.price > 1000000 && product.price <= 1500000
+              : product.price > 1500000;
+
+    const matchStock =
+      stockFilter.value === "all"
+        ? true
+        : stockFilter.value === "in-stock"
+          ? product.stock > 3
+          : stockFilter.value === "low-stock"
+            ? product.stock > 0 && product.stock <= 3
+            : product.stock <= 0;
+
+    return matchSearch && matchCategory && matchPrice && matchStock;
+  });
+});
+
+const sortedProducts = computed(() => {
+  const result = [...filteredProducts.value];
+
+  if (sortOption.value === "price-low") {
+    return result.sort((a, b) => a.price - b.price);
+  }
+
+  if (sortOption.value === "price-high") {
+    return result.sort((a, b) => b.price - a.price);
+  }
+
+  if (sortOption.value === "name-az") {
+    return result.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  return result;
+});
+
+const setSortOption = (value) => {
+  sortOption.value = value;
+  isSortOpen.value = false;
+};
+
+const saveRecentSearch = (keyword) => {
+  const cleanKeyword = keyword.trim();
+
+  if (!cleanKeyword) return;
+
+  const updatedSearches = [
+    cleanKeyword,
+    ...recentSearches.value.filter(
+      (item) => item.toLowerCase() !== cleanKeyword.toLowerCase(),
+    ),
+  ].slice(0, MAX_RECENT_SEARCH);
+
+  recentSearches.value = updatedSearches;
+
+  sessionStorage.setItem(RECENT_SEARCH_KEY, JSON.stringify(updatedSearches));
+};
+
+const applySearchKeyword = (keyword) => {
+  search.value = keyword;
+  activeCategory.value = "All";
+  saveRecentSearch(keyword);
+  isSearchFocused.value = false;
+};
+
+const applyProductSuggestion = (product) => {
+  search.value = product.title;
+  activeCategory.value = "All";
+  saveRecentSearch(product.title);
+  isSearchFocused.value = false;
+};
+
+const handleSearchEnter = () => {
+  saveRecentSearch(search.value);
+  isSearchFocused.value = false;
+};
+
+const clearRecentSearches = () => {
+  recentSearches.value = [];
+  sessionStorage.removeItem(RECENT_SEARCH_KEY);
+};
+
+const handleSearchBlur = () => {
+  setTimeout(() => {
+    isSearchFocused.value = false;
+  }, 150);
+};
+
+const resetFilters = () => {
+  search.value = "";
+  activeCategory.value = "All";
+  priceFilter.value = "all";
+  stockFilter.value = "all";
+  sortOption.value = "featured";
+  isSortOpen.value = false;
+  isSearchFocused.value = false;
+};
+
+const selectCategoryFromCard = (category) => {
+  activeCategory.value = category;
+  search.value = "";
+  priceFilter.value = "all";
+  stockFilter.value = "all";
+  sortOption.value = "featured";
+
+  goToProducts();
+};
+
+const goToProducts = () => {
+  const el = document.getElementById("products");
+
+  if (!el) return;
+
+  const yOffset = -90;
+  const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+  window.scrollTo({
+    top: y,
+    behavior: "smooth",
+  });
+};
+
+const goToCategories = () => {
+  const el = document.getElementById("categories");
+
+  if (!el) return;
+
+  const yOffset = -90;
+  const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+  window.scrollTo({
+    top: y,
+    behavior: "smooth",
+  });
+};
+</script>
