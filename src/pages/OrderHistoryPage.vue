@@ -637,8 +637,8 @@ const getTotalItems = (items = []) => {
 };
 
 const formatPaymentMethod = (method) => {
-  if (method === "bank-transfer") return "Bank Transfer";
-  if (method === "virtual-account") return "Virtual Account";
+  if (method === "qris-main") return "QRIS GoPay Merchant";
+  if (method === "bca-001") return "Bank BCA";
 
   return method || "-";
 };

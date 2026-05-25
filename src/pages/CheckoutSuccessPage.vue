@@ -116,24 +116,89 @@
             <div
               class="w-11 h-11 rounded-full bg-luxe-cream text-luxe-espresso flex items-center justify-center text-xl shrink-0"
             >
-              💳
+              {{ paymentMethodData?.type === "qris" ? "📱" : "🏦" }}
             </div>
 
-            <div>
+            <div class="flex-1">
               <h2 class="text-xl font-bold text-luxe-espresso mb-2">
-                Payment Instruction
+                {{
+                  paymentMethodData?.name ||
+                  formatPaymentMethod(lastOrder?.paymentMethod)
+                }}
               </h2>
 
-              <p class="text-luxe-brown/75 leading-7">
-                Please complete the payment using your selected method. For the
-                current MVP flow, payment confirmation can be handled manually
-                by the admin after the customer sends proof of payment.
-              </p>
+              <!-- QRIS -->
+              <div v-if="paymentMethodData?.type === 'qris'">
+                <div
+                  v-if="paymentMethodData.qrImageUrl"
+                  class="mt-5 bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 flex justify-center"
+                >
+                  <img
+                    :src="paymentMethodData.qrImageUrl"
+                    :alt="paymentMethodData.name"
+                    class="w-full max-w-[320px] rounded-2xl border border-luxe-sand/60 bg-luxe-ivory"
+                  />
+                </div>
 
-              <p class="text-luxe-brown/75 leading-7 mt-3">
-                If you use QRIS, scan the merchant QRIS and pay according to the
-                total amount above before the QRIS expires.
-              </p>
+                <p class="text-luxe-brown/75 leading-7 mt-5">
+                  {{ paymentMethodData.instructions }}
+                </p>
+
+                <div
+                  class="mt-5 bg-luxe-cream border border-luxe-sand/50 rounded-3xl p-5"
+                >
+                  <p class="text-sm font-semibold text-luxe-espresso mb-2">
+                    QRIS Note
+                  </p>
+
+                  <p class="text-sm text-luxe-brown/75 leading-6">
+                    Please pay exactly according to the Total Payment amount. If
+                    your QRIS expires, repeat checkout or contact admin for a
+                    new QRIS.
+                  </p>
+                </div>
+              </div>
+
+              <!-- BANK TRANSFER -->
+              <div v-else-if="paymentMethodData?.type === 'bank_transfer'">
+                <div
+                  class="mt-5 bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 space-y-3"
+                >
+                  <div class="flex justify-between gap-4">
+                    <span class="text-luxe-brown/70">Bank</span>
+                    <span class="font-semibold text-luxe-espresso text-right">
+                      {{ paymentMethodData.bankName || paymentMethodData.name }}
+                    </span>
+                  </div>
+
+                  <div class="flex justify-between gap-4">
+                    <span class="text-luxe-brown/70">Account Name</span>
+                    <span class="font-semibold text-luxe-espresso text-right">
+                      {{ paymentMethodData.accountName }}
+                    </span>
+                  </div>
+
+                  <div class="flex justify-between gap-4">
+                    <span class="text-luxe-brown/70">Account Number</span>
+                    <span class="font-semibold text-luxe-espresso text-right">
+                      {{ paymentMethodData.accountNumber }}
+                    </span>
+                  </div>
+                </div>
+
+                <p class="text-luxe-brown/75 leading-7 mt-5">
+                  {{ paymentMethodData.instructions }}
+                </p>
+              </div>
+
+              <!-- FALLBACK -->
+              <div v-else>
+                <p class="text-luxe-brown/75 leading-7 mt-4">
+                  Please complete your payment using the selected method. After
+                  payment, save the receipt and send it to the admin for manual
+                  confirmation.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -164,7 +229,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
@@ -185,11 +250,15 @@ const loadLastOrder = () => {
 const lastOrder = ref(loadLastOrder());
 
 const formatPaymentMethod = (method) => {
-  if (method === "bank-transfer") return "Bank Transfer";
-  if (method === "virtual-account") return "Virtual Account";
+  if (method === "qris-main") return "QRIS GoPay Merchant";
+  if (method === "bca-001") return "Bank BCA";
 
   return method || "-";
 };
+
+const paymentMethodData = computed(() => {
+  return lastOrder.value?.paymentMethodData || null;
+});
 
 const formatStatus = (status) => {
   if (!status) return "Pending";

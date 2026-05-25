@@ -8,6 +8,7 @@ import WishlistPage from "../pages/WishlistPage.vue";
 import OrderHistoryPage from "../pages/OrderHistoryPage.vue";
 import NotFoundPage from "../pages/NotFoundPage.vue";
 import AdminOrdersPage from "../pages/AdminOrdersPage.vue";
+import AdminPaymentsPage from "../pages/AdminPaymentsPage.vue";
 
 const routes = [
   {
@@ -38,6 +39,11 @@ const routes = [
   {
     path: "/admin/orders",
     component: AdminOrdersPage,
+  },
+
+  {
+    path: "/admin/payments",
+    component: AdminPaymentsPage,
   },
 
   // Wajib paling bawah

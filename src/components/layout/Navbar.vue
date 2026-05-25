@@ -73,6 +73,18 @@
         >
           Admin
         </RouterLink>
+
+        <RouterLink
+          to="/admin/payments"
+          :class="
+            route.path === '/admin/payments'
+              ? 'text-luxe-espresso'
+              : 'text-luxe-brown'
+          "
+          class="hover:text-luxe-espresso transition"
+        >
+          Payments
+        </RouterLink>
       </nav>
 
       <!-- RIGHT -->
@@ -201,6 +213,14 @@
           class="hover:text-luxe-espresso transition"
         >
           Admin
+        </RouterLink>
+
+        <RouterLink
+          to="/admin/payments"
+          @click="isMobileMenuOpen = false"
+          class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
+        >
+          Admin Payments
         </RouterLink>
       </nav>
     </aside>

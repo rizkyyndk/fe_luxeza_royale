@@ -211,33 +211,75 @@
                   Payment Method
                 </label>
 
-                <div class="grid sm:grid-cols-2 gap-4">
+                <div
+                  v-if="isLoadingPaymentMethods"
+                  class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 text-luxe-brown/75"
+                >
+                  Loading payment methods...
+                </div>
+
+                <div
+                  v-else-if="paymentMethodError"
+                  class="bg-red-50 border border-red-100 text-red-600 rounded-3xl p-5"
+                >
+                  {{ paymentMethodError }}
+                </div>
+
+                <div
+                  v-else-if="paymentMethods.length === 0"
+                  class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 text-luxe-brown/75"
+                >
+                  No active payment method available. Please contact admin.
+                </div>
+
+                <div v-else class="grid sm:grid-cols-2 gap-4">
                   <button
                     v-for="method in paymentMethods"
-                    :key="method.value"
+                    :key="method.code"
                     type="button"
-                    @click="form.paymentMethod = method.value"
+                    @click="form.paymentMethod = method.code"
                     :class="
-                      form.paymentMethod === method.value
+                      form.paymentMethod === method.code
                         ? 'bg-luxe-espresso text-luxe-ivory shadow-lg shadow-luxe-brown/20'
                         : 'border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:border-luxe-royal hover:bg-luxe-cream'
                     "
                     class="rounded-2xl px-5 py-4 text-left transition"
                   >
-                    <p class="font-semibold">
-                      {{ method.label }}
-                    </p>
+                    <div class="flex items-start justify-between gap-4">
+                      <div>
+                        <p class="font-semibold">
+                          {{ method.name }}
+                        </p>
 
-                    <p
-                      :class="
-                        form.paymentMethod === method.value
-                          ? 'text-luxe-sand'
-                          : 'text-luxe-brown/70'
-                      "
-                      class="text-sm mt-1"
-                    >
-                      {{ method.description }}
-                    </p>
+                        <p
+                          :class="
+                            form.paymentMethod === method.code
+                              ? 'text-luxe-sand'
+                              : 'text-luxe-brown/70'
+                          "
+                          class="text-sm mt-1"
+                        >
+                          <span v-if="method.type === 'qris'">
+                            QRIS manual confirmation
+                          </span>
+
+                          <span v-else>
+                            {{ method.bankName }} • {{ method.accountName }}
+                          </span>
+                        </p>
+                      </div>
+
+                      <span
+                        class="text-lg"
+                        :class="
+                          form.paymentMethod === method.code
+                            ? 'text-luxe-ivory'
+                            : 'text-luxe-espresso'
+                        "
+                      >
+                        {{ method.type === "qris" ? "📱" : "🏦" }}
+                      </span>
+                    </div>
                   </button>
                 </div>
               </div>
@@ -441,7 +483,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import Navbar from "../components/layout/Navbar.vue";
@@ -455,6 +497,7 @@ import Footer from "../components/layout/Footer.vue";
 import { voucherService } from "../services/voucherService";
 import { orderService } from "../services/orderService";
 import { useOrderStore } from "../stores/orderStore";
+import { paymentMethodService } from "../services/paymentMethodService";
 
 const router = useRouter();
 const cartStore = useCartStore();
@@ -476,7 +519,7 @@ const form = reactive({
   phone: "",
   address: "",
   shippingMethod: "standard",
-  paymentMethod: "bank-transfer",
+  paymentMethod: "",
 });
 
 const shippingMethods = [
@@ -494,18 +537,36 @@ const shippingMethods = [
   },
 ];
 
-const paymentMethods = [
-  {
-    label: "Bank Transfer",
-    value: "bank-transfer",
-    description: "Manual payment confirmation",
-  },
-  {
-    label: "Virtual Account",
-    value: "virtual-account",
-    description: "Frontend mock payment",
-  },
-];
+const paymentMethods = ref([]);
+const isLoadingPaymentMethods = ref(false);
+const paymentMethodError = ref("");
+
+const selectedPaymentMethod = computed(() => {
+  return (
+    paymentMethods.value.find((method) => method.code === form.paymentMethod) ||
+    null
+  );
+});
+
+const loadPaymentMethods = async () => {
+  isLoadingPaymentMethods.value = true;
+  paymentMethodError.value = "";
+
+  try {
+    paymentMethods.value = await paymentMethodService.getActivePaymentMethods();
+
+    if (!form.paymentMethod && paymentMethods.value.length > 0) {
+      form.paymentMethod = paymentMethods.value[0].code;
+    }
+  } catch (error) {
+    console.error("Failed to load payment methods:", error);
+
+    paymentMethodError.value =
+      error?.message || "Failed to load payment methods.";
+  } finally {
+    isLoadingPaymentMethods.value = false;
+  }
+};
 
 const selectedShippingMethod = computed(() => {
   return shippingMethods.find((method) => method.value === form.shippingMethod);
@@ -561,6 +622,7 @@ const isFormValid = computed(() => {
     isValidEmail(form.email) &&
     form.phone.trim() !== "" &&
     form.address.trim() !== "" &&
+    form.paymentMethod.trim() !== "" &&
     !cartStore.isEmpty &&
     cartStore.hasSelectedItems
   );
@@ -668,8 +730,10 @@ const placeOrder = async () => {
       customer_phone: form.phone,
       customer_address: form.address,
       voucher_code: appliedVoucher.value ? appliedVoucher.value.code : null,
+      payment_method_code: form.paymentMethod,
       shipping_method: form.shippingMethod,
       payment_method: form.paymentMethod,
+      paymentMethodData: selectedPaymentMethod.value,
       items: cartStore.selectedItems.map((item) => ({
         product_id: item.product_id || item.productId || item.id,
         slug: item.slug || null,
@@ -696,6 +760,7 @@ const placeOrder = async () => {
       shippingMethod: form.shippingMethod,
       shippingMethodLabel: selectedShippingMethod.value?.label,
       paymentMethod: form.paymentMethod,
+      paymentMethodData: selectedPaymentMethod.value,
 
       items: cartStore.selectedItems,
 
@@ -745,4 +810,8 @@ const placeOrder = async () => {
     isSubmitting.value = false;
   }
 };
+
+onMounted(() => {
+  loadPaymentMethods();
+});
 </script>

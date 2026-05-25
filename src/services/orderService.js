@@ -86,6 +86,25 @@ const normalizeOrderItem = (item) => {
   };
 };
 
+const normalizePaymentMethodFromBackend = (method) => {
+  if (!method) return null;
+
+  return {
+    id: method.id,
+    type: method.type,
+    code: method.code,
+    name: method.name,
+    bankName: method.bank_name || "",
+    accountName: method.account_name || "",
+    accountNumber: method.account_number || "",
+    qrImageUrl: method.qr_image_url || "",
+    instructions: method.instructions || "",
+    isActive: Boolean(method.is_active),
+    sortOrder: Number(method.sort_order || 0),
+    raw: method,
+  };
+};
+
 const normalizeOrder = (order, summary = {}) => {
   if (!order) return null;
 
@@ -142,7 +161,15 @@ const normalizeOrder = (order, summary = {}) => {
       : null,
 
     shippingMethod: order.shipping_method || "standard",
-    paymentMethod: order.payment_method || "-",
+    paymentMethod:
+      order.payment_method_code ||
+      order.paymentMethod ||
+      order.payment_method ||
+      null,
+
+    paymentMethodData: order.payment_method
+      ? normalizePaymentMethodFromBackend(order.payment_method)
+      : order.paymentMethodData || null,
 
     status: order.status || "pending",
     createdAt: order.created_at,
