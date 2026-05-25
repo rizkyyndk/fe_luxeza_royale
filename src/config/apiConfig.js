@@ -1,6 +1,8 @@
+const rawBaseURL =
+  import.meta.env.VITE_API_BASE_URL || "http://luxeza-royale-api.test/api";
+
 export const API_CONFIG = {
-  baseURL:
-    import.meta.env.VITE_API_BASE_URL || "http://luxeza-royale-api.test/api",
+  baseURL: rawBaseURL.replace(/\/$/, ""),
 
   appName: import.meta.env.VITE_APP_NAME || "Luxeza Royale",
 
