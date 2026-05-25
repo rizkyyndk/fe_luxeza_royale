@@ -7,6 +7,7 @@ import CheckoutSuccessPage from "../pages/CheckoutSuccessPage.vue";
 import WishlistPage from "../pages/WishlistPage.vue";
 import OrderHistoryPage from "../pages/OrderHistoryPage.vue";
 import NotFoundPage from "../pages/NotFoundPage.vue";
+import AdminOrdersPage from "../pages/AdminOrdersPage.vue";
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
   {
     path: "/orders",
     component: OrderHistoryPage,
+  },
+
+  {
+    path: "/admin/orders",
+    component: AdminOrdersPage,
   },
 
   // Wajib paling bawah

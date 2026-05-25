@@ -42,9 +42,9 @@
               Shipping Information
             </h1>
 
-            <p class="text-gray-500 mb-10 leading-7">
-              Complete your details to continue the mock checkout process.
-              Backend order submission will be integrated later.
+            <p class="text-luxe-brown/75 mb-10 leading-7">
+              Complete your shipping details to place an order through Luxeza
+              Royale backend system.
             </p>
 
             <form class="space-y-6" @submit.prevent="placeOrder">
@@ -54,7 +54,7 @@
                   v-model="form.fullName"
                   type="text"
                   placeholder="Full Name"
-                  class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-black transition"
+                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition shadow-sm"
                 />
 
                 <p v-if="errors.fullName" class="text-red-500 text-sm mt-2">
@@ -68,7 +68,7 @@
                   v-model="form.email"
                   type="email"
                   placeholder="Email Address"
-                  class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-black transition"
+                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition shadow-sm"
                 />
 
                 <p v-if="errors.email" class="text-red-500 text-sm mt-2">
@@ -82,7 +82,7 @@
                   v-model="form.phone"
                   type="text"
                   placeholder="Phone Number"
-                  class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-black transition"
+                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition shadow-sm"
                 />
 
                 <p v-if="errors.phone" class="text-red-500 text-sm mt-2">
@@ -96,7 +96,7 @@
                   v-model="form.address"
                   placeholder="Shipping Address"
                   rows="5"
-                  class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-black transition resize-none"
+                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition resize-none shadow-sm"
                 ></textarea>
 
                 <p v-if="errors.address" class="text-red-500 text-sm mt-2">
@@ -107,13 +107,13 @@
               <!-- SHIPPING METHOD -->
               <div>
                 <div class="flex items-center justify-between gap-4 mb-3">
-                  <label class="block text-sm text-gray-500">
+                  <label class="block text-sm text-luxe-brown/75">
                     Shipping Method
                   </label>
 
                   <span
                     v-if="isFreeShippingUnlocked"
-                    class="text-xs bg-black text-white px-4 py-2 rounded-full"
+                    class="text-xs bg-luxe-espresso text-luxe-ivory px-4 py-2 rounded-full"
                   >
                     Free shipping unlocked
                   </span>
@@ -127,8 +127,8 @@
                     @click="form.shippingMethod = method.value"
                     :class="
                       form.shippingMethod === method.value
-                        ? 'bg-black text-white'
-                        : 'border border-luxe-sand hover:border-black'
+                        ? 'bg-luxe-espresso text-luxe-ivory shadow-lg shadow-luxe-brown/20'
+                        : 'border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:border-luxe-royal hover:bg-luxe-cream'
                     "
                     class="rounded-2xl px-5 py-4 text-left transition"
                   >
@@ -141,8 +141,8 @@
                         <p
                           :class="
                             form.shippingMethod === method.value
-                              ? 'text-gray-300'
-                              : 'text-gray-500'
+                              ? 'text-luxe-sand'
+                              : 'text-luxe-brown/70'
                           "
                           class="text-sm mt-1"
                         >
@@ -153,8 +153,8 @@
                       <span
                         :class="
                           form.shippingMethod === method.value
-                            ? 'text-white'
-                            : 'text-black'
+                            ? 'text-luxe-ivory'
+                            : 'text-luxe-espresso'
                         "
                         class="text-sm font-semibold whitespace-nowrap"
                       >
@@ -169,11 +169,15 @@
                 </div>
 
                 <!-- FREE SHIPPING PROGRESS -->
-                <div class="mt-5 bg-luxe-cream rounded-3xl p-5">
+                <div
+                  class="mt-5 bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5"
+                >
                   <div class="flex items-center justify-between gap-4 mb-3">
-                    <p class="text-sm font-semibold">Free Shipping Progress</p>
+                    <p class="text-sm font-semibold text-luxe-espresso">
+                      Free Shipping Progress
+                    </p>
 
-                    <p class="text-xs text-gray-500">
+                    <p class="text-xs text-luxe-brown/70">
                       {{ freeShippingProgress }}%
                     </p>
                   </div>
@@ -182,12 +186,12 @@
                     class="w-full h-2 bg-luxe-ivory rounded-full overflow-hidden mb-3"
                   >
                     <div
-                      class="h-full bg-black rounded-full transition-all duration-500"
+                      class="h-full bg-luxe-espresso rounded-full transition-all duration-500"
                       :style="{ width: `${freeShippingProgress}%` }"
                     ></div>
                   </div>
 
-                  <p class="text-sm text-gray-500 leading-6">
+                  <p class="text-sm text-luxe-brown/75 leading-6">
                     <span v-if="remainingForFreeShipping > 0">
                       Add {{ formatCurrency(remainingForFreeShipping) }} more
                       selected items to unlock free shipping.
@@ -203,7 +207,7 @@
 
               <!-- PAYMENT METHOD -->
               <div>
-                <label class="block text-sm text-gray-500 mb-3">
+                <label class="block text-sm text-luxe-brown/75 mb-3">
                   Payment Method
                 </label>
 
@@ -215,8 +219,8 @@
                     @click="form.paymentMethod = method.value"
                     :class="
                       form.paymentMethod === method.value
-                        ? 'bg-black text-white'
-                        : 'border border-luxe-sand hover:border-black'
+                        ? 'bg-luxe-espresso text-luxe-ivory shadow-lg shadow-luxe-brown/20'
+                        : 'border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:border-luxe-royal hover:bg-luxe-cream'
                     "
                     class="rounded-2xl px-5 py-4 text-left transition"
                   >
@@ -227,8 +231,8 @@
                     <p
                       :class="
                         form.paymentMethod === method.value
-                          ? 'text-gray-300'
-                          : 'text-gray-500'
+                          ? 'text-luxe-sand'
+                          : 'text-luxe-brown/70'
                       "
                       class="text-sm mt-1"
                     >

@@ -221,4 +221,14 @@ export const orderService = {
 
     return normalizeOrder(data);
   },
+
+  async updateOrderStatus(orderCode, status) {
+    const response = await httpClient.put(`/orders/${orderCode}/status`, {
+      status,
+    });
+
+    const data = unwrapData(response, null);
+
+    return normalizeOrder(data);
+  },
 };

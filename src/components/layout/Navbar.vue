@@ -61,6 +61,18 @@
         >
           Orders
         </RouterLink>
+
+        <RouterLink
+          to="/admin/orders"
+          :class="
+            route.path === '/admin/orders'
+              ? 'text-luxe-espresso'
+              : 'text-luxe-brown'
+          "
+          class="hover:text-luxe-espresso transition"
+        >
+          Admin
+        </RouterLink>
       </nav>
 
       <!-- RIGHT -->
@@ -177,6 +189,18 @@
           class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
           Orders
+        </RouterLink>
+
+        <RouterLink
+          to="/admin/orders"
+          :class="
+            route.path === '/admin/orders'
+              ? 'text-luxe-espresso'
+              : 'text-luxe-brown'
+          "
+          class="hover:text-luxe-espresso transition"
+        >
+          Admin
         </RouterLink>
       </nav>
     </aside>

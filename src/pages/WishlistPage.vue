@@ -10,24 +10,24 @@
           class="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
         >
           <div>
-            <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-4">
+            <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
               Wishlist
             </p>
 
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-luxe-espresso">
               Saved Luxury Pieces
             </h1>
 
-            <p class="text-gray-500 max-w-xl leading-7">
-              Your favorite products are saved here. You can review them anytime
-              before adding them to your cart.
+            <p class="text-luxe-brown/75 max-w-xl leading-7">
+              Your favorite Luxeza Royale products are saved here. Review them
+              anytime before adding them to your cart.
             </p>
           </div>
 
           <button
             v-if="!wishlistStore.isEmpty"
             @click="wishlistStore.clearWishlist()"
-            class="border border-black px-6 py-3 rounded-full hover:bg-black hover:text-white transition"
+            class="border border-luxe-espresso text-luxe-espresso px-6 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition w-fit"
           >
             Clear Wishlist
           </button>
@@ -36,22 +36,22 @@
         <!-- EMPTY -->
         <div
           v-if="wishlistStore.isEmpty"
-          class="min-h-[50vh] bg-[#f8f5f2] rounded-[2rem] flex items-center justify-center text-center px-6"
+          class="min-h-[50vh] bg-luxe-cream border border-luxe-sand/60 shadow-[0_18px_60px_rgba(92,56,36,0.10)] rounded-[2rem] flex items-center justify-center text-center px-6"
         >
           <div>
-            <p class="text-6xl mb-6">♡</p>
+            <p class="text-6xl mb-6 text-luxe-espresso">♡</p>
 
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-luxe-espresso">
               Your wishlist is empty
             </h2>
 
-            <p class="text-gray-500 mb-8">
+            <p class="text-luxe-brown/75 mb-8">
               Start saving your favorite luxury products.
             </p>
 
             <RouterLink
               to="/"
-              class="bg-black text-white px-8 py-4 rounded-full inline-block hover:scale-105 transition"
+              class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full inline-block hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
             >
               Explore Collection
             </RouterLink>
