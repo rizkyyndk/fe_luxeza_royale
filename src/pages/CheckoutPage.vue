@@ -321,8 +321,13 @@
                     </p>
 
                     <p class="text-sm text-gray-500 mt-1">
-                      {{ appliedVoucher.discountValue }}% off, max
-                      {{ formatCurrency(appliedVoucher.maxDiscount) }}
+                      <span v-if="appliedVoucher.discountType === 'percentage'">
+                        {{ appliedVoucher.discountValue }}% off
+                      </span>
+
+                      <span v-else>
+                        {{ formatCurrency(appliedVoucher.discountAmount) }} off
+                      </span>
                     </p>
                   </div>
 
@@ -341,9 +346,7 @@
 
                 <p v-else class="text-gray-400 text-sm mt-3">
                   Try code:
-                  <span class="font-semibold text-black">
-                    LUXEZAROYALE_120926
-                  </span>
+                  <span class="font-semibold text-black"> LRDISC10 </span>
                 </p>
               </div>
 
@@ -441,7 +444,8 @@ import { useToastStore } from "../stores/toastStore";
 import { formatCurrency } from "../utils/formatCurrency";
 import ProductImage from "../components/ui/ProductImage.vue";
 import Footer from "../components/layout/Footer.vue";
-import { findVoucherByCode } from "../data/vouchers";
+import { voucherService } from "../services/voucherService";
+import { orderService } from "../services/orderService";
 import { useOrderStore } from "../stores/orderStore";
 
 const router = useRouter();
@@ -529,14 +533,7 @@ const shippingLabel = computed(() => {
 const discountAmount = computed(() => {
   if (!appliedVoucher.value) return 0;
 
-  if (appliedVoucher.value.discountType === "percentage") {
-    const rawDiscount =
-      cartStore.selectedTotalPrice * (appliedVoucher.value.discountValue / 100);
-
-    return Math.min(rawDiscount, appliedVoucher.value.maxDiscount);
-  }
-
-  return 0;
+  return Number(appliedVoucher.value.discountAmount || 0);
 });
 
 const grandTotal = computed(() => {
@@ -595,7 +592,7 @@ const delay = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-const applyVoucher = () => {
+const applyVoucher = async () => {
   voucherError.value = "";
 
   if (!voucherCode.value.trim()) {
@@ -608,30 +605,31 @@ const applyVoucher = () => {
     return;
   }
 
-  const voucher = findVoucherByCode(voucherCode.value);
+  try {
+    const voucher = await voucherService.validateVoucher(
+      voucherCode.value,
+      cartStore.selectedTotalPrice,
+    );
 
-  if (!voucher) {
+    appliedVoucher.value = voucher;
+    voucherCode.value = voucher.code;
+    voucherError.value = "";
+
+    toastStore.showToast({
+      title: "Voucher Applied",
+      message: `${voucher.code} has been applied successfully.`,
+      type: "success",
+    });
+  } catch (error) {
     appliedVoucher.value = null;
-    voucherError.value = "Invalid voucher code.";
+    voucherError.value = error?.message || "Invalid voucher code.";
 
     toastStore.showToast({
       title: "Invalid Voucher",
-      message: "The voucher code you entered is not valid.",
+      message: error?.message || "The voucher code you entered is not valid.",
       type: "error",
     });
-
-    return;
   }
-
-  appliedVoucher.value = voucher;
-  voucherCode.value = voucher.code;
-  voucherError.value = "";
-
-  toastStore.showToast({
-    title: "Voucher Applied",
-    message: `${voucher.code} has been applied successfully.`,
-    type: "success",
-  });
 };
 
 const removeVoucher = () => {
@@ -655,52 +653,85 @@ const placeOrder = async () => {
 
   isSubmitting.value = true;
 
-  const order = {
-    orderNumber: generateOrderNumber(),
-    customer: {
-      fullName: form.fullName,
-      email: form.email,
-      phone: form.phone,
-      address: form.address,
-    },
-    shippingMethod: form.shippingMethod,
-    shippingMethodLabel: selectedShippingMethod.value?.label,
-    paymentMethod: form.paymentMethod,
-    items: cartStore.selectedItems,
-    subtotal: cartStore.selectedTotalPrice,
-    voucher: appliedVoucher.value
-      ? {
-          code: appliedVoucher.value.code,
-          label: appliedVoucher.value.label,
-          discountType: appliedVoucher.value.discountType,
-          discountValue: appliedVoucher.value.discountValue,
-          maxDiscount: appliedVoucher.value.maxDiscount,
-        }
-      : null,
-    discountAmount: discountAmount.value,
-    freeShippingUnlocked: isFreeShippingUnlocked.value,
-    shippingCost: shippingCost.value,
-    total: grandTotal.value,
-    createdAt: new Date().toISOString(),
-  };
+  try {
+    const orderPayload = {
+      customer_name: form.fullName,
+      customer_email: form.email,
+      customer_phone: form.phone,
+      customer_address: form.address,
+      voucher_code: appliedVoucher.value ? appliedVoucher.value.code : null,
+      items: cartStore.selectedItems.map((item) => ({
+        product_id: item.product_id || item.productId || item.id,
+        slug: item.slug || null,
+        quantity: Number(item.quantity || 1),
+      })),
+    };
 
-  await delay(900);
+    const createdOrder = await orderService.createOrder(orderPayload);
 
-  sessionStorage.setItem("lastOrder", JSON.stringify(order));
+    const order = {
+      orderNumber:
+        createdOrder?.order_code ||
+        createdOrder?.order?.order_code ||
+        generateOrderNumber(),
 
-  orderStore.addOrder(order);
+      customer: {
+        fullName: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        address: form.address,
+      },
 
-  cartStore.removeSelectedItems();
+      shippingMethod: form.shippingMethod,
+      shippingMethodLabel: selectedShippingMethod.value?.label,
+      paymentMethod: form.paymentMethod,
 
-  toastStore.showToast({
-    title: "Order Placed",
-    message: `Order ${order.orderNumber} has been created successfully.`,
-    type: "success",
-    duration: 3500,
-  });
+      items: cartStore.selectedItems,
 
-  isSubmitting.value = false;
+      subtotal: cartStore.selectedTotalPrice,
 
-  router.push("/checkout/success");
+      voucher: appliedVoucher.value
+        ? {
+            code: appliedVoucher.value.code,
+            label: appliedVoucher.value.label,
+            discountType: appliedVoucher.value.discountType,
+            discountValue: appliedVoucher.value.discountValue,
+            discountAmount: appliedVoucher.value.discountAmount,
+          }
+        : null,
+
+      discountAmount: discountAmount.value,
+      freeShippingUnlocked: isFreeShippingUnlocked.value,
+      shippingCost: shippingCost.value,
+      total: grandTotal.value,
+      status: createdOrder?.status || createdOrder?.order?.status || "pending",
+      backendOrder: createdOrder,
+      createdAt: new Date().toISOString(),
+    };
+
+    sessionStorage.setItem("lastOrder", JSON.stringify(order));
+
+    orderStore.addOrder(order);
+
+    cartStore.removeSelectedItems();
+
+    toastStore.showToast({
+      title: "Order Placed",
+      message: `Order ${order.orderNumber} has been created successfully.`,
+      type: "success",
+      duration: 3500,
+    });
+
+    router.push("/checkout/success");
+  } catch (error) {
+    toastStore.showToast({
+      title: "Order Failed",
+      message: error?.message || "Failed to create order. Please try again.",
+      type: "error",
+      duration: 4000,
+    });
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 </script>
