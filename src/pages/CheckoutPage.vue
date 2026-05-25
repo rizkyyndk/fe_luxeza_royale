@@ -54,7 +54,7 @@
                   v-model="form.fullName"
                   type="text"
                   placeholder="Full Name"
-                  class="w-full border border-gray-300 rounded-2xl px-6 py-5 outline-none focus:border-black transition"
+                  class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-black transition"
                 />
 
                 <p v-if="errors.fullName" class="text-red-500 text-sm mt-2">
@@ -68,7 +68,7 @@
                   v-model="form.email"
                   type="email"
                   placeholder="Email Address"
-                  class="w-full border border-gray-300 rounded-2xl px-6 py-5 outline-none focus:border-black transition"
+                  class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-black transition"
                 />
 
                 <p v-if="errors.email" class="text-red-500 text-sm mt-2">
@@ -82,7 +82,7 @@
                   v-model="form.phone"
                   type="text"
                   placeholder="Phone Number"
-                  class="w-full border border-gray-300 rounded-2xl px-6 py-5 outline-none focus:border-black transition"
+                  class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-black transition"
                 />
 
                 <p v-if="errors.phone" class="text-red-500 text-sm mt-2">
@@ -96,7 +96,7 @@
                   v-model="form.address"
                   placeholder="Shipping Address"
                   rows="5"
-                  class="w-full border border-gray-300 rounded-2xl px-6 py-5 outline-none focus:border-black transition resize-none"
+                  class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-black transition resize-none"
                 ></textarea>
 
                 <p v-if="errors.address" class="text-red-500 text-sm mt-2">
@@ -128,7 +128,7 @@
                     :class="
                       form.shippingMethod === method.value
                         ? 'bg-black text-white'
-                        : 'border border-gray-300 hover:border-black'
+                        : 'border border-luxe-sand hover:border-black'
                     "
                     class="rounded-2xl px-5 py-4 text-left transition"
                   >
@@ -169,7 +169,7 @@
                 </div>
 
                 <!-- FREE SHIPPING PROGRESS -->
-                <div class="mt-5 bg-[#f8f5f2] rounded-3xl p-5">
+                <div class="mt-5 bg-luxe-cream rounded-3xl p-5">
                   <div class="flex items-center justify-between gap-4 mb-3">
                     <p class="text-sm font-semibold">Free Shipping Progress</p>
 
@@ -179,7 +179,7 @@
                   </div>
 
                   <div
-                    class="w-full h-2 bg-white rounded-full overflow-hidden mb-3"
+                    class="w-full h-2 bg-luxe-ivory rounded-full overflow-hidden mb-3"
                   >
                     <div
                       class="h-full bg-black rounded-full transition-all duration-500"
@@ -216,7 +216,7 @@
                     :class="
                       form.paymentMethod === method.value
                         ? 'bg-black text-white'
-                        : 'border border-gray-300 hover:border-black'
+                        : 'border border-luxe-sand hover:border-black'
                     "
                     class="rounded-2xl px-5 py-4 text-left transition"
                   >
@@ -242,9 +242,13 @@
 
           <!-- RIGHT -->
           <div>
-            <div class="bg-[#f8f5f2] p-8 md:p-10 rounded-[2rem] sticky top-28">
+            <div
+              class="bg-luxe-ivory border border-luxe-sand/70 shadow-[0_24px_80px_rgba(92,56,36,0.16)] p-8 md:p-10 rounded-[2rem] sticky top-28"
+            >
               <div class="flex items-center justify-between mb-10">
-                <h2 class="text-3xl font-bold">Order Summary</h2>
+                <h2 class="text-3xl font-bold text-luxe-espresso">
+                  Order Summary
+                </h2>
 
                 <span class="text-sm text-gray-500">
                   {{ cartStore.selectedTotalItems }} selected item
@@ -285,7 +289,7 @@
               </div>
 
               <!-- VOUCHER -->
-              <div class="mb-8 border-t border-gray-300 pt-6">
+              <div class="mb-8 border-t border-luxe-sand pt-6">
                 <label class="block text-sm text-gray-500 mb-3">
                   Voucher Code
                 </label>
@@ -299,13 +303,13 @@
                     @keyup.enter="applyVoucher"
                     type="text"
                     placeholder="Enter voucher code"
-                    class="flex-1 border border-gray-300 rounded-full px-5 py-4 outline-none focus:border-black transition bg-white"
+                    class="flex-1 border border-luxe-sand rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition bg-white text-luxe-espresso placeholder:text-luxe-brown/50"
                   />
 
                   <button
                     @click="applyVoucher"
                     type="button"
-                    class="bg-black text-white px-6 py-4 rounded-full hover:scale-105 transition"
+                    class="bg-luxe-espresso text-luxe-ivory px-6 py-4 rounded-full hover:bg-luxe-royal hover:scale-105 transition"
                   >
                     Apply
                   </button>
@@ -313,7 +317,7 @@
 
                 <div
                   v-else
-                  class="bg-white rounded-3xl p-5 flex items-start justify-between gap-4"
+                  class="bg-luxe-ivory rounded-3xl p-5 flex items-start justify-between gap-4"
                 >
                   <div>
                     <p class="font-semibold">
@@ -346,12 +350,12 @@
 
                 <p v-else class="text-gray-400 text-sm mt-3">
                   Try code:
-                  <span class="font-semibold text-black"> LRDISC10 </span>
+                  <span class="font-semibold text-luxe-royal"> LRDISC10 </span>
                 </p>
               </div>
 
               <!-- PRICE DETAIL -->
-              <div class="space-y-4 border-t border-gray-300 pt-6 mb-8">
+              <div class="space-y-4 border-t border-luxe-sand pt-6 mb-8">
                 <div class="flex items-center justify-between">
                   <span class="text-gray-500">Subtotal</span>
 
@@ -385,7 +389,7 @@
                 </div>
 
                 <div
-                  class="flex items-center justify-between text-xl pt-4 border-t border-gray-300"
+                  class="flex items-center justify-between text-xl pt-4 border-t border-luxe-sand"
                 >
                   <span>Total</span>
 
@@ -401,8 +405,8 @@
                 :disabled="!isFormValid || isSubmitting"
                 :class="
                   isFormValid && !isSubmitting
-                    ? 'bg-black text-white hover:scale-[1.02]'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    ? 'bg-luxe-espresso text-luxe-ivory hover:bg-luxe-royal hover:scale-[1.02] shadow-lg shadow-luxe-brown/20'
+                    : 'bg-luxe-sand/60 text-luxe-brown/60 cursor-not-allowed'
                 "
                 class="w-full py-5 rounded-full text-lg transition flex items-center justify-center gap-3"
               >
@@ -660,9 +664,12 @@ const placeOrder = async () => {
       customer_phone: form.phone,
       customer_address: form.address,
       voucher_code: appliedVoucher.value ? appliedVoucher.value.code : null,
+      shipping_method: form.shippingMethod,
+      payment_method: form.paymentMethod,
       items: cartStore.selectedItems.map((item) => ({
         product_id: item.product_id || item.productId || item.id,
         slug: item.slug || null,
+        size: item.size || null,
         quantity: Number(item.quantity || 1),
       })),
     };

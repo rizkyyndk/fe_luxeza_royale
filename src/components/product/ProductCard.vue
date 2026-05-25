@@ -1,6 +1,8 @@
 <template>
   <div class="group cursor-pointer block">
-    <div class="relative overflow-hidden rounded-3xl bg-gray-100 mb-5">
+    <div
+      class="relative overflow-hidden rounded-3xl bg-luxe-cream mb-5 shadow-[0_18px_50px_rgba(92,56,36,0.12)] border border-luxe-sand/50"
+    >
       <RouterLink :to="`/product/${id}`" class="block">
         <ProductImage
           :src="image"
@@ -23,10 +25,10 @@
         type="button"
         :class="
           wishlistStore.isInWishlist(id)
-            ? 'bg-black text-white'
-            : 'bg-white text-black'
+            ? 'bg-luxe-espresso text-luxe-ivory'
+            : 'bg-luxe-ivory text-luxe-espresso'
         "
-        class="absolute top-4 right-4 w-11 h-11 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition"
+        class="absolute top-4 right-4 w-11 h-11 rounded-full shadow-lg border border-luxe-sand/50 flex items-center justify-center hover:scale-110 transition"
       >
         <span class="text-lg">
           {{ wishlistStore.isInWishlist(id) ? "♥" : "♡" }}
@@ -37,29 +39,29 @@
       <button
         @click.stop="isQuickViewOpen = true"
         type="button"
-        class="absolute left-5 right-5 bottom-5 bg-white/90 backdrop-blur-xl text-black py-4 rounded-full font-medium translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-black hover:text-white transition duration-300"
+        class="absolute left-5 right-5 bottom-5 bg-luxe-ivory/90 backdrop-blur-xl text-luxe-espresso py-4 rounded-full font-medium translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-luxe-espresso hover:text-luxe-ivory transition duration-300"
       >
         Quick View
       </button>
     </div>
 
     <RouterLink :to="`/product/${id}`" class="block">
-      <p class="text-sm uppercase tracking-[3px] text-gray-500 mb-2">
+      <p class="text-sm uppercase tracking-[3px] text-luxe-brown mb-2">
         {{ category }}
       </p>
 
       <h3
-        class="text-2xl font-semibold mb-2 group-hover:text-gray-600 transition"
+        class="text-2xl font-semibold mb-2 text-luxe-espresso group-hover:text-luxe-royal transition"
       >
         {{ title }}
       </h3>
 
       <div class="flex items-center justify-between gap-4">
-        <p class="font-bold">
+        <p class="font-bold text-luxe-espresso">
           {{ formatCurrency(price) }}
         </p>
 
-        <p class="text-sm text-gray-400">
+        <p class="text-sm text-luxe-brown/70">
           {{ stockText }}
         </p>
       </div>
@@ -162,9 +164,9 @@ const stockText = computed(() => {
 });
 
 const stockBadgeClass = computed(() => {
-  if (isOutOfStock.value) return "bg-white/90 text-red-600";
-  if (isLowStock.value) return "bg-white/90 text-orange-600";
-  return "bg-white/90 text-black";
+  if (isOutOfStock.value) return "bg-luxe-ivory/90 text-red-600";
+  if (isLowStock.value) return "bg-luxe-ivory/90 text-orange-600";
+  return "bg-luxe-ivory/90 text-luxe-espresso";
 });
 
 const toggleWishlist = () => {

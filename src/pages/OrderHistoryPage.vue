@@ -14,30 +14,70 @@
               Order History
             </p>
 
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">
-              Your Mock Orders
-            </h1>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Your Orders</h1>
 
             <p class="text-gray-500 max-w-xl leading-7">
-              This page stores frontend mock order history using sessionStorage.
-              Later, this data can be replaced with real backend order data from
-              Spring Boot API.
+              Order history is now loaded from the Laravel database through the
+              backend API.
             </p>
           </div>
 
           <button
-            v-if="!orderStore.isEmpty"
-            @click="clearOrderHistory"
+            v-if="!isEmpty"
+            @click="loadOrders"
             class="border border-black px-6 py-3 rounded-full hover:bg-black hover:text-white transition w-fit"
           >
-            Clear History
+            Refresh Orders
           </button>
+        </div>
+
+        <!-- LOADING -->
+        <div
+          v-if="isLoadingOrders"
+          class="min-h-[50vh] bg-luxe-cream rounded-[2rem] flex items-center justify-center text-center px-6"
+        >
+          <div>
+            <p class="text-6xl mb-6">⏳</p>
+
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">
+              Loading orders...
+            </h2>
+
+            <p class="text-gray-500">
+              Please wait while we load your order history.
+            </p>
+          </div>
+        </div>
+
+        <!-- ERROR -->
+        <div
+          v-else-if="orderErrorMessage"
+          class="min-h-[50vh] bg-red-50 rounded-[2rem] flex items-center justify-center text-center px-6"
+        >
+          <div>
+            <p class="text-6xl mb-6">⚠️</p>
+
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">
+              Failed to load orders
+            </h2>
+
+            <p class="text-red-500 mb-8">
+              {{ orderErrorMessage }}
+            </p>
+
+            <button
+              @click="loadOrders"
+              class="bg-black text-white px-8 py-4 rounded-full inline-block hover:scale-105 transition"
+            >
+              Try Again
+            </button>
+          </div>
         </div>
 
         <!-- EMPTY -->
         <div
-          v-if="orderStore.isEmpty"
-          class="min-h-[50vh] bg-[#f8f5f2] rounded-[2rem] flex items-center justify-center text-center px-6"
+          v-else-if="isEmpty"
+          class="min-h-[50vh] bg-luxe-cream rounded-[2rem] flex items-center justify-center text-center px-6"
         >
           <div>
             <p class="text-6xl mb-6">📦</p>
@@ -45,7 +85,7 @@
             <h2 class="text-3xl md:text-4xl font-bold mb-4">No orders yet</h2>
 
             <p class="text-gray-500 mb-8">
-              Your completed mock checkout orders will appear here.
+              Your completed checkout orders will appear here.
             </p>
 
             <RouterLink
@@ -60,9 +100,9 @@
         <!-- ORDERS -->
         <div v-else class="space-y-8">
           <div
-            v-for="order in orderStore.latestOrders"
+            v-for="order in latestOrders"
             :key="order.orderNumber"
-            class="bg-[#f8f5f2] rounded-[2rem] overflow-hidden"
+            class="bg-luxe-cream rounded-[2rem] overflow-hidden"
           >
             <!-- ORDER HEADER -->
             <div
@@ -78,12 +118,12 @@
 
               <div class="flex flex-wrap gap-3">
                 <span
-                  class="bg-white text-black px-4 py-2 rounded-full text-sm font-semibold"
+                  class="bg-luxe-ivory text-black px-4 py-2 rounded-full text-sm font-semibold"
                 >
-                  {{ order.status || "Processing" }}
+                  {{ formatStatus(order.status) }}
                 </span>
 
-                <span class="bg-white/10 px-4 py-2 rounded-full text-sm">
+                <span class="bg-luxe-ivory/10 px-4 py-2 rounded-full text-sm">
                   {{ formatDate(order.createdAt) }}
                 </span>
               </div>
@@ -105,7 +145,7 @@
                   <div
                     v-for="item in order.items"
                     :key="`${order.orderNumber}-${item.id}-${item.size}`"
-                    class="bg-white rounded-3xl p-4 flex items-center gap-5"
+                    class="bg-luxe-ivory rounded-3xl p-4 flex items-center gap-5"
                   >
                     <ProductImage
                       :src="item.image"
@@ -119,7 +159,7 @@
                       </h4>
 
                       <p class="text-sm text-gray-500 mt-1">
-                        Size: {{ item.size }}
+                        Size: {{ item.size || "-" }}
                       </p>
 
                       <p class="text-sm text-gray-500">
@@ -135,7 +175,7 @@
               </div>
 
               <!-- SUMMARY -->
-              <div class="bg-white rounded-3xl p-6 h-fit">
+              <div class="bg-luxe-ivory rounded-3xl p-6 h-fit">
                 <h3 class="text-2xl font-bold mb-6">Order Summary</h3>
 
                 <div class="space-y-4">
@@ -198,7 +238,7 @@
                   </div>
                 </div>
 
-                <div class="mt-6 bg-[#f8f5f2] rounded-3xl p-5">
+                <div class="mt-6 bg-luxe-cream rounded-3xl p-5">
                   <p class="text-sm font-semibold mb-2">Shipping Address</p>
 
                   <p class="text-sm text-gray-500 leading-6">
@@ -217,17 +257,49 @@
 </template>
 
 <script setup>
+import { computed, onMounted, ref } from "vue";
+
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
 import Footer from "../components/layout/Footer.vue";
 import ProductImage from "../components/ui/ProductImage.vue";
 
-import { useOrderStore } from "../stores/orderStore";
 import { useToastStore } from "../stores/toastStore";
 import { formatCurrency } from "../utils/formatCurrency";
+import { orderService } from "../services/orderService";
 
-const orderStore = useOrderStore();
 const toastStore = useToastStore();
+
+const orders = ref([]);
+const isLoadingOrders = ref(false);
+const orderErrorMessage = ref("");
+
+const latestOrders = computed(() => orders.value);
+const isEmpty = computed(() => orders.value.length === 0);
+
+const loadOrders = async () => {
+  isLoadingOrders.value = true;
+  orderErrorMessage.value = "";
+
+  try {
+    orders.value = await orderService.getOrders();
+  } catch (error) {
+    console.error("Failed to load orders:", error);
+
+    orderErrorMessage.value =
+      error?.response?.data?.message ||
+      error?.message ||
+      "Failed to load order history.";
+
+    toastStore.showToast({
+      title: "Failed to Load Orders",
+      message: orderErrorMessage.value,
+      type: "error",
+    });
+  } finally {
+    isLoadingOrders.value = false;
+  }
+};
 
 const formatDate = (date) => {
   if (!date) return "-";
@@ -249,13 +321,16 @@ const formatPaymentMethod = (method) => {
   return method || "-";
 };
 
-const clearOrderHistory = () => {
-  orderStore.clearOrders();
+const formatStatus = (status) => {
+  if (!status) return "Pending";
 
-  toastStore.showToast({
-    title: "Order History Cleared",
-    message: "All mock order history has been removed.",
-    type: "info",
-  });
+  return status
+    .split("-")
+    .join(" ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 };
+
+onMounted(() => {
+  loadOrders();
+});
 </script>

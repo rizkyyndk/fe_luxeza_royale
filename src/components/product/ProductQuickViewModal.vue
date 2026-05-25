@@ -1,13 +1,13 @@
 <template>
   <div
-    class="fixed inset-0 z-[999] bg-black/50 px-6 flex items-center justify-center"
+    class="fixed inset-0 z-[999] bg-luxe-espresso/60 px-6 flex items-center justify-center"
     @click.self="closeModal"
   >
     <div
-      class="bg-white rounded-[2rem] w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-2xl grid lg:grid-cols-2"
+      class="bg-luxe-ivory rounded-[2rem] w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-[0_30px_90px_rgba(43,26,18,0.28)] border border-luxe-sand/60 grid lg:grid-cols-2"
     >
       <!-- IMAGE -->
-      <div class="relative bg-[#f8f5f2] min-h-[420px]">
+      <div class="relative bg-luxe-cream min-h-[420px]">
         <ProductImage
           :src="mainImage"
           :alt="product.title"
@@ -16,7 +16,7 @@
 
         <button
           @click="closeModal"
-          class="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/90 backdrop-blur-xl flex items-center justify-center text-2xl hover:bg-black hover:text-white transition"
+          class="absolute top-5 right-5 w-11 h-11 rounded-full bg-luxe-ivory/90 backdrop-blur-xl flex items-center justify-center text-2xl text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory transition"
         >
           ×
         </button>
@@ -67,8 +67,8 @@
               @click="selectSize(size)"
               :class="
                 selectedSize === size
-                  ? 'bg-black text-white scale-105 shadow-lg'
-                  : 'border border-black hover:bg-gray-100'
+                  ? 'bg-luxe-espresso text-luxe-ivory scale-105 shadow-lg'
+                  : 'border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream'
               "
               class="px-5 py-3 rounded-full transition"
             >
@@ -116,7 +116,7 @@
             :class="
               isOutOfStock
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-black text-white hover:scale-[1.02]'
+                : 'bg-luxe-espresso text-luxe-ivory hover:bg-luxe-royal hover:scale-[1.02]'
             "
             class="w-full py-5 rounded-full text-lg transition"
           >
@@ -127,8 +127,8 @@
             @click="toggleWishlist"
             :class="
               wishlistStore.isInWishlist(product.id)
-                ? 'bg-black text-white'
-                : 'border border-black hover:bg-black hover:text-white'
+                ? 'bg-luxe-espresso text-luxe-ivory'
+                : 'border border-luxe-espresso text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory'
             "
             class="w-full py-5 rounded-full text-lg transition"
           >
@@ -142,7 +142,7 @@
           <RouterLink
             :to="`/product/${product.id}`"
             @click="closeModal"
-            class="w-full text-center py-5 rounded-full text-lg bg-[#f8f5f2] hover:bg-black hover:text-white transition"
+            class="w-full text-center py-5 rounded-full text-lg bg-luxe-cream text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory transition"
           >
             View Full Details
           </RouterLink>

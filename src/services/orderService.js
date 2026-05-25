@@ -34,11 +34,136 @@ const saveOrderToStorage = (order) => {
   return orderWithStatus;
 };
 
+const normalizeImageUrl = (url) => {
+  if (!url || typeof url !== "string") return "";
+
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+
+  if (url.startsWith("/")) {
+    return `${window.location.origin}${url}`;
+  }
+
+  return `${window.location.origin}/${url}`;
+};
+
+const getPrimaryImageValue = (product) => {
+  const primaryImage = product?.primary_image;
+
+  if (!primaryImage) return "";
+
+  if (typeof primaryImage === "string") {
+    return primaryImage;
+  }
+
+  return (
+    primaryImage.image_url ||
+    primaryImage.url ||
+    primaryImage.path ||
+    primaryImage.file_path ||
+    primaryImage.image ||
+    ""
+  );
+};
+
+const normalizeOrderItem = (item) => {
+  const product = item.product || {};
+  const image = normalizeImageUrl(getPrimaryImageValue(product));
+
+  return {
+    id: item.id,
+    product_id: item.product_id,
+    slug: product.slug || null,
+    title: product.title || product.name || "Product",
+    image,
+    size: item.size || "-",
+    quantity: Number(item.quantity || 0),
+    price: Number(item.price || product.price || 0),
+    subtotal: Number(item.subtotal || 0),
+    product,
+    raw: item,
+  };
+};
+
+const normalizeOrder = (order, summary = {}) => {
+  if (!order) return null;
+
+  const items = Array.isArray(order.items)
+    ? order.items.map(normalizeOrderItem)
+    : [];
+
+  const subtotalFromItems = items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  );
+
+  const subtotal = Number(
+    order.subtotal_amount ?? summary.subtotal ?? subtotalFromItems,
+  );
+
+  const discountAmount = Number(
+    order.discount_amount ?? summary.discount_amount ?? 0,
+  );
+
+  const shippingCost = Number(
+    order.shipping_cost ?? summary.shipping_cost ?? 0,
+  );
+
+  const total = Number(
+    order.total_amount ??
+      summary.grand_total ??
+      subtotal - discountAmount + shippingCost,
+  );
+
+  return {
+    id: order.id,
+    order_code: order.order_code,
+    orderNumber: order.order_code,
+
+    customer: {
+      fullName: order.customer_name,
+      email: order.customer_email,
+      phone: order.customer_phone,
+      address: order.customer_address,
+    },
+
+    items,
+
+    subtotal,
+    discountAmount,
+    shippingCost,
+    total,
+
+    voucher: order.voucher_code
+      ? {
+          code: order.voucher_code,
+        }
+      : null,
+
+    shippingMethod: order.shipping_method || "standard",
+    paymentMethod: order.payment_method || "-",
+
+    status: order.status || "pending",
+    createdAt: order.created_at,
+    updatedAt: order.updated_at,
+
+    raw: order,
+  };
+};
+
+const normalizeOrderList = (orders) => {
+  if (!Array.isArray(orders)) return [];
+
+  return orders.map((order) => normalizeOrder(order)).filter(Boolean);
+};
+
 const normalizeOrderPayload = (orderPayload) => {
   const normalizedItems = (orderPayload.items || []).map((item) => {
     return {
       product_id: item.product_id || item.productId || item.id || null,
       slug: item.slug || null,
+      size: item.size || null,
       quantity: Number(item.quantity || item.qty || 1),
     };
   });
@@ -60,11 +185,20 @@ export const orderService = {
     const data = unwrapData(response, null);
 
     if (data?.order) {
-      sessionStorage.setItem(LAST_ORDER_KEY, JSON.stringify(data.order));
-      return data.order;
+      const normalizedOrder = normalizeOrder(data.order, data.summary);
+
+      sessionStorage.setItem(LAST_ORDER_KEY, JSON.stringify(normalizedOrder));
+
+      return normalizedOrder;
     }
 
-    return data;
+    const normalizedOrder = normalizeOrder(data);
+
+    if (normalizedOrder) {
+      sessionStorage.setItem(LAST_ORDER_KEY, JSON.stringify(normalizedOrder));
+    }
+
+    return normalizedOrder || data;
   },
 
   async getOrders(params = {}) {
@@ -76,11 +210,15 @@ export const orderService = {
     const endpoint = query ? `/orders?${query}` : "/orders";
 
     const response = await httpClient.get(endpoint);
-    return unwrapData(response, []);
+    const data = unwrapData(response, []);
+
+    return normalizeOrderList(data);
   },
 
   async getOrderDetail(orderCode) {
     const response = await httpClient.get(`/orders/${orderCode}`);
-    return unwrapData(response, null);
+    const data = unwrapData(response, null);
+
+    return normalizeOrder(data);
   },
 };

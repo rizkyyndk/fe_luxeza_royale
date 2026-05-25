@@ -50,7 +50,7 @@
           <!-- IMAGE GALLERY -->
           <div class="space-y-5">
             <!-- MAIN IMAGE -->
-            <div class="relative overflow-hidden rounded-[2rem] bg-[#f8f5f2]">
+            <div class="relative overflow-hidden rounded-[2rem] bg-luxe-cream">
               <ProductImage
                 :src="selectedImage"
                 :alt="product.title"
@@ -59,7 +59,7 @@
 
               <!-- IMAGE COUNTER -->
               <div
-                class="absolute top-5 left-5 bg-white/85 backdrop-blur-xl px-4 py-2 rounded-full text-sm font-medium"
+                class="absolute top-5 left-5 bg-luxe-ivory/85 backdrop-blur-xl px-4 py-2 rounded-full text-sm font-medium"
               >
                 {{ selectedImageIndex + 1 }} / {{ galleryImages.length }}
               </div>
@@ -71,14 +71,14 @@
               >
                 <button
                   @click="previousImage"
-                  class="w-11 h-11 rounded-full bg-white/85 backdrop-blur-xl flex items-center justify-center hover:bg-black hover:text-white transition"
+                  class="w-11 h-11 rounded-full bg-luxe-ivory/85 backdrop-blur-xl flex items-center justify-center hover:bg-black hover:text-white transition"
                 >
                   ←
                 </button>
 
                 <button
                   @click="nextImage"
-                  class="w-11 h-11 rounded-full bg-white/85 backdrop-blur-xl flex items-center justify-center hover:bg-black hover:text-white transition"
+                  class="w-11 h-11 rounded-full bg-luxe-ivory/85 backdrop-blur-xl flex items-center justify-center hover:bg-black hover:text-white transition"
                 >
                   →
                 </button>
@@ -96,7 +96,7 @@
                     ? 'border-black opacity-100'
                     : 'border-transparent opacity-70 hover:opacity-100'
                 "
-                class="overflow-hidden rounded-2xl bg-[#f8f5f2] border-2 transition"
+                class="overflow-hidden rounded-2xl bg-luxe-cream border-2 transition"
               >
                 <ProductImage
                   :src="image"
@@ -150,13 +150,13 @@
               <div
                 v-for="attribute in productAttributes"
                 :key="attribute.id || attribute.label"
-                class="bg-[#f8f5f2] rounded-3xl p-5"
+                class="bg-luxe-ivory border border-luxe-sand/70 shadow-[0_16px_45px_rgba(92,56,36,0.12)] rounded-3xl p-5"
               >
-                <p class="text-sm text-gray-500 mb-2">
+                <p class="text-sm text-luxe-brown/70 mb-2">
                   {{ attribute.label }}
                 </p>
 
-                <p class="font-semibold">
+                <p class="font-semibold text-luxe-espresso">
                   {{ attribute.value }}
                 </p>
               </div>
@@ -165,7 +165,7 @@
             <!-- SIZE -->
             <div class="mb-8">
               <div class="flex items-center justify-between mb-4">
-                <p class="font-semibold">Select Size</p>
+                <p class="font-semibold text-luxe-espresso">Select Size</p>
 
                 <button
                   @click="isSizeGuideOpen = true"

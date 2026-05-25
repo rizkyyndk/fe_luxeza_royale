@@ -7,13 +7,11 @@
     <CartSidebar />
 
     <!-- HERO -->
-    <section
-      class="min-h-screen bg-[#f8f5f2] px-6 pt-28 pb-20 flex items-center"
-    >
+    <section class="min-h-screen px-6 pt-28 pb-20 flex items-center">
       <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
         <!-- HERO CONTENT -->
         <div>
-          <p class="uppercase tracking-[6px] text-sm mb-6 text-gray-500">
+          <p class="uppercase tracking-[6px] text-sm mb-6 text-luxe-brown/75">
             Luxury Fashion
           </p>
 
@@ -29,14 +27,14 @@
           <div class="flex flex-col sm:flex-row gap-4">
             <button
               @click="goToProducts"
-              class="bg-black text-white px-10 py-5 rounded-full hover:scale-105 transition"
+              class="bg-luxe-espresso text-luxe-ivory px-10 py-5 rounded-full hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
             >
               Shop Collection
             </button>
 
             <button
               @click="goToCategories"
-              class="border border-black px-10 py-5 rounded-full hover:bg-black hover:text-white transition"
+              class="border border-luxe-espresso text-luxe-espresso px-10 py-5 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition"
             >
               Explore Categories
             </button>
@@ -45,17 +43,17 @@
           <div class="grid grid-cols-3 gap-6 mt-14 max-w-lg">
             <div>
               <p class="text-3xl font-bold">10+</p>
-              <p class="text-sm text-gray-500 mt-1">Curated Items</p>
+              <p class="text-sm text-luxe-brown/70 mt-1">Curated Items</p>
             </div>
 
             <div>
               <p class="text-3xl font-bold">5</p>
-              <p class="text-sm text-gray-500 mt-1">Categories</p>
+              <p class="text-sm text-luxe-brown/70 mt-1">Categories</p>
             </div>
 
             <div>
               <p class="text-3xl font-bold">100%</p>
-              <p class="text-sm text-gray-500 mt-1">Frontend Ready</p>
+              <p class="text-sm text-luxe-brown/70 mt-1">Frontend Ready</p>
             </div>
           </div>
         </div>
@@ -63,15 +61,15 @@
         <!-- HERO IMAGE -->
         <div class="relative">
           <div
-            class="absolute -top-6 -left-6 w-40 h-40 bg-black rounded-full opacity-5"
+            class="absolute -top-6 -left-6 w-40 h-40 bg-luxe-gold rounded-full opacity-20 blur-sm"
           ></div>
           <div
-            class="absolute -bottom-6 -right-6 w-52 h-52 border border-black/10 rounded-full"
+            class="absolute -bottom-6 -right-6 w-52 h-52 border border-luxe-brown/20 rounded-full"
           ></div>
 
           <div
             v-if="heroProduct"
-            class="relative overflow-hidden rounded-[2.5rem] bg-white shadow-2xl"
+            class="relative overflow-hidden rounded-[2.5rem] bg-luxe-ivory shadow-[0_30px_90px_rgba(92,56,36,0.18)] border border-luxe-sand/60"
           >
             <ProductImage
               :src="heroProduct.image"
@@ -80,18 +78,18 @@
             />
 
             <div
-              class="absolute bottom-6 left-6 right-6 bg-white/85 backdrop-blur-xl rounded-3xl p-5 flex items-center justify-between gap-4"
+              class="absolute bottom-6 left-6 right-6 bg-luxe-ivory/90 backdrop-blur-xl rounded-3xl p-5 flex items-center justify-between gap-4 border border-luxe-sand/50"
             >
               <div>
-                <p class="text-sm text-gray-500 mb-1">Featured Piece</p>
-                <h3 class="font-bold text-lg">
+                <p class="text-sm text-luxe-brown/70 mb-1">Featured Piece</p>
+                <h3 class="font-bold text-lg text-luxe-espresso">
                   {{ heroProduct.title }}
                 </h3>
               </div>
 
               <RouterLink
                 :to="`/product/${heroProduct.id}`"
-                class="bg-black text-white px-5 py-3 rounded-full text-sm hover:scale-105 transition"
+                class="bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full text-sm hover:bg-luxe-royal hover:scale-105 transition"
               >
                 View
               </RouterLink>
@@ -102,7 +100,7 @@
     </section>
 
     <!-- PROMO STRIP -->
-    <section class="bg-black text-white px-6 py-5">
+    <section class="bg-luxe-espresso text-luxe-ivory px-6 py-5">
       <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-6 text-center">
         <p class="text-sm tracking-[3px] uppercase">Premium Selection</p>
 
@@ -115,20 +113,20 @@
     </section>
 
     <!-- CATEGORY SPOTLIGHT -->
-    <section id="categories" class="py-24 px-6 bg-white">
+    <section id="categories" class="py-24 px-6 bg-luxe-ivory/70">
       <div class="max-w-7xl mx-auto">
         <div
           class="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
         >
           <div>
-            <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-3">
+            <p class="uppercase tracking-[4px] text-sm text-luxe-brown/75 mb-3">
               Shop By Category
             </p>
 
             <h2 class="text-4xl md:text-5xl font-bold">Luxury Essentials</h2>
           </div>
 
-          <p class="text-gray-500 max-w-md leading-7">
+          <p class="text-luxe-brown/75 max-w-md leading-7">
             Explore refined essentials across jackets, hoodies, t-shirts, pants,
             and shoes.
           </p>
@@ -148,7 +146,7 @@
             />
 
             <div
-              class="absolute inset-0 bg-black/35 group-hover:bg-black/45 transition"
+              class="absolute inset-0 bg-luxe-espresso/35 group-hover:bg-luxe-espresso/50 transition"
             ></div>
 
             <div
@@ -166,14 +164,14 @@
     </section>
 
     <!-- PRODUCTS -->
-    <section id="products" class="pt-28 pb-24 px-6 bg-white">
+    <section id="products" class="pt-28 pb-24 px-6 bg-luxe-ivory/80">
       <div class="max-w-7xl mx-auto">
         <!-- SECTION HEADER -->
         <div
           class="mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8"
         >
           <div>
-            <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-3">
+            <p class="uppercase tracking-[4px] text-sm text-luxe-brown/75 mb-3">
               Luxury Collection
             </p>
 
@@ -181,19 +179,19 @@
               Featured Products
             </h2>
 
-            <p class="text-gray-500 max-w-xl leading-7">
+            <p class="text-luxe-brown/75 max-w-xl leading-7">
               Discover curated premium fashion pieces designed for modern
               lifestyle.
             </p>
           </div>
 
-          <p class="text-sm text-gray-500">
+          <p class="text-sm text-luxe-brown/75">
             Showing
-            <span class="font-semibold text-black">
+            <span class="font-semibold text-luxe-espresso">
               {{ sortedProducts.length }}
             </span>
             result from
-            <span class="font-semibold text-black">
+            <span class="font-semibold text-luxe-espresso">
               {{ products.length }}
             </span>
             products
@@ -204,7 +202,7 @@
         <div class="mb-10 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6">
           <!-- SEARCH -->
           <div class="relative">
-            <label class="block text-sm text-gray-500 mb-2">
+            <label class="block text-sm text-luxe-brown/75 mb-2">
               Find your luxury items
             </label>
 
@@ -215,13 +213,13 @@
               @keyup.enter="handleSearchEnter"
               type="text"
               placeholder="Search by product, category, or description..."
-              class="border border-gray-300 px-6 py-4 rounded-full outline-none w-full lg:max-w-[520px] focus:border-black transition"
+              class="border border-luxe-sand bg-luxe-ivory px-6 py-4 rounded-full outline-none w-full lg:max-w-[520px] focus:border-luxe-royal transition text-luxe-espresso placeholder:text-luxe-brown/50 shadow-sm"
             />
 
             <!-- SEARCH PANEL -->
             <div
               v-if="showSearchPanel"
-              class="absolute left-0 right-0 lg:max-w-[520px] mt-3 bg-white border border-gray-100 rounded-3xl shadow-2xl p-4 z-40"
+              class="absolute left-0 right-0 lg:max-w-[520px] mt-3 bg-luxe-ivory border border-luxe-sand/60 rounded-3xl shadow-[0_18px_60px_rgba(92,56,36,0.14)] p-4 z-40"
             >
               <!-- PRODUCT SUGGESTIONS -->
               <div v-if="searchSuggestions.length > 0">
@@ -235,7 +233,7 @@
                     :key="product.id"
                     @mousedown.prevent="applyProductSuggestion(product)"
                     type="button"
-                    class="w-full flex items-center gap-4 p-3 rounded-2xl hover:bg-[#f8f5f2] transition text-left"
+                    class="w-full flex items-center gap-4 p-3 rounded-2xl hover:bg-luxe-cream transition text-left"
                   >
                     <ProductImage
                       :src="product.image"
@@ -248,7 +246,7 @@
                         {{ product.title }}
                       </p>
 
-                      <p class="text-sm text-gray-500">
+                      <p class="text-sm text-luxe-brown/75">
                         {{ product.category }} ·
                         {{ formatCurrency(product.price) }}
                       </p>
@@ -274,7 +272,7 @@
                   <button
                     @mousedown.prevent="clearRecentSearches"
                     type="button"
-                    class="text-xs text-gray-400 hover:text-black transition"
+                    class="text-xs text-luxe-brown/60 hover:text-luxe-espresso transition"
                   >
                     Clear
                   </button>
@@ -286,7 +284,7 @@
                     :key="keyword"
                     @mousedown.prevent="applySearchKeyword(keyword)"
                     type="button"
-                    class="px-4 py-2 rounded-full bg-[#f8f5f2] text-sm text-gray-600 hover:bg-black hover:text-white transition"
+                    class="px-4 py-2 rounded-full bg-luxe-cream text-sm text-luxe-brown hover:bg-luxe-espresso hover:text-luxe-ivory transition"
                   >
                     {{ keyword }}
                   </button>
@@ -297,14 +295,14 @@
 
           <!-- SORT -->
           <div class="relative">
-            <label class="block text-sm text-gray-500 mb-2">
+            <label class="block text-sm text-luxe-brown/75 mb-2">
               Sort products
             </label>
 
             <button
               @click="isSortOpen = !isSortOpen"
               type="button"
-              class="w-full lg:w-[280px] border border-gray-300 px-6 py-4 rounded-full bg-white flex items-center justify-between gap-4 hover:border-black transition"
+              class="w-full lg:w-[280px] border border-luxe-sand px-6 py-4 rounded-full bg-luxe-ivory text-luxe-espresso flex items-center justify-between gap-4 hover:border-luxe-royal transition shadow-sm"
             >
               <span class="font-medium">
                 {{ sortLabels[sortOption] }}
@@ -312,7 +310,7 @@
 
               <span
                 :class="isSortOpen ? 'rotate-180' : ''"
-                class="transition-transform duration-300 text-gray-500"
+                class="transition-transform duration-300 text-luxe-brown/75"
               >
                 ↓
               </span>
@@ -320,7 +318,7 @@
 
             <div
               v-if="isSortOpen"
-              class="absolute right-0 mt-3 w-full lg:w-[280px] bg-white border border-gray-100 rounded-3xl shadow-2xl p-3 z-30"
+              class="absolute right-0 mt-3 w-full lg:w-[280px] bg-luxe-ivory border border-luxe-sand/60 rounded-3xl shadow-[0_18px_60px_rgba(92,56,36,0.14)] p-3 z-30"
             >
               <button
                 v-for="option in sortOptions"
@@ -329,8 +327,8 @@
                 type="button"
                 :class="
                   sortOption === option.value
-                    ? 'bg-black text-white'
-                    : 'text-gray-600 hover:bg-[#f8f5f2]'
+                    ? 'bg-luxe-espresso text-luxe-ivory'
+                    : 'text-luxe-brown hover:bg-luxe-cream'
                 "
                 class="w-full text-left px-5 py-3 rounded-2xl transition"
               >
@@ -344,7 +342,7 @@
         <div
           class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
         >
-          <p class="text-sm text-gray-500">
+          <p class="text-sm text-luxe-brown/75">
             {{ activeFilterCount }} active filter
           </p>
 
@@ -353,7 +351,7 @@
             :disabled="activeFilterCount === 0"
             :class="
               activeFilterCount > 0
-                ? 'border-black text-black hover:bg-black hover:text-white'
+                ? 'border-luxe-espresso text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory'
                 : 'border-gray-200 text-gray-300 cursor-not-allowed'
             "
             class="text-sm border px-5 py-2 rounded-full transition w-fit"
@@ -364,7 +362,7 @@
 
         <!-- CATEGORIES -->
         <div class="mb-10">
-          <p class="text-sm text-gray-500 mb-3">Category</p>
+          <p class="text-sm text-luxe-brown/75 mb-3">Category</p>
 
           <div class="flex flex-wrap gap-4">
             <button
@@ -373,8 +371,8 @@
               @click="activeCategory = cat"
               :class="
                 activeCategory === cat
-                  ? 'bg-black text-white scale-105 shadow-lg'
-                  : 'border border-black hover:bg-gray-100'
+                  ? 'bg-luxe-espresso text-luxe-ivory scale-105 shadow-lg shadow-luxe-brown/20'
+                  : 'border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream'
               "
               class="px-6 py-2 rounded-full transition"
             >
@@ -387,7 +385,7 @@
         <div class="grid md:grid-cols-2 gap-8 mb-12">
           <!-- PRICE FILTER -->
           <div>
-            <p class="text-sm text-gray-500 mb-3">Price Range</p>
+            <p class="text-sm text-luxe-brown/75 mb-3">Price Range</p>
 
             <div class="flex flex-wrap gap-3">
               <button
@@ -396,8 +394,8 @@
                 @click="priceFilter = option.value"
                 :class="
                   priceFilter === option.value
-                    ? 'bg-black text-white'
-                    : 'bg-[#f8f5f2] text-gray-600 hover:bg-black hover:text-white'
+                    ? 'bg-luxe-espresso text-luxe-ivory'
+                    : 'bg-luxe-cream text-luxe-brown hover:bg-luxe-espresso hover:text-luxe-ivory'
                 "
                 class="px-5 py-3 rounded-full text-sm transition"
               >
@@ -408,7 +406,7 @@
 
           <!-- STOCK FILTER -->
           <div>
-            <p class="text-sm text-gray-500 mb-3">Availability</p>
+            <p class="text-sm text-luxe-brown/75 mb-3">Availability</p>
 
             <div class="flex flex-wrap gap-3">
               <button
@@ -417,8 +415,8 @@
                 @click="stockFilter = option.value"
                 :class="
                   stockFilter === option.value
-                    ? 'bg-black text-white'
-                    : 'bg-[#f8f5f2] text-gray-600 hover:bg-black hover:text-white'
+                    ? 'bg-luxe-espresso text-luxe-ivory'
+                    : 'bg-luxe-cream text-luxe-brown hover:bg-luxe-espresso hover:text-luxe-ivory'
                 "
                 class="px-5 py-3 rounded-full text-sm transition"
               >
@@ -453,7 +451,7 @@
 
             <button
               @click="loadProducts"
-              class="bg-black text-white px-8 py-4 rounded-full inline-block hover:scale-105 transition"
+              class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full inline-block hover:bg-luxe-royal hover:scale-105 transition"
             >
               Try Again
             </button>
@@ -480,18 +478,21 @@
           </div>
 
           <!-- EMPTY STATE -->
-          <div v-else class="text-center py-24 bg-[#f8f5f2] rounded-3xl">
+          <div
+            v-else
+            class="text-center py-24 bg-luxe-cream rounded-3xl border border-luxe-sand/60 shadow-[0_18px_60px_rgba(92,56,36,0.10)]"
+          >
             <p class="text-5xl mb-5">🔎</p>
 
             <h3 class="text-2xl font-bold mb-3">No products found</h3>
 
-            <p class="text-gray-500 mb-8">
+            <p class="text-luxe-brown/75 mb-8">
               Try another keyword or select a different category.
             </p>
 
             <button
               @click="resetFilters"
-              class="bg-black text-white px-8 py-4 rounded-full hover:scale-105 transition"
+              class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full hover:bg-luxe-royal hover:scale-105 transition"
             >
               Reset Filters
             </button>
@@ -501,12 +502,12 @@
     </section>
 
     <!-- EDITORIAL BANNER -->
-    <section class="px-6 pb-24 bg-white">
+    <section class="px-6 pb-24 bg-luxe-ivory/80">
       <div
-        class="max-w-7xl mx-auto bg-[#f8f5f2] rounded-[2.5rem] overflow-hidden grid lg:grid-cols-2"
+        class="max-w-7xl mx-auto bg-luxe-cream rounded-[2.5rem] overflow-hidden grid lg:grid-cols-2 border border-luxe-sand/60 shadow-[0_24px_80px_rgba(92,56,36,0.14)]"
       >
         <div class="p-10 md:p-16 flex flex-col justify-center">
-          <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-4">
+          <p class="uppercase tracking-[4px] text-sm text-luxe-brown/75 mb-4">
             Editorial Collection
           </p>
 
@@ -522,7 +523,7 @@
 
           <button
             @click="goToProducts"
-            class="bg-black text-white px-8 py-4 rounded-full w-fit hover:scale-105 transition"
+            class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full w-fit hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
           >
             Browse Products
           </button>

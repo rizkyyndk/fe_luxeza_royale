@@ -3,32 +3,32 @@
     <!-- OVERLAY -->
     <div
       @click="uiStore.closeCart()"
-      class="fixed inset-0 bg-black/40 z-40"
+      class="fixed inset-0 bg-luxe-espresso/45 backdrop-blur-sm z-40"
     ></div>
 
     <!-- SIDEBAR -->
     <aside
-      class="fixed top-0 right-0 w-full sm:w-[440px] h-screen bg-white shadow-2xl z-50 flex flex-col"
+      class="fixed top-0 right-0 w-full sm:w-[440px] h-screen bg-luxe-ivory border-l border-luxe-sand/60 shadow-[0_24px_90px_rgba(92,56,36,0.22)] z-50 flex flex-col"
     >
       <!-- HEADER -->
       <div
-        class="p-6 border-b border-gray-200 flex items-center justify-between"
+        class="p-6 border-b border-luxe-sand/60 flex items-center justify-between"
       >
         <div>
-          <p class="uppercase tracking-[3px] text-xs text-gray-400 mb-1">
+          <p class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-1">
             Shopping Bag
           </p>
 
           <h2 class="text-2xl font-bold">Your Cart</h2>
 
-          <p class="text-sm text-gray-500 mt-1">
+          <p class="text-sm text-luxe-brown/70 mt-1">
             {{ cartStore.totalItems }} item in cart
           </p>
         </div>
 
         <button
           @click="uiStore.closeCart()"
-          class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-2xl leading-none hover:bg-black hover:text-white transition"
+          class="w-10 h-10 rounded-full border border-luxe-sand text-luxe-espresso flex items-center justify-center text-2xl leading-none hover:bg-luxe-espresso hover:text-luxe-ivory transition"
         >
           ×
         </button>
@@ -43,13 +43,13 @@
 
         <h3 class="text-xl font-semibold mb-2">Your cart is empty</h3>
 
-        <p class="text-gray-500 mb-8 leading-7">
+        <p class="text-luxe-brown/70 mb-8 leading-7">
           Discover our luxury collection and add your favorite pieces.
         </p>
 
         <button
           @click="goToProducts"
-          class="bg-black text-white px-8 py-4 rounded-full hover:scale-105 transition"
+          class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
         >
           Start Shopping
         </button>
@@ -58,18 +58,22 @@
       <!-- CART CONTENT -->
       <template v-else>
         <!-- CART SUMMARY -->
-        <div class="px-6 py-5 border-b border-gray-100 bg-[#f8f5f2]">
+        <div class="px-6 py-5 border-b border-luxe-sand/60 bg-luxe-cream">
           <div class="grid grid-cols-2 gap-4 mb-5">
-            <div class="bg-white rounded-3xl p-4">
-              <p class="text-xs text-gray-400 mb-1">Selected Items</p>
+            <div
+              class="bg-luxe-ivory rounded-3xl p-4 border border-luxe-sand/50 shadow-sm"
+            >
+              <p class="text-xs text-luxe-brown/70 mb-1">Selected Items</p>
 
               <p class="text-xl font-bold">
                 {{ cartStore.selectedTotalItems }}
               </p>
             </div>
 
-            <div class="bg-white rounded-3xl p-4">
-              <p class="text-xs text-gray-400 mb-1">Selected Total</p>
+            <div
+              class="bg-luxe-ivory rounded-3xl p-4 border border-luxe-sand/50 shadow-sm"
+            >
+              <p class="text-xs text-luxe-brown/70 mb-1">Selected Total</p>
 
               <p class="text-xl font-bold">
                 {{ formatPrice(cartStore.selectedTotalPrice) }}
@@ -78,23 +82,27 @@
           </div>
 
           <!-- FREE SHIPPING PROGRESS -->
-          <div class="bg-white rounded-3xl p-4">
+          <div
+            class="bg-luxe-ivory rounded-3xl p-4 border border-luxe-sand/50 shadow-sm"
+          >
             <div class="flex items-center justify-between gap-4 mb-3">
               <p class="text-sm font-semibold">Free Shipping Progress</p>
 
-              <p class="text-xs text-gray-500">{{ freeShippingProgress }}%</p>
+              <p class="text-xs text-luxe-brown/70">
+                {{ freeShippingProgress }}%
+              </p>
             </div>
 
             <div
               class="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-3"
             >
               <div
-                class="h-full bg-black rounded-full transition-all duration-500"
+                class="h-full bg-luxe-espresso rounded-full transition-all duration-500"
                 :style="{ width: `${freeShippingProgress}%` }"
               ></div>
             </div>
 
-            <p class="text-xs text-gray-500 leading-5">
+            <p class="text-xs text-luxe-brown/70 leading-5">
               <span v-if="remainingForFreeShipping > 0">
                 Add {{ formatPrice(remainingForFreeShipping) }} more selected
                 items to get free shipping.
@@ -109,7 +117,7 @@
 
         <!-- SELECT ALL -->
         <div
-          class="px-6 py-4 border-b border-gray-100 flex items-center justify-between"
+          class="px-6 py-4 border-b border-luxe-sand/60 flex items-center justify-between"
         >
           <label class="flex items-center gap-3 cursor-pointer">
             <input
@@ -125,7 +133,7 @@
           <button
             v-if="cartStore.hasSelectedItems"
             @click="cartStore.removeSelectedItems()"
-            class="text-sm text-gray-400 hover:text-red-500 transition"
+            class="text-sm text-luxe-brown/70 hover:text-red-500 transition"
           >
             Remove selected
           </button>
@@ -138,8 +146,8 @@
             :key="`${item.id}-${item.size}`"
             :class="
               item.selected
-                ? 'opacity-100 border-black/10 bg-white'
-                : 'opacity-55 border-gray-100 bg-gray-50'
+                ? 'opacity-100 border-black/10 bg-luxe-ivory shadow-sm'
+                : 'opacity-55 border-luxe-sand/60 bg-gray-50'
             "
             class="flex gap-4 border rounded-3xl p-4 transition"
           >
@@ -169,28 +177,28 @@
 
                     <span
                       v-if="item.selected"
-                      class="text-[10px] uppercase tracking-[2px] bg-black text-white px-2 py-1 rounded-full"
+                      class="text-[10px] uppercase tracking-[2px] bg-luxe-espresso text-luxe-ivory px-2 py-1 rounded-full"
                     >
                       Selected
                     </span>
                   </div>
 
-                  <p class="text-gray-500 text-sm">
+                  <p class="text-luxe-brown/70 text-sm">
                     {{ formatPrice(item.price) }}
                   </p>
 
-                  <p class="text-sm text-gray-400 mt-1">
+                  <p class="text-sm text-luxe-brown/70 mt-1">
                     Size: {{ item.size }}
                   </p>
 
-                  <p class="text-sm text-gray-400 mt-1">
+                  <p class="text-sm text-luxe-brown/70 mt-1">
                     Stock: {{ item.stock }}
                   </p>
                 </div>
 
                 <button
                   @click="cartStore.removeItem(item.id, item.size)"
-                  class="text-gray-400 hover:text-black transition"
+                  class="text-luxe-brown/60 hover:text-luxe-espresso transition"
                 >
                   ×
                 </button>
@@ -201,7 +209,7 @@
                 <div class="flex items-center gap-3">
                   <button
                     @click="cartStore.decreaseQuantity(item.id, item.size)"
-                    class="w-8 h-8 rounded-full border border-gray-300 hover:bg-black hover:text-white transition"
+                    class="w-8 h-8 rounded-full border border-luxe-sand text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory transition"
                   >
                     -
                   </button>
@@ -220,9 +228,9 @@
                       typeof item.stock === 'number' &&
                       item.quantity >= item.stock
                         ? 'opacity-40 cursor-not-allowed'
-                        : 'hover:bg-black hover:text-white'
+                        : 'hover:bg-luxe-espresso hover:text-luxe-ivory'
                     "
-                    class="w-8 h-8 rounded-full border border-gray-300 transition"
+                    class="w-8 h-8 rounded-full border border-luxe-sand/60 transition"
                   >
                     +
                   </button>
@@ -237,10 +245,10 @@
         </div>
 
         <!-- FOOTER -->
-        <div class="p-6 border-t border-gray-200 bg-white">
+        <div class="p-6 border-t border-luxe-sand/60 bg-luxe-ivory">
           <div class="space-y-3 mb-6">
             <div class="flex items-center justify-between">
-              <span class="text-gray-500"> Selected subtotal </span>
+              <span class="text-luxe-brown/70"> Selected subtotal </span>
 
               <span class="font-semibold">
                 {{ formatPrice(cartStore.selectedTotalPrice) }}
@@ -248,7 +256,7 @@
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-gray-500"> Estimated shipping </span>
+              <span class="text-luxe-brown/70"> Estimated shipping </span>
 
               <span class="font-semibold">
                 {{ estimatedShippingLabel }}
@@ -256,7 +264,7 @@
             </div>
 
             <div
-              class="flex items-center justify-between border-t border-gray-100 pt-4"
+              class="flex items-center justify-between border-t border-luxe-sand/60 pt-4"
             >
               <span class="text-lg"> Estimated total </span>
 
@@ -271,8 +279,8 @@
             :disabled="!cartStore.hasSelectedItems"
             :class="
               cartStore.hasSelectedItems
-                ? 'bg-black text-white hover:scale-[1.02]'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                ? 'bg-luxe-espresso text-luxe-ivory hover:bg-luxe-royal hover:scale-[1.02] shadow-lg shadow-luxe-brown/20'
+                : 'bg-luxe-sand/60 text-luxe-brown/60 cursor-not-allowed'
             "
             class="w-full py-4 rounded-full text-lg transition"
           >
@@ -281,7 +289,7 @@
 
           <button
             @click="cartStore.clearCart()"
-            class="w-full mt-4 text-sm text-gray-500 hover:text-black transition"
+            class="w-full mt-4 text-sm text-luxe-brown/70 hover:text-luxe-espresso transition"
           >
             Clear Cart
           </button>

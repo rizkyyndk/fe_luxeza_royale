@@ -1,12 +1,17 @@
 <template>
   <header
-    class="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100"
+    class="fixed top-0 left-0 w-full z-50 bg-luxe-ivory/85 backdrop-blur-xl border-b border-luxe-sand/60 shadow-sm"
   >
     <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
       <!-- LOGO -->
-      <RouterLink to="/" class="flex flex-col leading-none">
-        <span class="text-2xl font-bold tracking-wide">LUXEZA</span>
-        <span class="text-[10px] tracking-[4px] text-gray-400 uppercase">
+      <RouterLink to="/" class="flex flex-col leading-none group">
+        <span
+          class="text-2xl font-bold tracking-wide text-luxe-espresso group-hover:text-luxe-royal transition"
+        >
+          LUXEZA
+        </span>
+
+        <span class="text-[10px] tracking-[4px] text-luxe-gold uppercase">
           Royale
         </span>
       </RouterLink>
@@ -15,38 +20,44 @@
       <nav class="hidden md:flex items-center gap-8 font-medium text-sm">
         <RouterLink
           to="/"
-          :class="route.path === '/' ? 'text-black' : 'text-gray-500'"
-          class="hover:text-black transition"
+          :class="route.path === '/' ? 'text-luxe-espresso' : 'text-luxe-brown'"
+          class="hover:text-luxe-espresso transition"
         >
           Home
         </RouterLink>
 
         <button
           @click="goToProducts"
-          class="text-gray-500 hover:text-black transition"
+          class="text-luxe-brown hover:text-luxe-espresso transition"
         >
           Shop
         </button>
 
         <button
           @click="goToProducts"
-          class="text-gray-500 hover:text-black transition"
+          class="text-luxe-brown hover:text-luxe-espresso transition"
         >
           Collections
         </button>
 
         <RouterLink
           to="/wishlist"
-          :class="route.path === '/wishlist' ? 'text-black' : 'text-gray-500'"
-          class="hover:text-black transition"
+          :class="
+            route.path === '/wishlist'
+              ? 'text-luxe-espresso'
+              : 'text-luxe-brown'
+          "
+          class="hover:text-luxe-espresso transition"
         >
           Wishlist
         </RouterLink>
 
         <RouterLink
           to="/orders"
-          :class="route.path === '/orders' ? 'text-black' : 'text-gray-500'"
-          class="hover:text-black transition"
+          :class="
+            route.path === '/orders' ? 'text-luxe-espresso' : 'text-luxe-brown'
+          "
+          class="hover:text-luxe-espresso transition"
         >
           Orders
         </RouterLink>
@@ -57,13 +68,13 @@
         <!-- WISHLIST -->
         <RouterLink
           to="/wishlist"
-          class="relative w-11 h-11 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition"
+          class="relative w-11 h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
         >
           <span class="text-xl">♡</span>
 
           <span
             v-if="wishlistStore.totalWishlistItems"
-            class="absolute -top-2 -right-2 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+            class="absolute -top-2 -right-2 bg-luxe-royal text-luxe-ivory text-xs w-5 h-5 rounded-full flex items-center justify-center"
           >
             {{ wishlistStore.totalWishlistItems }}
           </span>
@@ -72,13 +83,13 @@
         <!-- CART -->
         <button
           @click="uiStore.toggleCart()"
-          class="relative w-11 h-11 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition"
+          class="relative w-11 h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
         >
           <span class="text-lg">🛒</span>
 
           <span
             v-if="cartStore.totalItems"
-            class="absolute -top-2 -right-2 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+            class="absolute -top-2 -right-2 bg-luxe-royal text-luxe-ivory text-xs w-5 h-5 rounded-full flex items-center justify-center"
           >
             {{ cartStore.totalItems }}
           </span>
@@ -87,7 +98,7 @@
         <!-- MOBILE MENU BUTTON -->
         <button
           @click="isMobileMenuOpen = true"
-          class="md:hidden w-11 h-11 rounded-full border border-gray-200 flex items-center justify-center text-2xl"
+          class="md:hidden w-11 h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center text-2xl hover:bg-luxe-espresso hover:text-luxe-ivory transition"
         >
           ☰
         </button>
@@ -100,41 +111,46 @@
     <!-- OVERLAY -->
     <div
       @click="isMobileMenuOpen = false"
-      class="absolute inset-0 bg-black/50"
+      class="absolute inset-0 bg-luxe-espresso/60"
     ></div>
 
     <!-- SIDEBAR -->
     <aside
-      class="absolute right-0 top-0 w-full max-w-[340px] h-screen bg-white p-8 shadow-2xl"
+      class="absolute right-0 top-0 w-full max-w-[340px] h-screen bg-luxe-ivory p-8 shadow-2xl"
     >
       <div class="flex items-center justify-between mb-12">
         <div>
-          <h2 class="text-2xl font-bold">Menu</h2>
-          <p class="text-sm text-gray-400 mt-1">Luxeza Royale</p>
+          <h2 class="text-2xl font-bold text-luxe-espresso">Menu</h2>
+          <p class="text-sm text-luxe-brown mt-1">Luxeza Royale</p>
         </div>
 
-        <button @click="isMobileMenuOpen = false" class="text-3xl">×</button>
+        <button
+          @click="isMobileMenuOpen = false"
+          class="text-3xl text-luxe-espresso hover:text-luxe-royal transition"
+        >
+          ×
+        </button>
       </div>
 
-      <nav class="flex flex-col gap-3 text-lg font-medium">
+      <nav class="flex flex-col gap-3 text-lg font-medium text-luxe-espresso">
         <RouterLink
           to="/"
           @click="isMobileMenuOpen = false"
-          class="px-5 py-4 rounded-2xl hover:bg-[#f8f5f2] transition"
+          class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
           Home
         </RouterLink>
 
         <button
           @click="goToProductsFromMobile"
-          class="text-left px-5 py-4 rounded-2xl hover:bg-[#f8f5f2] transition"
+          class="text-left px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
           Shop
         </button>
 
         <button
           @click="goToProductsFromMobile"
-          class="text-left px-5 py-4 rounded-2xl hover:bg-[#f8f5f2] transition"
+          class="text-left px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
           Collections
         </button>
@@ -142,7 +158,7 @@
         <RouterLink
           to="/checkout"
           @click="isMobileMenuOpen = false"
-          class="px-5 py-4 rounded-2xl hover:bg-[#f8f5f2] transition"
+          class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
           Checkout
         </RouterLink>
@@ -150,7 +166,7 @@
         <RouterLink
           to="/wishlist"
           @click="isMobileMenuOpen = false"
-          class="px-5 py-4 rounded-2xl hover:bg-[#f8f5f2] transition"
+          class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
           Wishlist
         </RouterLink>
@@ -158,7 +174,7 @@
         <RouterLink
           to="/orders"
           @click="isMobileMenuOpen = false"
-          class="px-5 py-4 rounded-2xl hover:bg-[#f8f5f2] transition"
+          class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
           Orders
         </RouterLink>
@@ -185,7 +201,7 @@ const route = useRoute();
 const isMobileMenuOpen = ref(false);
 
 const goToProducts = async () => {
-  if (window.location.pathname !== "/") {
+  if (route.path !== "/") {
     await router.push("/");
   }
 

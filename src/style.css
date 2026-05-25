@@ -2,11 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: Inter, sans-serif;
-}
-
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(176, 138, 98, 0.12), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(139, 94, 60, 0.10), transparent 28%),
+    linear-gradient(180deg, #fffdf8 0%, #f8f1e7 45%, #fffdf8 100%);
+  color: #2b1a12;
+}
+
+::selection {
+  background: #8b5e3c;
+  color: #fffdf8;
 }
