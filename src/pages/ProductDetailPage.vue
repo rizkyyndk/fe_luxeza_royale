@@ -10,7 +10,21 @@
       @close="isSizeGuideOpen = false"
     />
 
-    <section v-if="product" class="pt-28 pb-24 px-6">
+    <section v-if="isLoading" class="pt-28 pb-24 px-6">
+      <div class="max-w-7xl mx-auto text-center py-24">
+        <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-4">
+          Loading Product
+        </p>
+
+        <h1 class="text-4xl md:text-5xl font-bold mb-5">Please wait...</h1>
+
+        <p class="text-gray-500 leading-7">
+          Product detail is being loaded from database.
+        </p>
+      </div>
+    </section>
+
+    <section v-else-if="product" class="pt-28 pb-24 px-6">
       <div class="max-w-7xl mx-auto">
         <!-- BREADCRUMB -->
         <div class="mb-10 flex items-center gap-2 text-sm text-gray-500">
@@ -129,20 +143,22 @@
             </p>
 
             <!-- PRODUCT INFO -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-              <div class="bg-[#f8f5f2] rounded-3xl p-5">
-                <p class="text-sm text-gray-500 mb-2">Material</p>
-                <p class="font-semibold">Premium Fabric</p>
-              </div>
+            <div
+              v-if="productAttributes.length > 0"
+              class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10"
+            >
+              <div
+                v-for="attribute in productAttributes"
+                :key="attribute.id || attribute.label"
+                class="bg-[#f8f5f2] rounded-3xl p-5"
+              >
+                <p class="text-sm text-gray-500 mb-2">
+                  {{ attribute.label }}
+                </p>
 
-              <div class="bg-[#f8f5f2] rounded-3xl p-5">
-                <p class="text-sm text-gray-500 mb-2">Fit</p>
-                <p class="font-semibold">Modern Luxury</p>
-              </div>
-
-              <div class="bg-[#f8f5f2] rounded-3xl p-5">
-                <p class="text-sm text-gray-500 mb-2">Style</p>
-                <p class="font-semibold">Minimalist</p>
+                <p class="font-semibold">
+                  {{ attribute.value }}
+                </p>
               </div>
             </div>
 
@@ -300,7 +316,6 @@
       </div>
     </section>
 
-    <!-- PRODUCT NOT FOUND -->
     <section
       v-else
       class="min-h-screen pt-40 pb-24 px-6 flex items-center justify-center"
@@ -335,14 +350,14 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
 import ProductCard from "../components/product/ProductCard.vue";
 
-import { products } from "../data/products";
+import { productService } from "../services/productService";
 import { useCartStore } from "../stores/cartStore";
 import { useUiStore } from "../stores/uiStore";
 import { useWishlistStore } from "../stores/wishlistStore";
@@ -361,19 +376,91 @@ const uiStore = useUiStore();
 const wishlistStore = useWishlistStore();
 const toastStore = useToastStore();
 
+const product = ref(null);
+const relatedProducts = ref([]);
+const isLoading = ref(false);
+const loadError = ref("");
+
+const selectedSize = ref("");
+const quantity = ref(1);
+const errorMessage = ref("");
+const selectedImageIndex = ref(0);
+const isSizeGuideOpen = ref(false);
+
+const hasStockLimit = (stock) => {
+  return typeof stock === "number" && Number.isFinite(stock);
+};
+
+const resetProductState = () => {
+  selectedSize.value = "";
+  quantity.value = 1;
+  errorMessage.value = "";
+  selectedImageIndex.value = 0;
+  isSizeGuideOpen.value = false;
+};
+
+const loadProduct = async () => {
+  const productIdOrSlug = route.params.id;
+
+  if (!productIdOrSlug) {
+    return;
+  }
+
+  isLoading.value = true;
+  loadError.value = "";
+  product.value = null;
+  relatedProducts.value = [];
+  resetProductState();
+
+  try {
+    const loadedProduct = await productService.getProductById(productIdOrSlug);
+    product.value = loadedProduct;
+
+    if (loadedProduct) {
+      relatedProducts.value = await productService.getRelatedProducts(
+        loadedProduct.category,
+        loadedProduct.slug || loadedProduct.id,
+      );
+    }
+  } catch (error) {
+    console.error("Failed to load product detail:", error);
+
+    loadError.value =
+      error?.response?.data?.message ||
+      error?.message ||
+      "Failed to load product detail.";
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 const availableSizes = computed(() => {
-  return product.value?.sizes || ["S", "M", "L", "XL"];
+  return product.value?.sizes?.length
+    ? product.value.sizes
+    : ["S", "M", "L", "XL"];
 });
 
 const stockStatus = computed(() => {
   if (!product.value) return "Unavailable";
+
+  if (!hasStockLimit(product.value.stock)) return "In Stock";
+
   if (product.value.stock <= 0) return "Out of Stock";
   if (product.value.stock <= 3) return "Low Stock";
+
   return "In Stock";
 });
 
 const stockStatusClass = computed(() => {
-  if (!product.value || product.value.stock <= 0) {
+  if (!product.value) {
+    return "bg-red-50 text-red-600";
+  }
+
+  if (!hasStockLimit(product.value.stock)) {
+    return "bg-black text-white";
+  }
+
+  if (product.value.stock <= 0) {
     return "bg-red-50 text-red-600";
   }
 
@@ -385,17 +472,10 @@ const stockStatusClass = computed(() => {
 });
 
 const isOutOfStock = computed(() => {
-  return !product.value || product.value.stock <= 0;
-});
-
-const selectedSize = ref("");
-const quantity = ref(1);
-const errorMessage = ref("");
-const selectedImageIndex = ref(0);
-const isSizeGuideOpen = ref(false);
-
-const product = computed(() => {
-  return products.find((item) => item.id === Number(route.params.id));
+  return (
+    !product.value ||
+    (hasStockLimit(product.value.stock) && product.value.stock <= 0)
+  );
 });
 
 const galleryImages = computed(() => {
@@ -405,23 +485,19 @@ const galleryImages = computed(() => {
     return product.value.images;
   }
 
-  return [product.value.image];
+  return product.value.image ? [product.value.image] : [];
 });
 
 const selectedImage = computed(() => {
-  return galleryImages.value[selectedImageIndex.value] || product.value?.image;
+  return (
+    galleryImages.value[selectedImageIndex.value] || product.value?.image || ""
+  );
 });
 
-const relatedProducts = computed(() => {
-  if (!product.value) return [];
-
-  return products
-    .filter(
-      (item) =>
-        item.category === product.value.category &&
-        item.id !== product.value.id,
-    )
-    .slice(0, 4);
+const productAttributes = computed(() => {
+  return Array.isArray(product.value?.attributes)
+    ? product.value.attributes
+    : [];
 });
 
 const selectSize = (size) => {
@@ -432,7 +508,10 @@ const selectSize = (size) => {
 const increaseQuantity = () => {
   if (!product.value) return;
 
-  if (quantity.value >= product.value.stock) {
+  if (
+    hasStockLimit(product.value.stock) &&
+    quantity.value >= product.value.stock
+  ) {
     toastStore.showToast({
       title: "Stock Limit Reached",
       message: `Only ${product.value.stock} item available.`,
@@ -488,7 +567,7 @@ const addToCart = () => {
 
   if (!product.value) return;
 
-  if (product.value.stock <= 0) {
+  if (hasStockLimit(product.value.stock) && product.value.stock <= 0) {
     toastStore.showToast({
       title: "Out of Stock",
       message: "This product is currently unavailable.",
@@ -498,7 +577,10 @@ const addToCart = () => {
     return;
   }
 
-  if (quantity.value > product.value.stock) {
+  if (
+    hasStockLimit(product.value.stock) &&
+    quantity.value > product.value.stock
+  ) {
     toastStore.showToast({
       title: "Stock Limit Reached",
       message: `Only ${product.value.stock} item available.`,
@@ -567,14 +649,18 @@ const goToProducts = async () => {
   }, 150);
 };
 
+onMounted(() => {
+  loadProduct();
+});
+
 watch(
   () => route.params.id,
-  () => {
-    selectedSize.value = "";
-    quantity.value = 1;
-    errorMessage.value = "";
-    selectedImageIndex.value = 0;
-    isSizeGuideOpen.value = false;
+  (newId) => {
+    if (!newId) {
+      return;
+    }
+
+    loadProduct();
 
     window.scrollTo({
       top: 0,

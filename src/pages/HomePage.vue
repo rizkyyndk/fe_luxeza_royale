@@ -70,6 +70,7 @@
           ></div>
 
           <div
+            v-if="heroProduct"
             class="relative overflow-hidden rounded-[2.5rem] bg-white shadow-2xl"
           >
             <ProductImage
@@ -437,6 +438,27 @@
             <ProductCardSkeleton v-for="item in 8" :key="item" />
           </div>
 
+          <!-- PRODUCT ERROR -->
+          <div
+            v-else-if="productErrorMessage"
+            class="text-center py-24 bg-red-50 rounded-3xl"
+          >
+            <p class="text-5xl mb-5">⚠️</p>
+
+            <h3 class="text-2xl font-bold mb-3">Failed to load products</h3>
+
+            <p class="text-red-500 mb-8">
+              {{ productErrorMessage }}
+            </p>
+
+            <button
+              @click="loadProducts"
+              class="bg-black text-white px-8 py-4 rounded-full inline-block hover:scale-105 transition"
+            >
+              Try Again
+            </button>
+          </div>
+
           <!-- PRODUCT GRID -->
           <div
             v-else-if="sortedProducts.length > 0"
@@ -506,7 +528,7 @@
           </button>
         </div>
 
-        <div class="min-h-[420px]">
+        <div v-if="editorialProduct" class="min-h-[420px]">
           <ProductImage
             :src="editorialProduct.image"
             :alt="editorialProduct.title"
@@ -531,8 +553,9 @@ import ProductCardSkeleton from "../components/ui/ProductCardSkeleton.vue";
 import ProductImage from "../components/ui/ProductImage.vue";
 import { formatCurrency } from "../utils/formatCurrency";
 
-import { products } from "../data/products";
+import { productService } from "../services/productService";
 
+const products = ref([]);
 const search = ref("");
 const activeCategory = ref("All");
 const sortOption = ref("featured");
@@ -540,6 +563,7 @@ const priceFilter = ref("all");
 const stockFilter = ref("all");
 const isSortOpen = ref(false);
 const isLoadingProducts = ref(true);
+const productErrorMessage = ref("");
 
 const isSearchFocused = ref(false);
 const RECENT_SEARCH_KEY = "recentSearches";
@@ -625,32 +649,50 @@ const sortLabels = {
   "name-az": "Name: A to Z",
 };
 
-onMounted(() => {
-  setTimeout(() => {
+const loadProducts = async () => {
+  isLoadingProducts.value = true;
+  productErrorMessage.value = "";
+
+  try {
+    products.value = await productService.getProducts();
+  } catch (error) {
+    console.error("Failed to load products:", error);
+
+    productErrorMessage.value =
+      error?.response?.data?.message ||
+      error?.message ||
+      "Failed to load products from database.";
+
+    products.value = [];
+  } finally {
     isLoadingProducts.value = false;
-  }, 700);
+  }
+};
+
+onMounted(() => {
+  loadProducts();
 });
 
 const heroProduct = computed(() => {
-  return products[0];
+  return products.value[0] || null;
 });
 
 const editorialProduct = computed(() => {
-  return products[4] || products[0];
+  return products.value[4] || products.value[0] || null;
 });
 
 const categories = computed(() => {
-  const productCategories = products.map((product) => product.category);
+  const productCategories = products.value.map((product) => product.category);
   return ["All", ...new Set(productCategories)];
 });
 
 const categoryCards = computed(() => {
   const uniqueCategories = [
-    ...new Set(products.map((product) => product.category)),
+    ...new Set(products.value.map((product) => product.category)),
   ];
 
   return uniqueCategories.map((category) => {
-    const product = products.find((item) => item.category === category);
+    const product = products.value.find((item) => item.category === category);
 
     return {
       name: category,
@@ -676,7 +718,7 @@ const searchSuggestions = computed(() => {
 
   if (!keyword) return [];
 
-  return products
+  return products.value
     .filter((product) => {
       return (
         product.title.toLowerCase().includes(keyword) ||
@@ -697,7 +739,7 @@ const showSearchPanel = computed(() => {
 const filteredProducts = computed(() => {
   const keyword = search.value.toLowerCase().trim();
 
-  return products.filter((product) => {
+  return products.value.filter((product) => {
     const matchSearch =
       product.title.toLowerCase().includes(keyword) ||
       product.category.toLowerCase().includes(keyword) ||
