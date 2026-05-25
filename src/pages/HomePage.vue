@@ -223,7 +223,9 @@
             >
               <!-- PRODUCT SUGGESTIONS -->
               <div v-if="searchSuggestions.length > 0">
-                <p class="text-xs uppercase tracking-[3px] text-gray-400 mb-3">
+                <p
+                  class="text-xs uppercase tracking-[3px] text-luxe-brown/60 mb-3"
+                >
                   Suggestions
                 </p>
 
@@ -265,7 +267,9 @@
                 "
               >
                 <div class="flex items-center justify-between mb-3">
-                  <p class="text-xs uppercase tracking-[3px] text-gray-400">
+                  <p
+                    class="text-xs uppercase tracking-[3px] text-luxe-brown/60"
+                  >
                     Recent Search
                   </p>
 

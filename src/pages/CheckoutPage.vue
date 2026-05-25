@@ -17,13 +17,13 @@
               No selected items
             </h1>
 
-            <p class="text-gray-500 mb-8">
+            <p class="text-luxe-brown/75 mb-8">
               Please select at least one item from your cart before checkout.
             </p>
 
             <RouterLink
               to="/"
-              class="bg-black text-white px-8 py-4 rounded-full inline-block hover:scale-105 transition"
+              class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full inline-block hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
             >
               Back to Collection
             </RouterLink>
@@ -34,7 +34,7 @@
         <div v-else class="grid lg:grid-cols-2 gap-20">
           <!-- LEFT -->
           <div>
-            <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-4">
+            <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
               Checkout
             </p>
 
@@ -296,7 +296,7 @@
                   Order Summary
                 </h2>
 
-                <span class="text-sm text-gray-500">
+                <span class="text-sm text-luxe-brown/70">
                   {{ cartStore.selectedTotalItems }} selected item
                 </span>
               </div>
@@ -319,11 +319,11 @@
                       {{ item.title }}
                     </h3>
 
-                    <p class="text-gray-500 text-sm mt-1">
+                    <p class="text-luxe-brown/70 text-sm mt-1">
                       Size: {{ item.size }}
                     </p>
 
-                    <p class="text-gray-500 text-sm">
+                    <p class="text-luxe-brown/70 text-sm">
                       Qty: {{ item.quantity }}
                     </p>
                   </div>
@@ -336,7 +336,7 @@
 
               <!-- VOUCHER -->
               <div class="mb-8 border-t border-luxe-sand pt-6">
-                <label class="block text-sm text-gray-500 mb-3">
+                <label class="block text-sm text-luxe-brown/75 mb-3">
                   Voucher Code
                 </label>
 
@@ -349,7 +349,7 @@
                     @keyup.enter="applyVoucher"
                     type="text"
                     placeholder="Enter voucher code"
-                    class="flex-1 border border-luxe-sand rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition bg-white text-luxe-espresso placeholder:text-luxe-brown/50"
+                    class="flex-1 border border-luxe-sand rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
                   />
 
                   <button
@@ -370,7 +370,7 @@
                       {{ appliedVoucher.code }}
                     </p>
 
-                    <p class="text-sm text-gray-500 mt-1">
+                    <p class="text-sm text-luxe-brown/70 mt-1">
                       <span v-if="appliedVoucher.discountType === 'percentage'">
                         {{ appliedVoucher.discountValue }}% off
                       </span>
@@ -384,7 +384,7 @@
                   <button
                     @click="removeVoucher"
                     type="button"
-                    class="text-sm text-gray-400 hover:text-black transition"
+                    class="text-sm text-luxe-brown/60 hover:text-luxe-espresso transition"
                   >
                     Remove
                   </button>
@@ -394,7 +394,7 @@
                   {{ voucherError }}
                 </p>
 
-                <p v-else class="text-gray-400 text-sm mt-3">
+                <p v-else class="text-luxe-brown/60 text-sm mt-3">
                   Try code:
                   <span class="font-semibold text-luxe-royal"> LRDISC10 </span>
                 </p>
@@ -403,7 +403,7 @@
               <!-- PRICE DETAIL -->
               <div class="space-y-4 border-t border-luxe-sand pt-6 mb-8">
                 <div class="flex items-center justify-between">
-                  <span class="text-gray-500">Subtotal</span>
+                  <span class="text-luxe-brown/70">Subtotal</span>
 
                   <span class="font-semibold">
                     {{ formatCurrency(cartStore.selectedTotalPrice) }}
@@ -414,7 +414,7 @@
                   v-if="discountAmount > 0"
                   class="flex items-center justify-between"
                 >
-                  <span class="text-gray-500">
+                  <span class="text-luxe-brown/70">
                     Discount
                     <span v-if="appliedVoucher">
                       ({{ appliedVoucher.code }})
@@ -427,7 +427,7 @@
                 </div>
 
                 <div class="flex items-center justify-between">
-                  <span class="text-gray-500">Shipping</span>
+                  <span class="text-luxe-brown/70">Shipping</span>
 
                   <span class="font-semibold">
                     {{ shippingLabel }}
@@ -468,7 +468,7 @@
 
               <p
                 v-if="!isFormValid"
-                class="text-center text-sm text-gray-400 mt-4"
+                class="text-center text-sm text-luxe-brown/60 mt-4"
               >
                 Complete shipping information to place order.
               </p>

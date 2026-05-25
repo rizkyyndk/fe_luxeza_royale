@@ -2,7 +2,7 @@
   <section class="min-h-screen bg-gray-50 flex items-center px-6 pt-32">
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
       <div>
-        <p class="uppercase tracking-[6px] text-sm text-gray-500 mb-4">
+        <p class="uppercase tracking-[6px] text-sm text-luxe-brown mb-4">
           Luxury Fashion
         </p>
 
@@ -15,7 +15,7 @@
         </p>
 
         <button
-          class="bg-black text-white px-8 py-4 rounded-full hover:scale-105 transition duration-300"
+          class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full hover:bg-luxe-royal hover:scale-105 transition duration-300 shadow-lg shadow-luxe-brown/20"
         >
           Shop Now
         </button>

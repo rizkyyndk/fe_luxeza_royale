@@ -1,20 +1,11 @@
 import { httpClient } from "./httpClient";
 
-const USE_MOCK_VOUCHER = false;
-
 const unwrapData = (response, fallback = null) => {
   return response?.data ?? response ?? fallback;
 };
 
 export const voucherService = {
   async validateVoucher(code, subtotal = 0) {
-    if (USE_MOCK_VOUCHER) {
-      throw {
-        status: 400,
-        message: "Mock voucher is disabled. Backend voucher API is active.",
-      };
-    }
-
     const response = await httpClient.post("/vouchers/validate", {
       code,
       subtotal,

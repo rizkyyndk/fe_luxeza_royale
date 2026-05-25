@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="isLoading"
-      class="py-16 text-center text-sm uppercase tracking-[3px] text-gray-400"
+      class="py-16 text-center text-sm uppercase tracking-[3px] text-luxe-brown/60"
     >
       Loading products...
     </div>
@@ -13,7 +13,7 @@
 
     <div
       v-else-if="products.length === 0"
-      class="py-16 text-center text-gray-500"
+      class="py-16 text-center text-luxe-brown/75"
     >
       Product belum tersedia.
     </div>

@@ -1,32 +1,32 @@
 <template>
   <div
-    class="fixed inset-0 z-[999] bg-black/50 px-6 flex items-center justify-center"
+    class="fixed inset-0 z-[999] bg-luxe-espresso/60 backdrop-blur-sm px-6 flex items-center justify-center"
     @click.self="closeModal"
   >
     <div
-      class="bg-white rounded-[2rem] w-full max-w-3xl max-h-[85vh] overflow-hidden shadow-2xl"
+      class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] w-full max-w-3xl max-h-[85vh] overflow-hidden shadow-[0_30px_90px_rgba(43,26,18,0.28)]"
     >
       <!-- HEADER -->
       <div
-        class="p-6 md:p-8 border-b border-gray-100 flex items-start justify-between gap-6"
+        class="p-6 md:p-8 border-b border-luxe-sand/60 flex items-start justify-between gap-6"
       >
         <div>
-          <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-3">
+          <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3">
             Size Guide
           </p>
 
-          <h2 class="text-3xl md:text-4xl font-bold">
+          <h2 class="text-3xl md:text-4xl font-bold text-luxe-espresso">
             {{ guideTitle }}
           </h2>
 
-          <p class="text-gray-500 mt-3 leading-7">
+          <p class="text-luxe-brown/75 mt-3 leading-7">
             Use this guide as a general reference before selecting your size.
           </p>
         </div>
 
         <button
           @click="closeModal"
-          class="text-3xl leading-none hover:scale-110 transition"
+          class="text-3xl leading-none text-luxe-espresso hover:text-luxe-royal hover:scale-110 transition"
         >
           ×
         </button>
@@ -36,13 +36,13 @@
       <div class="p-6 md:p-8 overflow-y-auto max-h-[60vh]">
         <!-- AVAILABLE SIZE -->
         <div class="mb-8">
-          <p class="font-semibold mb-4">Available Sizes</p>
+          <p class="font-semibold mb-4 text-luxe-espresso">Available Sizes</p>
 
           <div class="flex flex-wrap gap-3">
             <span
               v-for="size in sizes"
               :key="size"
-              class="px-5 py-2 rounded-full bg-[#f8f5f2] text-sm font-medium"
+              class="px-5 py-2 rounded-full bg-luxe-cream border border-luxe-sand/60 text-luxe-espresso text-sm font-medium"
             >
               {{ size }}
             </span>
@@ -50,10 +50,12 @@
         </div>
 
         <!-- TABLE -->
-        <div class="overflow-x-auto">
+        <div
+          class="overflow-x-auto rounded-3xl border border-luxe-sand/60 bg-luxe-ivory"
+        >
           <table class="w-full border-collapse">
             <thead>
-              <tr class="bg-black text-white">
+              <tr class="bg-luxe-espresso text-luxe-ivory">
                 <th
                   v-for="heading in tableHeadings"
                   :key="heading"
@@ -68,12 +70,12 @@
               <tr
                 v-for="(row, index) in sizeRows"
                 :key="index"
-                class="border-b border-gray-100"
+                class="border-b border-luxe-sand/50 last:border-b-0"
               >
                 <td
                   v-for="heading in tableHeadings"
                   :key="heading"
-                  class="px-5 py-4 text-sm text-gray-600 whitespace-nowrap"
+                  class="px-5 py-4 text-sm text-luxe-brown/80 whitespace-nowrap"
                 >
                   {{ row[heading] }}
                 </td>
@@ -83,10 +85,14 @@
         </div>
 
         <!-- NOTE -->
-        <div class="mt-8 bg-[#f8f5f2] rounded-3xl p-6">
-          <h3 class="font-semibold mb-2">Fit Recommendation</h3>
+        <div
+          class="mt-8 bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-6"
+        >
+          <h3 class="font-semibold mb-2 text-luxe-espresso">
+            Fit Recommendation
+          </h3>
 
-          <p class="text-gray-500 leading-7 text-sm">
+          <p class="text-luxe-brown/75 leading-7 text-sm">
             {{ guideNote }}
           </p>
         </div>

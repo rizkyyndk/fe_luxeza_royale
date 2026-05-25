@@ -146,7 +146,7 @@
             :key="`${item.id}-${item.size}`"
             :class="
               item.selected
-                ? 'opacity-100 border-black/10 bg-luxe-ivory shadow-sm'
+                ? 'opacity-100 border-luxe-sand/70 bg-luxe-ivory shadow-sm'
                 : 'opacity-55 border-luxe-sand/60 bg-gray-50'
             "
             class="flex gap-4 border rounded-3xl p-4 transition"

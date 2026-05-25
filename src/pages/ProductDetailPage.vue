@@ -12,13 +12,13 @@
 
     <section v-if="isLoading" class="pt-28 pb-24 px-6">
       <div class="max-w-7xl mx-auto text-center py-24">
-        <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-4">
+        <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
           Loading Product
         </p>
 
         <h1 class="text-4xl md:text-5xl font-bold mb-5">Please wait...</h1>
 
-        <p class="text-gray-500 leading-7">
+        <p class="text-luxe-brown/75 leading-7">
           Product detail is being loaded from database.
         </p>
       </div>
@@ -27,20 +27,23 @@
     <section v-else-if="product" class="pt-28 pb-24 px-6">
       <div class="max-w-7xl mx-auto">
         <!-- BREADCRUMB -->
-        <div class="mb-10 flex items-center gap-2 text-sm text-gray-500">
-          <RouterLink to="/" class="hover:text-black transition">
+        <div class="mb-10 flex items-center gap-2 text-sm text-luxe-brown/70">
+          <RouterLink to="/" class="hover:text-luxe-espresso transition">
             Home
           </RouterLink>
 
           <span>/</span>
 
-          <button @click="goToProducts" class="hover:text-black transition">
+          <button
+            @click="goToProducts"
+            class="hover:text-luxe-espresso transition"
+          >
             Collection
           </button>
 
           <span>/</span>
 
-          <span class="text-black">
+          <span class="text-luxe-espresso">
             {{ product.title }}
           </span>
         </div>
@@ -71,14 +74,14 @@
               >
                 <button
                   @click="previousImage"
-                  class="w-11 h-11 rounded-full bg-luxe-ivory/85 backdrop-blur-xl flex items-center justify-center hover:bg-black hover:text-white transition"
+                  class="w-11 h-11 rounded-full bg-luxe-ivory/85 text-luxe-espresso backdrop-blur-xl flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
                 >
                   ←
                 </button>
 
                 <button
                   @click="nextImage"
-                  class="w-11 h-11 rounded-full bg-luxe-ivory/85 backdrop-blur-xl flex items-center justify-center hover:bg-black hover:text-white transition"
+                  class="w-11 h-11 rounded-full bg-luxe-ivory/85 text-luxe-espresso backdrop-blur-xl flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
                 >
                   →
                 </button>
@@ -93,7 +96,7 @@
                 @click="selectImage(index)"
                 :class="
                   selectedImageIndex === index
-                    ? 'border-black opacity-100'
+                    ? 'border-luxe-espresso opacity-100'
                     : 'border-transparent opacity-70 hover:opacity-100'
                 "
                 class="overflow-hidden rounded-2xl bg-luxe-cream border-2 transition"
@@ -110,7 +113,7 @@
           <!-- CONTENT -->
           <div class="flex flex-col justify-center">
             <!-- CATEGORY -->
-            <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-4">
+            <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
               {{ product.category }}
             </p>
 
@@ -132,7 +135,7 @@
                 {{ stockStatus }}
               </span>
 
-              <span class="text-sm text-gray-500">
+              <span class="text-sm text-luxe-brown/70">
                 {{ product.stock }} item available
               </span>
             </div>
@@ -170,7 +173,7 @@
                 <button
                   @click="isSizeGuideOpen = true"
                   type="button"
-                  class="text-sm text-gray-400 hover:text-black underline underline-offset-4 transition"
+                  class="text-sm text-luxe-brown/60 hover:text-luxe-espresso underline underline-offset-4 transition"
                 >
                   Size guide
                 </button>
@@ -183,8 +186,8 @@
                   @click="selectSize(size)"
                   :class="
                     selectedSize === size
-                      ? 'bg-black text-white scale-105 shadow-lg'
-                      : 'border border-black hover:bg-gray-100'
+                      ? 'bg-luxe-espresso text-luxe-ivory scale-105 shadow-lg shadow-luxe-brown/20'
+                      : 'border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream'
                   "
                   class="px-6 py-3 rounded-full transition"
                 >
@@ -231,8 +234,8 @@
                 :disabled="isOutOfStock"
                 :class="
                   isOutOfStock
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-black text-white hover:scale-[1.02]'
+                    ? 'bg-luxe-sand/60 text-luxe-brown/60 cursor-not-allowed'
+                    : 'bg-luxe-espresso text-luxe-ivory hover:bg-luxe-royal hover:scale-[1.02] shadow-lg shadow-luxe-brown/20'
                 "
                 class="flex-1 py-5 rounded-full text-lg transition"
               >
@@ -243,8 +246,8 @@
                 @click="toggleWishlist"
                 :class="
                   wishlistStore.isInWishlist(product.id)
-                    ? 'bg-black text-white'
-                    : 'border border-black hover:bg-black hover:text-white'
+                    ? 'bg-luxe-espresso text-luxe-ivory'
+                    : 'border border-luxe-espresso text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory'
                 "
                 class="flex-1 text-center py-5 rounded-full text-lg transition"
               >
@@ -257,19 +260,19 @@
             </div>
 
             <!-- EXTRA INFO -->
-            <div class="mt-10 space-y-4 text-sm text-gray-500">
+            <div class="mt-10 space-y-4 text-sm text-luxe-brown/75">
               <div class="flex items-center gap-3">
-                <span class="w-2 h-2 bg-black rounded-full"></span>
+                <span class="w-2 h-2 bg-luxe-gold rounded-full"></span>
                 <p>Premium quality selected for modern luxury lifestyle.</p>
               </div>
 
               <div class="flex items-center gap-3">
-                <span class="w-2 h-2 bg-black rounded-full"></span>
+                <span class="w-2 h-2 bg-luxe-gold rounded-full"></span>
                 <p>Ready for future backend stock and order integration.</p>
               </div>
 
               <div class="flex items-center gap-3">
-                <span class="w-2 h-2 bg-black rounded-full"></span>
+                <span class="w-2 h-2 bg-luxe-gold rounded-full"></span>
                 <p>Cart quantity and price are calculated in real time.</p>
               </div>
             </div>
@@ -282,7 +285,7 @@
             class="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
           >
             <div>
-              <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-3">
+              <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3">
                 You May Also Like
               </p>
 
@@ -291,7 +294,7 @@
 
             <RouterLink
               to="/"
-              class="text-sm text-gray-500 hover:text-black transition"
+              class="text-sm text-luxe-brown/70 hover:text-luxe-espresso transition"
             >
               View all collection →
             </RouterLink>
@@ -323,7 +326,7 @@
       <div class="text-center max-w-xl">
         <p class="text-6xl mb-6">🛍️</p>
 
-        <p class="uppercase tracking-[4px] text-sm text-gray-500 mb-4">
+        <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
           Product Not Found
         </p>
 
@@ -331,14 +334,14 @@
           This product is unavailable
         </h1>
 
-        <p class="text-gray-500 mb-8 leading-7">
+        <p class="text-luxe-brown/75 mb-8 leading-7">
           The product you are looking for does not exist or may have been
           removed from the collection.
         </p>
 
         <RouterLink
           to="/"
-          class="bg-black text-white px-8 py-4 rounded-full inline-block hover:scale-105 transition"
+          class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full inline-block hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
         >
           Back to Home
         </RouterLink>
@@ -457,7 +460,7 @@ const stockStatusClass = computed(() => {
   }
 
   if (!hasStockLimit(product.value.stock)) {
-    return "bg-black text-white";
+    return "bg-luxe-espresso text-luxe-ivory";
   }
 
   if (product.value.stock <= 0) {
@@ -468,7 +471,7 @@ const stockStatusClass = computed(() => {
     return "bg-orange-50 text-orange-600";
   }
 
-  return "bg-black text-white";
+  return "bg-luxe-espresso text-luxe-ivory";
 });
 
 const isOutOfStock = computed(() => {
