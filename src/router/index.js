@@ -5,8 +5,8 @@ import ProductDetailPage from "../pages/ProductDetailPage.vue";
 import CheckoutPage from "../pages/CheckoutPage.vue";
 import CheckoutSuccessPage from "../pages/CheckoutSuccessPage.vue";
 import WishlistPage from "../pages/WishlistPage.vue";
-import NotFoundPage from "../pages/NotFoundPage.vue";
 import OrderHistoryPage from "../pages/OrderHistoryPage.vue";
+import NotFoundPage from "../pages/NotFoundPage.vue";
 
 const routes = [
   {
@@ -30,17 +30,19 @@ const routes = [
     component: WishlistPage,
   },
   {
-    path: "/:pathMatch(.*)*",
-    component: NotFoundPage,
-  },
-  {
     path: "/orders",
     component: OrderHistoryPage,
+  },
+
+  // Wajib paling bawah
+  {
+    path: "/:pathMatch(.*)*",
+    component: NotFoundPage,
   },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 
   scrollBehavior(to, from, savedPosition) {
