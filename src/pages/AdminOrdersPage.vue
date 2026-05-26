@@ -605,7 +605,7 @@ const loadOrders = async () => {
   orderErrorMessage.value = "";
 
   try {
-    orders.value = await orderService.getOrders();
+    orders.value = await orderService.getAdminOrders();
   } catch (error) {
     console.error("Failed to load admin orders:", error);
 

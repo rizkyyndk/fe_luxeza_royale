@@ -151,6 +151,12 @@ const normalizeOrder = (order, summary = {}) => {
   };
 };
 
+const normalizeOrders = (orders) => {
+  if (!Array.isArray(orders)) return [];
+
+  return orders.map((order) => normalizeOrder(order)).filter(Boolean);
+};
+
 const normalizeOrderList = (orders) => {
   if (!Array.isArray(orders)) return [];
 
@@ -214,12 +220,22 @@ export const orderService = {
   },
 
   async updateOrderStatus(orderCode, status) {
-    const response = await httpClient.put(`/orders/${orderCode}/status`, {
+    const response = await httpClient.put(`/admin/orders/${orderCode}/status`, {
       status,
     });
 
     const data = unwrapData(response, null);
 
     return normalizeOrder(data);
+  },
+
+  async getAdminOrders(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    const endpoint = query ? `/admin/orders?${query}` : "/admin/orders";
+
+    const response = await httpClient.get(endpoint);
+    const data = unwrapData(response, []);
+
+    return normalizeOrders(data);
   },
 };

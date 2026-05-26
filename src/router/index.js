@@ -9,6 +9,9 @@ import OrderHistoryPage from "../pages/OrderHistoryPage.vue";
 import NotFoundPage from "../pages/NotFoundPage.vue";
 import AdminOrdersPage from "../pages/AdminOrdersPage.vue";
 import AdminPaymentsPage from "../pages/AdminPaymentsPage.vue";
+import LoginPage from "../pages/LoginPage.vue";
+import RegisterPage from "../pages/RegisterPage.vue";
+import { useAuthStore } from "../stores/authStore";
 
 const routes = [
   {
@@ -22,6 +25,9 @@ const routes = [
   {
     path: "/checkout",
     component: CheckoutPage,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/checkout/success",
@@ -34,16 +40,33 @@ const routes = [
   {
     path: "/orders",
     component: OrderHistoryPage,
+    meta: {
+      requiresAuth: true,
+    },
   },
-
   {
     path: "/admin/orders",
     component: AdminOrdersPage,
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+    },
   },
-
   {
     path: "/admin/payments",
     component: AdminPaymentsPage,
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+    },
+  },
+  {
+    path: "/login",
+    component: LoginPage,
+  },
+  {
+    path: "/register",
+    component: RegisterPage,
   },
 
   // Wajib paling bawah
@@ -76,6 +99,31 @@ const router = createRouter({
       behavior: "smooth",
     };
   },
+});
+
+router.beforeEach((to) => {
+  const authStore = useAuthStore();
+
+  const isAuthPage = to.path === "/login" || to.path === "/register";
+
+  if (isAuthPage && authStore.isAuthenticated) {
+    return "/";
+  }
+
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    return {
+      path: "/login",
+      query: {
+        redirect: to.fullPath,
+      },
+    };
+  }
+
+  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    return "/";
+  }
+
+  return true;
 });
 
 export default router;

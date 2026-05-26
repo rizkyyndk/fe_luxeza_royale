@@ -63,6 +63,7 @@
         </RouterLink>
 
         <RouterLink
+          v-if="authStore.isAdmin"
           to="/admin/orders"
           :class="
             route.path === '/admin/orders'
@@ -75,6 +76,7 @@
         </RouterLink>
 
         <RouterLink
+          v-if="authStore.isAdmin"
           to="/admin/payments"
           :class="
             route.path === '/admin/payments'
@@ -118,6 +120,86 @@
             {{ cartStore.totalItems }}
           </span>
         </button>
+
+        <!-- ACCOUNT -->
+        <div class="relative">
+          <RouterLink
+            v-if="!authStore.isAuthenticated"
+            to="/login"
+            class="hidden sm:flex items-center gap-2 border border-luxe-sand text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-cream transition"
+          >
+            <span>👤</span>
+            <span class="text-sm font-medium">Login</span>
+          </RouterLink>
+
+          <button
+            v-else
+            @click="isAccountMenuOpen = !isAccountMenuOpen"
+            type="button"
+            class="hidden sm:flex items-center gap-2 border border-luxe-sand text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-cream transition"
+          >
+            <span>👤</span>
+            <span class="text-sm font-medium">
+              {{ authStore.userName }}
+            </span>
+          </button>
+
+          <div
+            v-if="authStore.isAuthenticated && isAccountMenuOpen"
+            class="absolute right-0 mt-3 w-64 bg-luxe-ivory border border-luxe-sand/70 rounded-3xl shadow-[0_18px_60px_rgba(92,56,36,0.16)] p-3 z-[70]"
+          >
+            <div class="px-4 py-3 border-b border-luxe-sand/60 mb-2">
+              <p class="font-semibold text-luxe-espresso">
+                {{ authStore.userName }}
+              </p>
+
+              <p class="text-xs text-luxe-brown/70 mt-1">
+                {{ authStore.user?.email }}
+              </p>
+
+              <p
+                v-if="authStore.isAdmin"
+                class="inline-block mt-3 text-xs bg-luxe-espresso text-luxe-ivory px-3 py-1 rounded-full"
+              >
+                Admin
+              </p>
+            </div>
+
+            <RouterLink
+              to="/orders"
+              @click="isAccountMenuOpen = false"
+              class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
+            >
+              My Orders
+            </RouterLink>
+
+            <RouterLink
+              v-if="authStore.isAdmin"
+              to="/admin/orders"
+              @click="isAccountMenuOpen = false"
+              class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
+            >
+              Admin Orders
+            </RouterLink>
+
+            <RouterLink
+              v-if="authStore.isAdmin"
+              to="/admin/payments"
+              @click="isAccountMenuOpen = false"
+              class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
+            >
+              Admin Payments
+            </RouterLink>
+
+            <button
+              @click="logout"
+              type="button"
+              class="w-full text-left px-4 py-3 rounded-2xl text-red-600 hover:bg-red-50 transition"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
 
         <!-- MOBILE MENU BUTTON -->
         <button
@@ -204,6 +286,7 @@
         </RouterLink>
 
         <RouterLink
+          v-if="authStore.isAdmin"
           to="/admin/orders"
           :class="
             route.path === '/admin/orders'
@@ -216,12 +299,70 @@
         </RouterLink>
 
         <RouterLink
+          v-if="authStore.isAdmin"
           to="/admin/payments"
           @click="isMobileMenuOpen = false"
           class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
           Admin Payments
         </RouterLink>
+
+        <div class="border-t border-luxe-sand/60 mt-4 pt-4">
+          <RouterLink
+            v-if="!authStore.isAuthenticated"
+            to="/login"
+            @click="isMobileMenuOpen = false"
+            class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
+          >
+            Login / Register
+          </RouterLink>
+
+          <template v-else>
+            <div class="px-5 py-4">
+              <p class="font-semibold text-luxe-espresso">
+                {{ authStore.userName }}
+              </p>
+
+              <p class="text-sm text-luxe-brown/70 mt-1">
+                {{ authStore.user?.email }}
+              </p>
+            </div>
+
+            <RouterLink
+              to="/orders"
+              @click="isMobileMenuOpen = false"
+              class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
+            >
+              My Orders
+            </RouterLink>
+
+            <RouterLink
+              v-if="authStore.isAdmin"
+              to="/admin/orders"
+              @click="isMobileMenuOpen = false"
+              class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
+            >
+              Admin Orders
+            </RouterLink>
+
+            <RouterLink
+              v-if="authStore.isAdmin"
+              to="/admin/payments"
+              @click="isMobileMenuOpen = false"
+              class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
+            >
+              Admin Payments
+            </RouterLink>
+
+            <button
+              @click="logout"
+              type="button"
+              class="w-full text-left px-5 py-4 rounded-2xl text-red-600 hover:bg-red-50 transition"
+            >
+              Logout
+            </button>
+          </template>
+        </div>
       </nav>
     </aside>
   </div>
@@ -234,15 +375,17 @@ import { useRoute, useRouter } from "vue-router";
 import { useCartStore } from "../../stores/cartStore";
 import { useUiStore } from "../../stores/uiStore";
 import { useWishlistStore } from "../../stores/wishlistStore";
+import { useAuthStore } from "../../stores/authStore";
 
 const cartStore = useCartStore();
 const wishlistStore = useWishlistStore();
 const uiStore = useUiStore();
-
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
 
 const isMobileMenuOpen = ref(false);
+const isAccountMenuOpen = ref(false);
 
 const goToProducts = async () => {
   if (route.path !== "/") {
@@ -267,5 +410,14 @@ const goToProducts = async () => {
 const goToProductsFromMobile = async () => {
   isMobileMenuOpen.value = false;
   await goToProducts();
+};
+
+const logout = async () => {
+  await authStore.logout();
+
+  isAccountMenuOpen.value = false;
+  isMobileMenuOpen.value = false;
+
+  await router.push("/");
 };
 </script>
