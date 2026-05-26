@@ -415,6 +415,9 @@ const goToProductsFromMobile = async () => {
 const logout = async () => {
   await authStore.logout();
 
+  cartStore.resetToGuestEmpty();
+  wishlistStore.resetToGuestEmpty();
+
   isAccountMenuOpen.value = false;
   isMobileMenuOpen.value = false;
 

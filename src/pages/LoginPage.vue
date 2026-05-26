@@ -96,11 +96,17 @@ import Footer from "../components/layout/Footer.vue";
 import { useAuthStore } from "../stores/authStore";
 import { useToastStore } from "../stores/toastStore";
 
+import { useCartStore } from "../stores/cartStore";
+import { useWishlistStore } from "../stores/wishlistStore";
+
 const router = useRouter();
 const route = useRoute();
 
 const authStore = useAuthStore();
 const toastStore = useToastStore();
+
+const cartStore = useCartStore();
+const wishlistStore = useWishlistStore();
 
 const errorMessage = ref("");
 const errors = ref({});
@@ -136,6 +142,9 @@ const submitLogin = async () => {
       email: form.email,
       password: form.password,
     });
+
+    cartStore.switchToUserCart(authStore.user?.id);
+    wishlistStore.switchToUserWishlist(authStore.user?.id);
 
     toastStore.showToast({
       title: "Login Successful",

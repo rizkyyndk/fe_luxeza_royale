@@ -8,7 +8,9 @@
 
     <!-- SIDEBAR -->
     <aside
-      class="fixed top-0 right-0 w-full sm:w-[440px] h-screen bg-luxe-ivory border-l border-luxe-sand/60 shadow-[0_24px_90px_rgba(92,56,36,0.22)] z-50 flex flex-col"
+      @wheel.stop
+      @touchmove.stop
+      class="fixed top-0 right-0 w-full sm:w-[440px] h-[100dvh] bg-luxe-ivory border-l border-luxe-sand/60 shadow-[0_24px_90px_rgba(92,56,36,0.22)] z-50 flex flex-col overflow-hidden overscroll-contain min-h-0"
     >
       <!-- HEADER -->
       <div
@@ -37,7 +39,7 @@
       <!-- EMPTY -->
       <div
         v-if="cartStore.isEmpty"
-        class="flex-1 flex flex-col items-center justify-center text-center px-8"
+        class="flex-1 min-h-0 flex flex-col items-center justify-center text-center px-8"
       >
         <p class="text-5xl mb-5">🛒</p>
 
@@ -56,18 +58,21 @@
       </div>
 
       <!-- CART CONTENT -->
-      <template v-else>
+      <div
+        v-else
+        class="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y"
+      >
         <!-- CART SUMMARY -->
         <div class="px-6 py-5 border-b border-luxe-sand/60 bg-luxe-cream">
-          <div class="grid grid-cols-2 gap-4 mb-5">
+          <div class="grid grid-cols-2 gap-3 mb-5">
             <div
               class="bg-luxe-ivory rounded-3xl p-4 border border-luxe-sand/50 shadow-sm"
             >
               <p class="text-xs text-luxe-brown/70 mb-1">Selected Items</p>
 
-              <p class="text-xl font-bold">
-                {{ cartStore.selectedTotalItems }}
-              </p>
+              <p
+                class="text-base sm:text-xl font-bold whitespace-nowrap tracking-[-0.04em]"
+              ></p>
             </div>
 
             <div
@@ -75,7 +80,9 @@
             >
               <p class="text-xs text-luxe-brown/70 mb-1">Selected Total</p>
 
-              <p class="text-xl font-bold">
+              <p
+                class="text-base sm:text-xl font-bold whitespace-nowrap tracking-[-0.03em]"
+              >
                 {{ formatPrice(cartStore.selectedTotalPrice) }}
               </p>
             </div>
@@ -117,30 +124,34 @@
 
         <!-- SELECT ALL -->
         <div
-          class="px-6 py-4 border-b border-luxe-sand/60 flex items-center justify-between"
+          class="px-6 py-4 border-b border-luxe-sand/60 flex items-center justify-between gap-3"
         >
-          <label class="flex items-center gap-3 cursor-pointer">
+          <label
+            class="flex-1 min-h-[48px] px-4 py-3 rounded-2xl bg-luxe-cream border border-luxe-sand/70 flex items-center gap-3 cursor-pointer hover:bg-luxe-beige transition"
+          >
             <input
               type="checkbox"
               :checked="allItemsSelected"
               @change="toggleSelectAll"
-              class="w-5 h-5 accent-black"
+              class="w-6 h-6 accent-luxe-espresso shrink-0"
             />
 
-            <span class="text-sm font-medium"> Select all items </span>
+            <span class="text-sm font-semibold text-luxe-espresso">
+              Select all items
+            </span>
           </label>
 
           <button
             v-if="cartStore.hasSelectedItems"
             @click="cartStore.removeSelectedItems()"
-            class="text-sm text-luxe-brown/70 hover:text-red-500 transition"
+            class="shrink-0 min-h-[44px] px-3 py-2 rounded-2xl text-xs font-medium text-red-500 hover:bg-red-50 transition"
           >
-            Remove selected
+            Remove
           </button>
         </div>
 
         <!-- ITEMS -->
-        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+        <div class="px-6 pb-5 space-y-4">
           <div
             v-for="item in cartStore.items"
             :key="`${item.id}-${item.size}`"
@@ -149,10 +160,10 @@
                 ? 'opacity-100 border-luxe-sand/70 bg-luxe-ivory shadow-sm'
                 : 'opacity-55 border-luxe-sand/60 bg-gray-50'
             "
-            class="flex gap-4 border rounded-3xl p-4 transition"
+            class="flex gap-3 sm:gap-4 border rounded-3xl p-4 transition min-w-0 overflow-hidden"
           >
             <!-- CHECKBOX -->
-            <div class="pt-9">
+            <div class="pt-7 shrink-0">
               <input
                 type="checkbox"
                 :checked="item.selected"
@@ -164,25 +175,26 @@
             <ProductImage
               :src="item.image"
               :alt="item.title"
-              class="w-24 h-24 object-cover rounded-2xl"
+              class="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-2xl shrink-0"
             />
 
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <div class="flex items-start justify-between gap-3">
                 <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <h3 class="font-semibold leading-snug">
+                  <div class="mb-1 min-w-0">
+                    <h3
+                      class="font-semibold leading-snug text-luxe-espresso break-words"
+                    >
                       {{ item.title }}
                     </h3>
 
                     <span
                       v-if="item.selected"
-                      class="text-[10px] uppercase tracking-[2px] bg-luxe-espresso text-luxe-ivory px-2 py-1 rounded-full"
+                      class="inline-flex mt-2 text-[10px] uppercase tracking-[2px] bg-luxe-espresso text-luxe-ivory px-2 py-1 rounded-full"
                     >
                       Selected
                     </span>
                   </div>
-
                   <p class="text-luxe-brown/70 text-sm">
                     {{ formatPrice(item.price) }}
                   </p>
@@ -205,7 +217,9 @@
               </div>
 
               <!-- QUANTITY -->
-              <div class="flex items-center justify-between mt-5">
+              <div
+                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-5 min-w-0"
+              >
                 <div class="flex items-center gap-3">
                   <button
                     @click="cartStore.decreaseQuantity(item.id, item.size)"
@@ -236,7 +250,7 @@
                   </button>
                 </div>
 
-                <p class="font-semibold">
+                <p class="font-semibold text-sm sm:text-base whitespace-nowrap">
                   {{ formatPrice(item.price * item.quantity) }}
                 </p>
               </div>
@@ -245,7 +259,9 @@
         </div>
 
         <!-- FOOTER -->
-        <div class="p-6 border-t border-luxe-sand/60 bg-luxe-ivory">
+        <div
+          class="shrink-0 p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] border-t border-luxe-sand/60 bg-luxe-ivory"
+        >
           <div class="space-y-3 mb-6">
             <div class="flex items-center justify-between">
               <span class="text-luxe-brown/70"> Selected subtotal </span>
@@ -294,13 +310,13 @@
             Clear Cart
           </button>
         </div>
-      </template>
+      </div>
     </aside>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, onBeforeUnmount, watch } from "vue";
 import { useRouter } from "vue-router";
 
 import ProductImage from "../ui/ProductImage.vue";
@@ -311,11 +327,23 @@ import { formatCurrency } from "../../utils/formatCurrency";
 
 const cartStore = useCartStore();
 const uiStore = useUiStore();
-
 const router = useRouter();
-
 const FREE_SHIPPING_TARGET = 2000000;
 const DEFAULT_SHIPPING_COST = 20000;
+
+watch(
+  () => uiStore.isCartOpen,
+  (isOpen) => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+  },
+  {
+    immediate: true,
+  },
+);
+
+onBeforeUnmount(() => {
+  document.body.style.overflow = "";
+});
 
 const allItemsSelected = computed(() => {
   return (
