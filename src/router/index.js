@@ -14,6 +14,7 @@ import RegisterPage from "../pages/RegisterPage.vue";
 import { useAuthStore } from "../stores/authStore";
 import AdminProductsPage from "../pages/AdminProductsPage.vue";
 import VerifyAccountPage from "../pages/VerifyAccountPage.vue";
+import MyAddressesPage from "../pages/MyAddressesPage.vue";
 
 const routes = [
   {
@@ -42,6 +43,13 @@ const routes = [
   {
     path: "/orders",
     component: OrderHistoryPage,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/my-addresses",
+    component: MyAddressesPage,
     meta: {
       requiresAuth: true,
     },

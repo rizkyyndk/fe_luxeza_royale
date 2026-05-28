@@ -411,17 +411,12 @@
                   </div>
                 </div>
 
-                <div
-                  class="mt-6 bg-luxe-cream border border-luxe-sand/50 rounded-3xl p-5"
-                >
-                  <p class="text-sm font-semibold mb-2 text-luxe-espresso">
-                    Shipping Address
-                  </p>
-
-                  <p class="text-sm text-luxe-brown/75 leading-6">
-                    {{ order.customer?.address }}
-                  </p>
-                </div>
+                <AddressSummaryCard
+                  :customer="order.customer || {}"
+                  title="Shipping Address"
+                  eyebrow="Delivery Information"
+                  class="mt-6"
+                />
               </div>
             </div>
           </div>
@@ -440,6 +435,7 @@ import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
 import Footer from "../components/layout/Footer.vue";
 import ProductImage from "../components/ui/ProductImage.vue";
+import AddressSummaryCard from "../components/order/AddressSummaryCard.vue";
 
 import { useToastStore } from "../stores/toastStore";
 import { formatCurrency } from "../utils/formatCurrency";
@@ -505,12 +501,26 @@ const latestOrders = computed(() => {
     const customerEmail = String(order.customer?.email || "").toLowerCase();
     const customerPhone = String(order.customer?.phone || "").toLowerCase();
 
+    const customerAddress = [
+      order.customer?.address,
+      order.customer?.addressDetail,
+      order.customer?.village,
+      order.customer?.district,
+      order.customer?.city,
+      order.customer?.province,
+      order.customer?.postalCode,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
     const matchesKeyword =
       !keyword ||
       orderNumber.includes(keyword) ||
       customerName.includes(keyword) ||
       customerEmail.includes(keyword) ||
-      customerPhone.includes(keyword);
+      customerPhone.includes(keyword) ||
+      customerAddress.includes(keyword);
 
     const orderStatus = String(order.status || "").toLowerCase();
 

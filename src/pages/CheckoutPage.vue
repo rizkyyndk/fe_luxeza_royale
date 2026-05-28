@@ -106,8 +106,190 @@
                 </p>
               </div>
 
+              <!-- SAVED ADDRESSES -->
+              <div
+                v-if="authStore.token"
+                class="bg-luxe-cream border border-luxe-sand/70 rounded-[2rem] p-5 md:p-6 space-y-5"
+              >
+                <div
+                  class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3"
+                >
+                  <div>
+                    <p
+                      class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2"
+                    >
+                      Saved Addresses
+                    </p>
+
+                    <h3 class="text-2xl font-bold text-luxe-espresso">
+                      Choose Delivery Address
+                    </h3>
+                  </div>
+
+                  <p class="text-sm text-luxe-brown/65">
+                    Use your primary address or save a new one for the next
+                    order.
+                  </p>
+                </div>
+
+                <div
+                  v-if="isLoadingAddresses"
+                  class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-5 text-luxe-brown/70"
+                >
+                  Loading saved addresses...
+                </div>
+
+                <div
+                  v-else-if="addressBookError"
+                  class="bg-red-50 border border-red-100 text-red-600 rounded-3xl p-5"
+                >
+                  {{ addressBookError }}
+                </div>
+
+                <div
+                  v-else-if="savedAddresses.length === 0"
+                  class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-5 text-luxe-brown/70"
+                >
+                  You do not have saved addresses yet. Fill the address form
+                  below and save it for your next order.
+                </div>
+
+                <div v-else class="grid md:grid-cols-2 gap-4">
+                  <button
+                    v-for="address in savedAddresses"
+                    :key="address.id"
+                    type="button"
+                    @click="applySavedAddress(address)"
+                    :class="
+                      selectedAddressId === String(address.id)
+                        ? 'bg-luxe-espresso text-luxe-ivory border-luxe-espresso shadow-lg shadow-luxe-brown/20'
+                        : 'bg-luxe-ivory text-luxe-espresso border-luxe-sand hover:border-luxe-royal hover:bg-white'
+                    "
+                    class="border rounded-3xl p-5 text-left transition"
+                  >
+                    <div class="flex items-start justify-between gap-4 mb-3">
+                      <div>
+                        <p class="font-bold">
+                          {{ address.label }}
+                        </p>
+
+                        <p
+                          :class="
+                            selectedAddressId === String(address.id)
+                              ? 'text-luxe-sand'
+                              : 'text-luxe-brown/70'
+                          "
+                          class="text-sm mt-1"
+                        >
+                          {{ address.recipientName }} • +{{ address.phone }}
+                        </p>
+                      </div>
+
+                      <span
+                        v-if="address.isPrimary"
+                        :class="
+                          selectedAddressId === String(address.id)
+                            ? 'bg-luxe-ivory text-luxe-espresso'
+                            : 'bg-luxe-espresso text-luxe-ivory'
+                        "
+                        class="text-xs px-3 py-1 rounded-full whitespace-nowrap"
+                      >
+                        Primary
+                      </span>
+                    </div>
+
+                    <p
+                      :class="
+                        selectedAddressId === String(address.id)
+                          ? 'text-luxe-sand'
+                          : 'text-luxe-brown/75'
+                      "
+                      class="text-sm leading-6"
+                    >
+                      {{ address.addressDetail }}, Kel. {{ address.village }},
+                      Kec. {{ address.district }}, {{ address.city }},
+                      {{ address.province }}, RT {{ address.rt }}/RW
+                      {{ address.rw }},
+                      {{ address.postalCode }}
+                    </p>
+                  </button>
+                </div>
+
+                <div
+                  v-if="savedAddresses.length > 0"
+                  class="flex flex-col sm:flex-row gap-3"
+                >
+                  <button
+                    type="button"
+                    @click="showChangeAddress"
+                    class="flex-1 border border-luxe-sand bg-luxe-ivory text-luxe-espresso px-5 py-4 rounded-2xl hover:bg-white hover:border-luxe-royal transition"
+                  >
+                    Change Address
+                  </button>
+
+                  <button
+                    type="button"
+                    @click="useNewAddress"
+                    class="flex-1 bg-luxe-espresso text-luxe-ivory px-5 py-4 rounded-2xl hover:bg-luxe-royal transition"
+                  >
+                    Use New Address
+                  </button>
+                </div>
+
+                <AddressSummaryCard
+                  v-if="selectedAddressId && !isAddressFormVisible"
+                  :customer="{
+                    fullName: form.fullName,
+                    phone: normalizePhoneNumber(form.phone),
+                    email: form.email,
+                    province: form.province,
+                    city: form.city,
+                    district: form.district,
+                    village: form.village,
+                    rt: form.rt,
+                    rw: form.rw,
+                    postalCode: form.postalCode,
+                    addressDetail: form.addressDetail,
+                  }"
+                  title="Selected Delivery Address"
+                  eyebrow="Current Checkout Address"
+                />
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                  <label
+                    class="flex items-center gap-3 bg-luxe-ivory border border-luxe-sand/70 rounded-2xl px-5 py-4 cursor-pointer"
+                  >
+                    <input
+                      v-model="saveAddressForNextOrder"
+                      type="checkbox"
+                      class="w-5 h-5 accent-black"
+                    />
+
+                    <span class="text-sm text-luxe-espresso">
+                      Save this address for next order
+                    </span>
+                  </label>
+
+                  <label
+                    class="flex items-center gap-3 bg-luxe-ivory border border-luxe-sand/70 rounded-2xl px-5 py-4 cursor-pointer"
+                  >
+                    <input
+                      v-model="setAsPrimaryAddress"
+                      type="checkbox"
+                      :disabled="!saveAddressForNextOrder"
+                      class="w-5 h-5 accent-black disabled:opacity-40"
+                    />
+
+                    <span class="text-sm text-luxe-espresso">
+                      Set as primary address
+                    </span>
+                  </label>
+                </div>
+              </div>
+
               <!-- ADDRESS -->
               <div
+                v-if="isAddressFormVisible || !selectedAddressId"
                 class="bg-luxe-cream border border-luxe-sand/70 rounded-[2rem] p-5 md:p-6 space-y-5"
               >
                 <div
@@ -131,6 +313,22 @@
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-5">
+                  <div class="md:col-span-2">
+                    <label
+                      class="block text-sm font-medium text-luxe-brown/75 mb-2"
+                    >
+                      Address Label
+                    </label>
+
+                    <input
+                      v-model="form.addressLabel"
+                      @input="markAddressAsCustom"
+                      type="text"
+                      placeholder="Example: Rumah, Kantor, Kos"
+                      class="w-full border border-luxe-sand rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                    />
+                  </div>
+
                   <!-- PROVINCE -->
                   <SearchableSelect
                     v-model="form.provinceId"
@@ -686,6 +884,8 @@ import { orderService } from "../services/orderService";
 import { paymentMethodService } from "../services/paymentMethodService";
 import { regionService } from "../services/regionService";
 import SearchableSelect from "../components/ui/SearchableSelect.vue";
+import { userAddressService } from "../services/userAddressService";
+import AddressSummaryCard from "../components/order/AddressSummaryCard.vue";
 
 const router = useRouter();
 
@@ -701,12 +901,370 @@ const voucherCode = ref("");
 const appliedVoucher = ref(null);
 const voucherError = ref("");
 
+const savedAddresses = ref([]);
+const selectedAddressId = ref("");
+const isLoadingAddresses = ref(false);
+const addressBookError = ref("");
+
+const saveAddressForNextOrder = ref(false);
+const setAsPrimaryAddress = ref(false);
+const isSavingAddress = ref(false);
+const isAddressFormVisible = ref(false);
+
+const normalizeAddressText = (value) => {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+};
+
+const getAddressSignature = (address) => {
+  return [
+    normalizeAddressText(address.provinceId || address.province_id),
+    normalizeAddressText(address.cityId || address.city_id),
+    normalizeAddressText(address.districtId || address.district_id),
+    normalizeAddressText(address.villageId || address.village_id),
+    normalizeAddressText(address.rt),
+    normalizeAddressText(address.rw),
+    normalizeAddressText(address.postalCode || address.postal_code),
+    normalizeAddressText(address.addressDetail || address.address_detail),
+    normalizeAddressText(address.phone),
+    normalizeAddressText(address.recipientName || address.recipient_name),
+  ].join("|");
+};
+
+const getCurrentAddressSignature = () => {
+  return getAddressSignature({
+    recipientName: form.fullName,
+    phone: normalizePhoneNumber(form.phone),
+    provinceId: form.provinceId,
+    cityId: form.cityId,
+    districtId: form.districtId,
+    villageId: form.villageId,
+    rt: form.rt,
+    rw: form.rw,
+    postalCode: form.postalCode,
+    addressDetail: form.addressDetail,
+  });
+};
+
+const resetAddressFormOnly = () => {
+  selectedAddressId.value = "";
+
+  form.addressLabel = "Rumah";
+
+  form.provinceId = "";
+  form.province = "";
+
+  form.cityId = "";
+  form.city = "";
+
+  form.districtId = "";
+  form.district = "";
+
+  form.villageId = "";
+  form.village = "";
+
+  form.rt = "";
+  form.rw = "";
+  form.postalCode = "";
+  form.addressDetail = "";
+
+  cities.value = [];
+  districts.value = [];
+  villages.value = [];
+};
+
+const showChangeAddress = () => {
+  isAddressFormVisible.value = true;
+};
+
+const useNewAddress = () => {
+  resetAddressFormOnly();
+
+  isAddressFormVisible.value = true;
+  saveAddressForNextOrder.value = true;
+  setAsPrimaryAddress.value = savedAddresses.value.length === 0;
+
+  toastStore.showToast({
+    title: "New Address",
+    message: "Please fill in your new delivery address.",
+    type: "info",
+  });
+};
+
+const findDuplicateSavedAddress = () => {
+  const currentSignature = getCurrentAddressSignature();
+
+  return savedAddresses.value.find((address) => {
+    return getAddressSignature(address) === currentSignature;
+  });
+};
+
+const phoneWithoutCountryCode = (phone) => {
+  return String(phone || "")
+    .replace(/\D/g, "")
+    .replace(/^62/, "")
+    .replace(/^0+/, "");
+};
+
+const hasAddressFormValue = () => {
+  return Boolean(
+    form.provinceId ||
+    form.cityId ||
+    form.districtId ||
+    form.villageId ||
+    form.addressDetail.trim(),
+  );
+};
+
+const addressToCustomer = (address) => {
+  return {
+    fullName: address.recipientName,
+    phone: address.phone,
+    address: [
+      address.addressDetail,
+      `Kel. ${address.village}`,
+      `Kec. ${address.district}`,
+      address.city,
+      address.province,
+      `RT ${address.rt}/RW ${address.rw}`,
+      address.postalCode,
+    ]
+      .filter(Boolean)
+      .join(", "),
+    province: address.province,
+    city: address.city,
+    district: address.district,
+    village: address.village,
+    rt: address.rt,
+    rw: address.rw,
+    postalCode: address.postalCode,
+    addressDetail: address.addressDetail,
+  };
+};
+
+const buildAddressPayload = () => {
+  return {
+    label: form.addressLabel || "Rumah",
+    recipient_name: form.fullName,
+    phone: normalizePhoneNumber(form.phone),
+
+    province_id: form.provinceId,
+    province: form.province,
+
+    city_id: form.cityId,
+    city: form.city,
+
+    district_id: form.districtId,
+    district: form.district,
+
+    village_id: form.villageId,
+    village: form.village,
+
+    rt: form.rt,
+    rw: form.rw,
+    postal_code: form.postalCode,
+    address_detail: form.addressDetail,
+
+    is_primary: setAsPrimaryAddress.value,
+  };
+};
+
+const applySavedAddress = async (address) => {
+  if (!address) return;
+
+  selectedAddressId.value = String(address.id);
+
+  form.addressLabel = address.label || "Rumah";
+  form.fullName = address.recipientName || form.fullName;
+  form.phone = phoneWithoutCountryCode(address.phone);
+
+  form.provinceId = address.provinceId || "";
+  form.province = address.province || "";
+
+  form.cityId = "";
+  form.city = "";
+  form.districtId = "";
+  form.district = "";
+  form.villageId = "";
+  form.village = "";
+
+  cities.value = [];
+  districts.value = [];
+  villages.value = [];
+
+  if (form.provinceId) {
+    await loadCities(form.provinceId);
+  }
+
+  form.cityId = address.cityId || "";
+  form.city = address.city || "";
+
+  if (form.cityId) {
+    await loadDistricts(form.cityId);
+  }
+
+  form.districtId = address.districtId || "";
+  form.district = address.district || "";
+
+  if (form.districtId) {
+    await loadVillages(form.districtId);
+  }
+
+  form.villageId = address.villageId || "";
+  form.village = address.village || "";
+
+  form.rt = address.rt || "";
+  form.rw = address.rw || "";
+  form.postalCode = address.postalCode || "";
+  form.addressDetail = address.addressDetail || "";
+
+  saveAddressForNextOrder.value = false;
+  setAsPrimaryAddress.value = false;
+  isAddressFormVisible.value = false;
+
+  toastStore.showToast({
+    title: "Address Selected",
+    message: `${address.label} has been applied to checkout.`,
+    type: "success",
+  });
+};
+
+const loadSavedAddresses = async () => {
+  if (!authStore.token) return;
+
+  isLoadingAddresses.value = true;
+  addressBookError.value = "";
+
+  try {
+    savedAddresses.value = await userAddressService.getAddresses();
+
+    const primaryAddress =
+      savedAddresses.value.find((address) => address.isPrimary) ||
+      savedAddresses.value[0];
+
+    if (primaryAddress && !hasAddressFormValue()) {
+      await applySavedAddress(primaryAddress);
+      isAddressFormVisible.value = false;
+    }
+
+    if (!primaryAddress) {
+      isAddressFormVisible.value = true;
+    }
+
+    if (savedAddresses.value.length === 0) {
+      saveAddressForNextOrder.value = true;
+      setAsPrimaryAddress.value = true;
+      isAddressFormVisible.value = true;
+    }
+
+    if (savedAddresses.value.length === 0) {
+      saveAddressForNextOrder.value = true;
+      setAsPrimaryAddress.value = true;
+    }
+  } catch (error) {
+    if (error?.status === 401) {
+      authStore.clearAuth();
+
+      savedAddresses.value = [];
+      selectedAddressId.value = "";
+      saveAddressForNextOrder.value = false;
+      setAsPrimaryAddress.value = false;
+      addressBookError.value = "";
+
+      toastStore.showToast({
+        title: "Session Expired",
+        message: "Please login again to use your saved addresses.",
+        type: "info",
+      });
+
+      return;
+    }
+
+    addressBookError.value =
+      error?.message || "Failed to load saved addresses.";
+  } finally {
+    isLoadingAddresses.value = false;
+  }
+};
+
+const saveCurrentAddressToBook = async () => {
+  if (!authStore.token || !saveAddressForNextOrder.value) return;
+
+  const duplicateAddress = findDuplicateSavedAddress();
+
+  if (duplicateAddress) {
+    selectedAddressId.value = String(duplicateAddress.id);
+
+    if (setAsPrimaryAddress.value && !duplicateAddress.isPrimary) {
+      try {
+        await userAddressService.setPrimaryAddress(duplicateAddress.id);
+
+        savedAddresses.value = savedAddresses.value.map((address) => ({
+          ...address,
+          isPrimary: String(address.id) === String(duplicateAddress.id),
+        }));
+      } catch (error) {
+        toastStore.showToast({
+          title: "Primary Address Not Updated",
+          message:
+            "Order was created, but primary address could not be updated.",
+          type: "info",
+        });
+      }
+    }
+
+    return;
+  }
+
+  isSavingAddress.value = true;
+
+  try {
+    const savedAddress = await userAddressService.createAddress(
+      buildAddressPayload(),
+    );
+
+    if (savedAddress) {
+      savedAddresses.value.unshift(savedAddress);
+      selectedAddressId.value = String(savedAddress.id);
+    }
+
+    toastStore.showToast({
+      title: "Address Saved",
+      message: "This address has been saved to your address book.",
+      type: "success",
+    });
+  } catch (error) {
+    toastStore.showToast({
+      title: "Address Not Saved",
+      message:
+        error?.message ||
+        "Your order was created, but this address could not be saved.",
+      type: "info",
+    });
+  } finally {
+    isSavingAddress.value = false;
+  }
+};
+
+const markAddressAsCustom = () => {
+  if (selectedAddressId.value) {
+    selectedAddressId.value = "";
+    saveAddressForNextOrder.value = true;
+  }
+
+  isAddressFormVisible.value = true;
+};
+
 const FREE_SHIPPING_TARGET = 2000000;
 
 const form = reactive({
   fullName: "",
   email: "",
   phone: "",
+
+  addressLabel: "Rumah",
 
   provinceId: "",
   province: "",
@@ -746,6 +1304,8 @@ const checkoutDraftFields = [
   "fullName",
   "email",
   "phone",
+
+  "addressLabel",
 
   "provinceId",
   "province",
@@ -954,6 +1514,7 @@ const loadVillages = async (districtId) => {
 };
 
 const handleProvinceChange = async () => {
+  markAddressAsCustom();
   form.province = findRegionName(provinces.value, form.provinceId);
 
   form.cityId = "";
@@ -967,6 +1528,7 @@ const handleProvinceChange = async () => {
 };
 
 const handleCityChange = async () => {
+  markAddressAsCustom();
   form.city = findRegionName(cities.value, form.cityId);
 
   form.districtId = "";
@@ -978,6 +1540,7 @@ const handleCityChange = async () => {
 };
 
 const handleDistrictChange = async () => {
+  markAddressAsCustom();
   form.district = findRegionName(districts.value, form.districtId);
 
   form.villageId = "";
@@ -987,6 +1550,7 @@ const handleDistrictChange = async () => {
 };
 
 const handleVillageChange = () => {
+  markAddressAsCustom();
   form.village = findRegionName(villages.value, form.villageId);
 };
 
@@ -1280,6 +1844,8 @@ const placeOrder = async () => {
 
     const createdOrder = await orderService.createOrder(orderPayload);
 
+    await saveCurrentAddressToBook();
+
     const order = {
       orderNumber:
         createdOrder?.order_code ||
@@ -1397,6 +1963,8 @@ onMounted(async () => {
   if (form.districtId) {
     await loadVillages(form.districtId);
   }
+
+  await loadSavedAddresses();
 
   await loadPaymentMethods();
 });

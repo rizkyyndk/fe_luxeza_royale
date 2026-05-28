@@ -415,9 +415,6 @@ const toggleWishlist = () => {
   });
 };
 
-console.log("Quick view product:", props.product);
-console.log("Size options:", props.product.sizeOptions);
-
 watch(
   () => props.product.id,
   () => {

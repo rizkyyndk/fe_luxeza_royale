@@ -113,12 +113,22 @@ const normalizeOrder = (order, summary = {}) => {
     orderNumber: order.order_code,
 
     customer: {
-      fullName: order.customer_name,
-      email: order.customer_email,
-      phone: order.customer_phone,
-      address: order.customer_address,
-    },
+      fullName: order.customer_name || order.customer?.fullName || "",
+      email: order.customer_email || order.customer?.email || "",
+      phone: order.customer_phone || order.customer?.phone || "",
+      address: order.customer_address || order.customer?.address || "",
 
+      province: order.customer_province || order.customer?.province || "",
+      city: order.customer_city || order.customer?.city || "",
+      district: order.customer_district || order.customer?.district || "",
+      village: order.customer_village || order.customer?.village || "",
+      rt: order.customer_rt || order.customer?.rt || "",
+      rw: order.customer_rw || order.customer?.rw || "",
+      postalCode:
+        order.customer_postal_code || order.customer?.postalCode || "",
+      addressDetail:
+        order.customer_address_detail || order.customer?.addressDetail || "",
+    },
     items,
 
     subtotal,

@@ -108,6 +108,15 @@
           </div>
         </div>
 
+        <!-- SHIPPING ADDRESS -->
+        <AddressSummaryCard
+          v-if="lastOrder"
+          :customer="lastOrder.customer || {}"
+          title="Shipping Address"
+          eyebrow="Delivery Information"
+          class="text-left mb-8"
+        />
+
         <!-- PAYMENT INSTRUCTION -->
         <div
           class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-6 text-left mb-8 shadow-sm"
@@ -234,7 +243,7 @@ import { computed, ref } from "vue";
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
 import Footer from "../components/layout/Footer.vue";
-
+import AddressSummaryCard from "../components/order/AddressSummaryCard.vue";
 import { formatCurrency } from "../utils/formatCurrency";
 
 const loadLastOrder = () => {

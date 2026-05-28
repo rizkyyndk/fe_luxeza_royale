@@ -138,7 +138,9 @@ export const useAuthStore = defineStore("auth", {
           await authService.logout();
         }
       } catch (error) {
-        console.error("Failed to logout:", error);
+        if (error?.status !== 401) {
+          console.error("Failed to logout:", error);
+        }
       } finally {
         this.clearAuth();
       }

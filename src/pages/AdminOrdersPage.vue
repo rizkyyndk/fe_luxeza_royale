@@ -291,49 +291,13 @@
             <div class="p-6 md:p-8 grid lg:grid-cols-[1fr_380px] gap-10">
               <!-- LEFT -->
               <div>
-                <!-- CUSTOMER -->
-                <div
-                  class="bg-luxe-ivory border border-luxe-sand/60 rounded-3xl p-6 mb-6 shadow-sm"
-                >
-                  <h3 class="text-2xl font-bold text-luxe-espresso mb-5">
-                    Customer Detail
-                  </h3>
-
-                  <div class="space-y-3 text-sm">
-                    <div class="flex justify-between gap-4">
-                      <span class="text-luxe-brown/70">Name</span>
-                      <span class="font-semibold text-luxe-espresso text-right">
-                        {{ order.customer?.fullName || "-" }}
-                      </span>
-                    </div>
-
-                    <div class="flex justify-between gap-4">
-                      <span class="text-luxe-brown/70">Email</span>
-                      <span class="font-semibold text-luxe-espresso text-right">
-                        {{ order.customer?.email || "-" }}
-                      </span>
-                    </div>
-
-                    <div class="flex justify-between gap-4">
-                      <span class="text-luxe-brown/70">Phone</span>
-                      <span class="font-semibold text-luxe-espresso text-right">
-                        {{ order.customer?.phone || "-" }}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div
-                    class="mt-5 bg-luxe-cream border border-luxe-sand/50 rounded-3xl p-5"
-                  >
-                    <p class="text-sm font-semibold mb-2 text-luxe-espresso">
-                      Shipping Address
-                    </p>
-
-                    <p class="text-sm text-luxe-brown/75 leading-6">
-                      {{ order.customer?.address || "-" }}
-                    </p>
-                  </div>
-                </div>
+                <!-- CUSTOMER / ADDRESS -->
+                <AddressSummaryCard
+                  :customer="order.customer || {}"
+                  title="Customer & Shipping Address"
+                  eyebrow="Order Recipient"
+                  class="mb-6"
+                />
 
                 <!-- ITEMS -->
                 <div>
@@ -529,6 +493,7 @@ import ProductImage from "../components/ui/ProductImage.vue";
 import { useToastStore } from "../stores/toastStore";
 import { formatCurrency } from "../utils/formatCurrency";
 import { orderService } from "../services/orderService";
+import AddressSummaryCard from "../components/order/AddressSummaryCard.vue";
 
 const toastStore = useToastStore();
 

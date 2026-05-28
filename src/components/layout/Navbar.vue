@@ -51,51 +51,6 @@
         >
           Wishlist
         </RouterLink>
-
-        <RouterLink
-          to="/orders"
-          :class="
-            route.path === '/orders' ? 'text-luxe-espresso' : 'text-luxe-brown'
-          "
-          class="hover:text-luxe-espresso transition"
-        >
-          Orders
-        </RouterLink>
-
-        <RouterLink
-          v-if="authStore.isAdmin"
-          to="/admin/orders"
-          :class="
-            route.path === '/admin/orders'
-              ? 'text-luxe-espresso'
-              : 'text-luxe-brown'
-          "
-          class="hover:text-luxe-espresso transition"
-        >
-          Admin
-        </RouterLink>
-
-        <RouterLink
-          v-if="authStore.isAdmin"
-          to="/admin/payments"
-          :class="
-            route.path === '/admin/payments'
-              ? 'text-luxe-espresso'
-              : 'text-luxe-brown'
-          "
-          class="hover:text-luxe-espresso transition"
-        >
-          Payments
-        </RouterLink>
-
-        <RouterLink
-          v-if="authStore.isAdmin"
-          to="/admin/products"
-          @click="isAccountMenuOpen = false"
-          class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
-        >
-          Admin Products
-        </RouterLink>
       </nav>
 
       <!-- RIGHT -->
@@ -183,6 +138,14 @@
             </RouterLink>
 
             <RouterLink
+              to="/my-addresses"
+              @click="isAccountMenuOpen = false"
+              class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
+            >
+              My Addresses
+            </RouterLink>
+
+            <RouterLink
               v-if="authStore.isAdmin"
               to="/admin/orders"
               @click="isAccountMenuOpen = false"
@@ -231,7 +194,7 @@
   </header>
 
   <!-- MOBILE MENU -->
-  <div v-if="isMobileMenuOpen" class="fixed inset-0 z-[60]">
+  <div v-if="isMobileMenuOpen" class="fixed inset-0 z-[100] overflow-hidden">
     <!-- OVERLAY -->
     <div
       @click="isMobileMenuOpen = false"
@@ -240,9 +203,12 @@
 
     <!-- SIDEBAR -->
     <aside
-      class="absolute right-0 top-0 w-full max-w-[340px] h-screen bg-luxe-ivory p-8 shadow-2xl"
+      class="absolute right-0 top-0 w-full max-w-[340px] h-[100dvh] bg-luxe-ivory shadow-2xl flex flex-col overflow-hidden overscroll-contain"
     >
-      <div class="flex items-center justify-between mb-12">
+      <!-- SIDEBAR HEADER -->
+      <div
+        class="flex items-center justify-between px-8 pt-8 pb-6 flex-shrink-0"
+      >
         <div>
           <h2 class="text-2xl font-bold text-luxe-espresso">Menu</h2>
           <p class="text-sm text-luxe-brown mt-1">Luxeza Royale</p>
@@ -256,7 +222,10 @@
         </button>
       </div>
 
-      <nav class="flex flex-col gap-3 text-lg font-medium text-luxe-espresso">
+      <!-- SCROLLABLE MENU CONTENT -->
+      <nav
+        class="flex-1 overflow-y-auto overscroll-contain px-8 pb-8 flex flex-col gap-3 text-lg font-medium text-luxe-espresso"
+      >
         <RouterLink
           to="/"
           @click="isMobileMenuOpen = false"
@@ -295,36 +264,6 @@
           Wishlist
         </RouterLink>
 
-        <RouterLink
-          to="/orders"
-          @click="isMobileMenuOpen = false"
-          class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
-        >
-          Orders
-        </RouterLink>
-
-        <RouterLink
-          v-if="authStore.isAdmin"
-          to="/admin/orders"
-          :class="
-            route.path === '/admin/orders'
-              ? 'text-luxe-espresso'
-              : 'text-luxe-brown'
-          "
-          class="hover:text-luxe-espresso transition"
-        >
-          Admin
-        </RouterLink>
-
-        <RouterLink
-          v-if="authStore.isAdmin"
-          to="/admin/payments"
-          @click="isMobileMenuOpen = false"
-          class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
-        >
-          Admin Payments
-        </RouterLink>
-
         <div class="border-t border-luxe-sand/60 mt-4 pt-4">
           <RouterLink
             v-if="!authStore.isAuthenticated"
@@ -352,6 +291,14 @@
               class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
             >
               My Orders
+            </RouterLink>
+
+            <RouterLink
+              to="/my-addresses"
+              @click="isMobileMenuOpen = false"
+              class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
+            >
+              My Addresses
             </RouterLink>
 
             <RouterLink
@@ -396,7 +343,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { useCartStore } from "../../stores/cartStore";
@@ -412,6 +359,16 @@ const route = useRoute();
 const authStore = useAuthStore();
 
 const isMobileMenuOpen = ref(false);
+watch(
+  () => isMobileMenuOpen.value,
+  (isOpen) => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+  },
+);
+
+onBeforeUnmount(() => {
+  document.body.style.overflow = "";
+});
 const isAccountMenuOpen = ref(false);
 
 const goToProducts = async () => {
