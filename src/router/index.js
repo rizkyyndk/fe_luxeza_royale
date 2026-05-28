@@ -18,6 +18,7 @@ import VerifyAccountPage from "../pages/VerifyAccountPage.vue";
 import MyAddressesPage from "../pages/MyAddressesPage.vue";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage.vue";
 import ResetPasswordPage from "../pages/ResetPasswordPage.vue";
+import AdminShippingMethodsPage from "../pages/AdminShippingMethodsPage.vue";
 
 const routes = [
   {
@@ -68,6 +69,14 @@ const routes = [
   {
     path: "/admin/payments",
     component: AdminPaymentsPage,
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+    },
+  },
+  {
+    path: "/admin/shipping-methods",
+    component: AdminShippingMethodsPage,
     meta: {
       requiresAuth: true,
       requiresAdmin: true,

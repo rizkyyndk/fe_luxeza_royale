@@ -515,53 +515,114 @@
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-4">
-                  <button
-                    v-for="method in shippingMethods"
-                    :key="method.value"
-                    type="button"
-                    @click="form.shippingMethod = method.value"
-                    :class="
-                      form.shippingMethod === method.value
-                        ? 'bg-luxe-espresso text-luxe-ivory shadow-lg shadow-luxe-brown/20'
-                        : 'border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:border-luxe-royal hover:bg-luxe-cream'
-                    "
-                    class="rounded-2xl px-5 py-4 text-left transition"
+                  <div
+                    v-if="isLoadingShippingMethods"
+                    class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 text-luxe-brown/75"
                   >
-                    <div class="flex items-start justify-between gap-4">
-                      <div>
-                        <p class="font-semibold">
-                          {{ method.label }}
-                        </p>
+                    Loading shipping methods...
+                  </div>
 
-                        <p
+                  <div
+                    v-else-if="shippingMethodError"
+                    class="bg-red-50 border border-red-100 text-red-600 rounded-3xl p-5"
+                  >
+                    {{ shippingMethodError }}
+                  </div>
+
+                  <div
+                    v-else-if="shippingMethods.length === 0"
+                    class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 text-luxe-brown/75"
+                  >
+                    No active shipping method available. Please contact admin.
+                  </div>
+
+                  <div v-else class="grid grid-cols-1 gap-4">
+                    <button
+                      v-for="method in shippingMethods"
+                      :key="method.value"
+                      type="button"
+                      @click="form.shippingMethod = method.value"
+                      :class="
+                        form.shippingMethod === method.value
+                          ? 'bg-luxe-espresso text-luxe-ivory border-luxe-espresso shadow-lg shadow-luxe-brown/20'
+                          : 'bg-luxe-ivory text-luxe-espresso border-luxe-sand hover:border-luxe-royal hover:bg-luxe-cream'
+                      "
+                      class="w-full rounded-3xl border px-5 py-5 text-left transition hover:shadow-md"
+                    >
+                      <div class="flex items-start gap-4">
+                        <span
+                          :class="
+                            form.shippingMethod === method.value
+                              ? 'bg-luxe-ivory/15 text-luxe-ivory border-luxe-ivory/20'
+                              : 'bg-luxe-cream text-luxe-espresso border-luxe-sand/60'
+                          "
+                          class="w-11 h-11 rounded-2xl border flex items-center justify-center text-lg shrink-0 mt-1"
+                        >
+                          🚚
+                        </span>
+
+                        <div class="min-w-0 flex-1">
+                          <p class="font-bold text-lg leading-snug break-words">
+                            {{ method.label }}
+                          </p>
+
+                          <p
+                            :class="
+                              form.shippingMethod === method.value
+                                ? 'text-luxe-sand'
+                                : 'text-luxe-brown/70'
+                            "
+                            class="text-sm mt-2 leading-6 break-words"
+                          >
+                            {{ method.description }}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div
+                        :class="
+                          form.shippingMethod === method.value
+                            ? 'border-luxe-ivory/20'
+                            : 'border-luxe-sand/60'
+                        "
+                        class="mt-5 pt-4 border-t flex items-center justify-between gap-4"
+                      >
+                        <span
                           :class="
                             form.shippingMethod === method.value
                               ? 'text-luxe-sand'
-                              : 'text-luxe-brown/70'
+                              : 'text-luxe-brown/65'
                           "
-                          class="text-sm mt-1"
+                          class="text-sm"
                         >
-                          {{ method.description }}
-                        </p>
-                      </div>
+                          Shipping Fee
+                        </span>
 
-                      <span
-                        :class="
-                          form.shippingMethod === method.value
-                            ? 'text-luxe-ivory'
-                            : 'text-luxe-espresso'
-                        "
-                        class="text-sm font-semibold whitespace-nowrap"
-                      >
-                        {{
-                          isFreeShippingUnlocked
-                            ? "Free"
-                            : formatCurrency(method.cost)
-                        }}
-                      </span>
-                    </div>
-                  </button>
+                        <span
+                          :class="
+                            form.shippingMethod === method.value
+                              ? 'text-luxe-ivory'
+                              : 'text-luxe-espresso'
+                          "
+                          class="text-lg font-bold whitespace-nowrap"
+                        >
+                          {{
+                            isFreeShippingUnlocked
+                              ? "Free"
+                              : formatCurrency(method.cost)
+                          }}
+                        </span>
+                      </div>
+                    </button>
+                  </div>
                 </div>
+
+                <p
+                  v-if="errors.shippingMethod"
+                  class="text-red-500 text-sm mt-2"
+                >
+                  {{ errors.shippingMethod }}
+                </p>
 
                 <!-- FREE SHIPPING PROGRESS -->
                 <div
@@ -888,6 +949,7 @@ import { formatCurrency } from "../utils/formatCurrency";
 import { voucherService } from "../services/voucherService";
 import { orderService } from "../services/orderService";
 import { paymentMethodService } from "../services/paymentMethodService";
+import { shippingMethodService } from "../services/shippingMethodService";
 import { regionService } from "../services/regionService";
 import SearchableSelect from "../components/ui/SearchableSelect.vue";
 import { userAddressService } from "../services/userAddressService";
@@ -1381,24 +1443,44 @@ watch(
 |--------------------------------------------------------------------------
 */
 
-const shippingMethods = [
-  {
-    label: "Standard Delivery",
-    value: "standard",
-    description: "2-4 working days",
-    cost: 20000,
-  },
-  {
-    label: "Express Delivery",
-    value: "express",
-    description: "1-2 working days",
-    cost: 35000,
-  },
-];
+const shippingMethods = ref([]);
+const isLoadingShippingMethods = ref(false);
+const shippingMethodError = ref("");
 
 const selectedShippingMethod = computed(() => {
-  return shippingMethods.find((method) => method.value === form.shippingMethod);
+  return (
+    shippingMethods.value.find(
+      (method) => method.value === form.shippingMethod,
+    ) || null
+  );
 });
+
+const loadShippingMethods = async () => {
+  isLoadingShippingMethods.value = true;
+  shippingMethodError.value = "";
+
+  try {
+    shippingMethods.value =
+      await shippingMethodService.getActiveShippingMethods();
+
+    const selectedMethodStillExists = shippingMethods.value.some(
+      (method) => method.value === form.shippingMethod,
+    );
+
+    if (!form.shippingMethod || !selectedMethodStillExists) {
+      form.shippingMethod = shippingMethods.value[0]?.value || "";
+    }
+  } catch (error) {
+    console.error("Failed to load shipping methods:", error);
+
+    shippingMethods.value = [];
+
+    shippingMethodError.value =
+      error?.message || "Failed to load shipping methods.";
+  } finally {
+    isLoadingShippingMethods.value = false;
+  }
+};
 
 const isFreeShippingUnlocked = computed(() => {
   return cartStore.selectedTotalPrice >= FREE_SHIPPING_TARGET;
@@ -1697,6 +1779,8 @@ const isFormValid = computed(() => {
     form.addressDetail.trim() !== "" &&
     String(form.paymentMethod || "").trim() !== "" &&
     !cartStore.isEmpty &&
+    String(form.shippingMethod || "").trim() !== "" &&
+    String(form.paymentMethod || "").trim() !== "" &&
     cartStore.hasSelectedItems
   );
 });
@@ -1782,6 +1866,10 @@ const validateForm = () => {
 
   if (!form.addressDetail.trim()) {
     validationErrors.addressDetail = "Address detail is required.";
+  }
+
+  if (!form.shippingMethod) {
+    validationErrors.shippingMethod = "Shipping method is required.";
   }
 
   if (!form.paymentMethod) {
@@ -1910,6 +1998,7 @@ const placeOrder = async () => {
       customer_postal_code: form.postalCode,
       customer_address_detail: form.addressDetail,
 
+      shipping_method: form.shippingMethod,
       payment_method_code: form.paymentMethod,
       voucher_code: appliedVoucher.value ? appliedVoucher.value.code : null,
 
@@ -2048,7 +2137,7 @@ onMounted(async () => {
   }
 
   await loadSavedAddresses();
-
+  await loadShippingMethods();
   await loadPaymentMethods();
 });
 </script>
