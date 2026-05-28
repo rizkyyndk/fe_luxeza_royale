@@ -83,6 +83,18 @@ export const httpClient = {
     return handleResponse(response);
   },
 
+  async patch(endpoint, payload) {
+    const response = await fetch(buildUrl(endpoint), {
+      method: "PATCH",
+      headers: buildHeaders({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify(payload),
+    });
+
+    return handleResponse(response);
+  },
+
   async delete(endpoint) {
     const response = await fetch(buildUrl(endpoint), {
       method: "DELETE",

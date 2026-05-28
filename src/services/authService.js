@@ -21,6 +21,16 @@ export const authService = {
     return unwrapData(response, null);
   },
 
+  async verifyAccount(payload) {
+    const response = await httpClient.post("/auth/verify", payload);
+    return unwrapData(response, null);
+  },
+
+  async resendVerificationCode(payload) {
+    const response = await httpClient.post("/auth/resend-code", payload);
+    return unwrapData(response, null);
+  },
+
   async me() {
     const response = await httpClient.get("/auth/me");
     return unwrapData(response, null);

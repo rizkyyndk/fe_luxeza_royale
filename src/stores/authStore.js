@@ -58,7 +58,11 @@ export const useAuthStore = defineStore("auth", {
 
       try {
         const data = await authService.login(payload);
-        this.setAuth(data);
+
+        if (data?.token && data?.user) {
+          this.setAuth(data);
+        }
+
         return data;
       } finally {
         this.isLoading = false;
@@ -70,8 +74,38 @@ export const useAuthStore = defineStore("auth", {
 
       try {
         const data = await authService.register(payload);
-        this.setAuth(data);
+
+        if (data?.token && data?.user) {
+          this.setAuth(data);
+        }
+
         return data;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async verifyAccount(payload) {
+      this.isLoading = true;
+
+      try {
+        const data = await authService.verifyAccount(payload);
+
+        if (data?.token && data?.user) {
+          this.setAuth(data);
+        }
+
+        return data;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async resendVerificationCode(payload) {
+      this.isLoading = true;
+
+      try {
+        return await authService.resendVerificationCode(payload);
       } finally {
         this.isLoading = false;
       }

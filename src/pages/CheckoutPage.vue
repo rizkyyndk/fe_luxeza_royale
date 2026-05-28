@@ -78,12 +78,28 @@
 
               <!-- PHONE -->
               <div>
-                <input
-                  v-model="form.phone"
-                  type="text"
-                  placeholder="Phone Number"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition shadow-sm"
-                />
+                <div>
+                  <div class="flex">
+                    <div
+                      class="px-5 py-5 rounded-l-2xl border border-r-0 border-luxe-sand bg-luxe-cream text-luxe-espresso font-semibold"
+                    >
+                      +62
+                    </div>
+
+                    <input
+                      v-model="form.phone"
+                      @input="handlePhoneInput"
+                      type="text"
+                      inputmode="numeric"
+                      placeholder="81234567890"
+                      class="w-full border border-luxe-sand rounded-r-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                    />
+                  </div>
+
+                  <p v-if="errors.phone" class="text-red-500 text-sm mt-2">
+                    {{ errors.phone }}
+                  </p>
+                </div>
 
                 <p v-if="errors.phone" class="text-red-500 text-sm mt-2">
                   {{ errors.phone }}
@@ -92,12 +108,124 @@
 
               <!-- ADDRESS -->
               <div>
-                <textarea
-                  v-model="form.address"
-                  placeholder="Shipping Address"
-                  rows="5"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition resize-none shadow-sm"
-                ></textarea>
+                <!-- ADDRESS DETAIL -->
+                <div class="grid md:grid-cols-2 gap-5">
+                  <div>
+                    <input
+                      v-model="form.province"
+                      type="text"
+                      placeholder="Province"
+                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                    />
+
+                    <p v-if="errors.province" class="text-red-500 text-sm mt-2">
+                      {{ errors.province }}
+                    </p>
+                  </div>
+
+                  <div>
+                    <input
+                      v-model="form.city"
+                      type="text"
+                      placeholder="City / Regency"
+                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                    />
+
+                    <p v-if="errors.city" class="text-red-500 text-sm mt-2">
+                      {{ errors.city }}
+                    </p>
+                  </div>
+
+                  <div>
+                    <input
+                      v-model="form.district"
+                      type="text"
+                      placeholder="District / Kecamatan"
+                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                    />
+
+                    <p v-if="errors.district" class="text-red-500 text-sm mt-2">
+                      {{ errors.district }}
+                    </p>
+                  </div>
+
+                  <div>
+                    <input
+                      v-model="form.village"
+                      type="text"
+                      placeholder="Village / Kelurahan"
+                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                    />
+
+                    <p v-if="errors.village" class="text-red-500 text-sm mt-2">
+                      {{ errors.village }}
+                    </p>
+                  </div>
+
+                  <div>
+                    <input
+                      v-model="form.rt"
+                      @input="handleNumericInput('rt')"
+                      type="text"
+                      inputmode="numeric"
+                      placeholder="RT"
+                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                    />
+
+                    <p v-if="errors.rt" class="text-red-500 text-sm mt-2">
+                      {{ errors.rt }}
+                    </p>
+                  </div>
+
+                  <div>
+                    <input
+                      v-model="form.rw"
+                      @input="handleNumericInput('rw')"
+                      type="text"
+                      inputmode="numeric"
+                      placeholder="RW"
+                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                    />
+
+                    <p v-if="errors.rw" class="text-red-500 text-sm mt-2">
+                      {{ errors.rw }}
+                    </p>
+                  </div>
+
+                  <div class="md:col-span-2">
+                    <input
+                      v-model="form.postalCode"
+                      @input="handleNumericInput('postalCode')"
+                      type="text"
+                      inputmode="numeric"
+                      placeholder="Postal Code"
+                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                    />
+
+                    <p
+                      v-if="errors.postalCode"
+                      class="text-red-500 text-sm mt-2"
+                    >
+                      {{ errors.postalCode }}
+                    </p>
+                  </div>
+
+                  <div class="md:col-span-2">
+                    <textarea
+                      v-model="form.addressDetail"
+                      placeholder="Street name, house number, building, landmark"
+                      rows="5"
+                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition resize-none bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                    ></textarea>
+
+                    <p
+                      v-if="errors.addressDetail"
+                      class="text-red-500 text-sm mt-2"
+                    >
+                      {{ errors.addressDetail }}
+                    </p>
+                  </div>
+                </div>
 
                 <p v-if="errors.address" class="text-red-500 text-sm mt-2">
                   {{ errors.address }}
@@ -232,55 +360,38 @@
                   No active payment method available. Please contact admin.
                 </div>
 
-                <div v-else class="grid sm:grid-cols-2 gap-4">
-                  <button
-                    v-for="method in paymentMethods"
-                    :key="method.code"
-                    type="button"
-                    @click="form.paymentMethod = method.code"
-                    :class="
-                      form.paymentMethod === method.code
-                        ? 'bg-luxe-espresso text-luxe-ivory shadow-lg shadow-luxe-brown/20'
-                        : 'border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:border-luxe-royal hover:bg-luxe-cream'
-                    "
-                    class="rounded-2xl px-5 py-4 text-left transition"
-                  >
-                    <div class="flex items-start justify-between gap-4">
-                      <div>
-                        <p class="font-semibold">
-                          {{ method.name }}
-                        </p>
+                <div v-else>
+                  <div class="grid sm:grid-cols-2 gap-4">
+                    <button
+                      v-for="method in paymentMethods"
+                      :key="method.code"
+                      type="button"
+                      @click="form.paymentMethod = method.code"
+                      :class="
+                        form.paymentMethod === method.code
+                          ? 'bg-luxe-espresso text-luxe-ivory shadow-lg shadow-luxe-brown/20'
+                          : 'border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:border-luxe-royal hover:bg-luxe-cream'
+                      "
+                      class="rounded-2xl px-5 py-4 text-left transition"
+                    >
+                      <div class="flex items-start justify-between gap-4">
+                        <div>
+                          <p class="font-semibold">
+                            {{ method.name }}
+                          </p>
 
-                        <p
-                          :class="
-                            form.paymentMethod === method.code
-                              ? 'text-luxe-sand'
-                              : 'text-luxe-brown/70'
-                          "
-                          class="text-sm mt-1"
-                        >
-                          <span v-if="method.type === 'qris'">
-                            QRIS manual confirmation
-                          </span>
-
-                          <span v-else>
-                            {{ method.bankName }} • {{ method.accountName }}
-                          </span>
-                        </p>
+                          <!-- isi detail payment kamu lanjutkan di sini -->
+                        </div>
                       </div>
+                    </button>
+                  </div>
 
-                      <span
-                        class="text-lg"
-                        :class="
-                          form.paymentMethod === method.code
-                            ? 'text-luxe-ivory'
-                            : 'text-luxe-espresso'
-                        "
-                      >
-                        {{ method.type === "qris" ? "📱" : "🏦" }}
-                      </span>
-                    </div>
-                  </button>
+                  <p
+                    v-if="errors.paymentMethod"
+                    class="text-red-500 text-sm mt-2"
+                  >
+                    {{ errors.paymentMethod }}
+                  </p>
                 </div>
               </div>
             </form>
@@ -483,26 +594,30 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
+import ProductImage from "../components/ui/ProductImage.vue";
+import Footer from "../components/layout/Footer.vue";
 
 import { useCartStore } from "../stores/cartStore";
 import { useToastStore } from "../stores/toastStore";
+import { useOrderStore } from "../stores/orderStore";
+import { useAuthStore } from "../stores/authStore";
+
 import { formatCurrency } from "../utils/formatCurrency";
-import ProductImage from "../components/ui/ProductImage.vue";
-import Footer from "../components/layout/Footer.vue";
 import { voucherService } from "../services/voucherService";
 import { orderService } from "../services/orderService";
-import { useOrderStore } from "../stores/orderStore";
 import { paymentMethodService } from "../services/paymentMethodService";
 
 const router = useRouter();
+
 const cartStore = useCartStore();
 const toastStore = useToastStore();
 const orderStore = useOrderStore();
+const authStore = useAuthStore();
 
 const errors = ref({});
 const isSubmitting = ref(false);
@@ -517,10 +632,94 @@ const form = reactive({
   fullName: "",
   email: "",
   phone: "",
-  address: "",
+  province: "",
+  city: "",
+  district: "",
+  village: "",
+  rt: "",
+  rw: "",
+  postalCode: "",
+  addressDetail: "",
   shippingMethod: "standard",
   paymentMethod: "",
 });
+
+/*
+|--------------------------------------------------------------------------
+| Checkout Draft Autosave
+|--------------------------------------------------------------------------
+*/
+
+const CHECKOUT_DRAFT_PREFIX = "checkoutFormDraft";
+
+const getCheckoutDraftKey = () => {
+  const userId = authStore.user?.id || "guest";
+  return `${CHECKOUT_DRAFT_PREFIX}:user:${userId}`;
+};
+
+const checkoutDraftFields = [
+  "fullName",
+  "email",
+  "phone",
+  "province",
+  "city",
+  "district",
+  "village",
+  "rt",
+  "rw",
+  "postalCode",
+  "addressDetail",
+  "shippingMethod",
+  "paymentMethod",
+];
+
+const saveCheckoutDraft = () => {
+  const draft = {};
+
+  checkoutDraftFields.forEach((field) => {
+    draft[field] = form[field];
+  });
+
+  sessionStorage.setItem(getCheckoutDraftKey(), JSON.stringify(draft));
+};
+
+const loadCheckoutDraft = () => {
+  try {
+    const savedDraft = sessionStorage.getItem(getCheckoutDraftKey());
+
+    if (!savedDraft) return;
+
+    const draft = JSON.parse(savedDraft);
+
+    checkoutDraftFields.forEach((field) => {
+      if (draft[field] !== undefined) {
+        form[field] = draft[field];
+      }
+    });
+  } catch (error) {
+    console.error("Failed to load checkout draft:", error);
+  }
+};
+
+const clearCheckoutDraft = () => {
+  sessionStorage.removeItem(getCheckoutDraftKey());
+};
+
+watch(
+  form,
+  () => {
+    saveCheckoutDraft();
+  },
+  {
+    deep: true,
+  },
+);
+
+/*
+|--------------------------------------------------------------------------
+| Shipping
+|--------------------------------------------------------------------------
+*/
 
 const shippingMethods = [
   {
@@ -536,37 +735,6 @@ const shippingMethods = [
     cost: 35000,
   },
 ];
-
-const paymentMethods = ref([]);
-const isLoadingPaymentMethods = ref(false);
-const paymentMethodError = ref("");
-
-const selectedPaymentMethod = computed(() => {
-  return (
-    paymentMethods.value.find((method) => method.code === form.paymentMethod) ||
-    null
-  );
-});
-
-const loadPaymentMethods = async () => {
-  isLoadingPaymentMethods.value = true;
-  paymentMethodError.value = "";
-
-  try {
-    paymentMethods.value = await paymentMethodService.getActivePaymentMethods();
-
-    if (!form.paymentMethod && paymentMethods.value.length > 0) {
-      form.paymentMethod = paymentMethods.value[0].code;
-    }
-  } catch (error) {
-    console.error("Failed to load payment methods:", error);
-
-    paymentMethodError.value =
-      error?.message || "Failed to load payment methods.";
-  } finally {
-    isLoadingPaymentMethods.value = false;
-  }
-};
 
 const selectedShippingMethod = computed(() => {
   return shippingMethods.find((method) => method.value === form.shippingMethod);
@@ -599,6 +767,53 @@ const shippingLabel = computed(() => {
   return shippingCost.value === 0 ? "Free" : formatCurrency(shippingCost.value);
 });
 
+/*
+|--------------------------------------------------------------------------
+| Payment Methods
+|--------------------------------------------------------------------------
+*/
+
+const paymentMethods = ref([]);
+const isLoadingPaymentMethods = ref(false);
+const paymentMethodError = ref("");
+
+const selectedPaymentMethod = computed(() => {
+  return (
+    paymentMethods.value.find((method) => method.code === form.paymentMethod) ||
+    null
+  );
+});
+
+const loadPaymentMethods = async () => {
+  isLoadingPaymentMethods.value = true;
+  paymentMethodError.value = "";
+
+  try {
+    paymentMethods.value = await paymentMethodService.getActivePaymentMethods();
+
+    const selectedMethodStillExists = paymentMethods.value.some(
+      (method) => method.code === form.paymentMethod,
+    );
+
+    if (form.paymentMethod && !selectedMethodStillExists) {
+      form.paymentMethod = "";
+    }
+  } catch (error) {
+    console.error("Failed to load payment methods:", error);
+
+    paymentMethodError.value =
+      error?.message || "Failed to load payment methods.";
+  } finally {
+    isLoadingPaymentMethods.value = false;
+  }
+};
+
+/*
+|--------------------------------------------------------------------------
+| Totals
+|--------------------------------------------------------------------------
+*/
+
 const discountAmount = computed(() => {
   if (!appliedVoucher.value) return 0;
 
@@ -612,6 +827,12 @@ const grandTotal = computed(() => {
   );
 });
 
+/*
+|--------------------------------------------------------------------------
+| Form Validation
+|--------------------------------------------------------------------------
+*/
+
 const isValidEmail = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
@@ -621,12 +842,52 @@ const isFormValid = computed(() => {
     form.fullName.trim() !== "" &&
     isValidEmail(form.email) &&
     form.phone.trim() !== "" &&
-    form.address.trim() !== "" &&
-    form.paymentMethod.trim() !== "" &&
+    form.phone.length >= 8 &&
+    form.province.trim() !== "" &&
+    form.city.trim() !== "" &&
+    form.district.trim() !== "" &&
+    form.village.trim() !== "" &&
+    form.rt.trim() !== "" &&
+    form.rw.trim() !== "" &&
+    form.postalCode.trim() !== "" &&
+    form.addressDetail.trim() !== "" &&
+    String(form.paymentMethod || "").trim() !== "" &&
     !cartStore.isEmpty &&
     cartStore.hasSelectedItems
   );
 });
+
+const normalizePhoneNumber = (phone) => {
+  const digits = String(phone || "")
+    .replace(/\D/g, "")
+    .replace(/^0+/, "");
+
+  return `62${digits}`;
+};
+
+const handlePhoneInput = () => {
+  form.phone = String(form.phone || "")
+    .replace(/\D/g, "")
+    .replace(/^0+/, "");
+};
+
+const handleNumericInput = (field) => {
+  form[field] = String(form[field] || "").replace(/\D/g, "");
+};
+
+const buildFullAddress = () => {
+  return [
+    form.addressDetail,
+    `Kel. ${form.village}`,
+    `Kec. ${form.district}`,
+    form.city,
+    form.province,
+    `RT ${form.rt}/RW ${form.rw}`,
+    form.postalCode,
+  ]
+    .filter(Boolean)
+    .join(", ");
+};
 
 const validateForm = () => {
   const validationErrors = {};
@@ -643,10 +904,44 @@ const validateForm = () => {
 
   if (!form.phone.trim()) {
     validationErrors.phone = "Phone number is required.";
+  } else if (form.phone.length < 8) {
+    validationErrors.phone = "Phone number is too short.";
   }
 
-  if (!form.address.trim()) {
-    validationErrors.address = "Shipping address is required.";
+  if (!form.province.trim()) {
+    validationErrors.province = "Province is required.";
+  }
+
+  if (!form.city.trim()) {
+    validationErrors.city = "City or regency is required.";
+  }
+
+  if (!form.district.trim()) {
+    validationErrors.district = "District is required.";
+  }
+
+  if (!form.village.trim()) {
+    validationErrors.village = "Village is required.";
+  }
+
+  if (!form.rt.trim()) {
+    validationErrors.rt = "RT is required.";
+  }
+
+  if (!form.rw.trim()) {
+    validationErrors.rw = "RW is required.";
+  }
+
+  if (!form.postalCode.trim()) {
+    validationErrors.postalCode = "Postal code is required.";
+  }
+
+  if (!form.addressDetail.trim()) {
+    validationErrors.addressDetail = "Address detail is required.";
+  }
+
+  if (!form.paymentMethod) {
+    validationErrors.paymentMethod = "Payment method is required.";
   }
 
   errors.value = validationErrors;
@@ -654,13 +949,11 @@ const validateForm = () => {
   return Object.keys(validationErrors).length === 0;
 };
 
-const generateOrderNumber = () => {
-  return `LXZ-${Date.now().toString().slice(-6)}`;
-};
-
-const delay = (ms) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-};
+/*
+|--------------------------------------------------------------------------
+| Voucher
+|--------------------------------------------------------------------------
+*/
 
 const applyVoucher = async () => {
   voucherError.value = "";
@@ -714,6 +1007,16 @@ const removeVoucher = () => {
   });
 };
 
+/*
+|--------------------------------------------------------------------------
+| Place Order
+|--------------------------------------------------------------------------
+*/
+
+const generateOrderNumber = () => {
+  return `LXZ-${Date.now().toString().slice(-6)}`;
+};
+
 const placeOrder = async () => {
   if (isSubmitting.value) return;
 
@@ -721,19 +1024,39 @@ const placeOrder = async () => {
 
   if (!isValid || cartStore.isEmpty || !cartStore.hasSelectedItems) return;
 
+  if (!form.paymentMethod) {
+    toastStore.showToast({
+      title: "Payment Method Required",
+      message: "Please select a payment method before placing your order.",
+      type: "error",
+    });
+
+    return;
+  }
+
   isSubmitting.value = true;
 
   try {
+    const fullAddress = buildFullAddress();
+
     const orderPayload = {
       customer_name: form.fullName,
       customer_email: form.email,
-      customer_phone: form.phone,
-      customer_address: form.address,
-      voucher_code: appliedVoucher.value ? appliedVoucher.value.code : null,
+      customer_phone: normalizePhoneNumber(form.phone),
+      customer_address: fullAddress,
+
+      customer_province: form.province,
+      customer_city: form.city,
+      customer_district: form.district,
+      customer_village: form.village,
+      customer_rt: form.rt,
+      customer_rw: form.rw,
+      customer_postal_code: form.postalCode,
+      customer_address_detail: form.addressDetail,
+
       payment_method_code: form.paymentMethod,
-      shipping_method: form.shippingMethod,
-      payment_method: form.paymentMethod,
-      paymentMethodData: selectedPaymentMethod.value,
+      voucher_code: appliedVoucher.value ? appliedVoucher.value.code : null,
+
       items: cartStore.selectedItems.map((item) => ({
         product_id: item.product_id || item.productId || item.id,
         slug: item.slug || null,
@@ -753,8 +1076,16 @@ const placeOrder = async () => {
       customer: {
         fullName: form.fullName,
         email: form.email,
-        phone: form.phone,
-        address: form.address,
+        phone: normalizePhoneNumber(form.phone),
+        address: fullAddress,
+        province: form.province,
+        city: form.city,
+        district: form.district,
+        village: form.village,
+        rt: form.rt,
+        rw: form.rw,
+        postalCode: form.postalCode,
+        addressDetail: form.addressDetail,
       },
 
       shippingMethod: form.shippingMethod,
@@ -787,6 +1118,8 @@ const placeOrder = async () => {
 
     sessionStorage.setItem("lastOrder", JSON.stringify(order));
 
+    clearCheckoutDraft();
+
     orderStore.addOrder(order);
 
     cartStore.removeSelectedItems();
@@ -800,6 +1133,24 @@ const placeOrder = async () => {
 
     router.push("/checkout/success");
   } catch (error) {
+    const stockError = error?.data || error?.response?.data?.data || null;
+
+    if (
+      error?.message?.toLowerCase().includes("insufficient stock") &&
+      stockError?.product_id
+    ) {
+      cartStore.removeItem(stockError.product_id, stockError.size);
+
+      toastStore.showToast({
+        title: "Stock Not Available",
+        message: `${stockError.product_name} size ${stockError.size} is out of stock and has been removed from your cart.`,
+        type: "error",
+        duration: 5000,
+      });
+
+      return;
+    }
+
     toastStore.showToast({
       title: "Order Failed",
       message: error?.message || "Failed to create order. Please try again.",
@@ -811,7 +1162,15 @@ const placeOrder = async () => {
   }
 };
 
-onMounted(() => {
-  loadPaymentMethods();
+/*
+|--------------------------------------------------------------------------
+| Lifecycle
+|--------------------------------------------------------------------------
+*/
+
+onMounted(async () => {
+  loadCheckoutDraft();
+
+  await loadPaymentMethods();
 });
 </script>

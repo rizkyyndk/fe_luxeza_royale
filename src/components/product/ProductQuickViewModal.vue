@@ -56,23 +56,27 @@
             <p class="font-semibold text-luxe-espresso">Select Size</p>
 
             <p class="text-sm text-luxe-brown/65">
-              {{ product.stock }} item available
+              {{ selectedStockLabel }}
             </p>
           </div>
 
           <div class="flex flex-wrap gap-3">
             <button
-              v-for="size in availableSizes"
-              :key="size"
-              @click="selectSize(size)"
+              v-for="sizeOption in availableSizes"
+              :key="sizeOption.size"
+              type="button"
+              :disabled="sizeOption.stock <= 0"
+              @click="selectSize(sizeOption)"
               :class="
-                selectedSize === size
-                  ? 'bg-luxe-espresso text-luxe-ivory scale-105 shadow-lg shadow-luxe-brown/20'
-                  : 'border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream'
+                sizeOption.stock <= 0
+                  ? 'border border-luxe-sand/60 text-luxe-brown/35 bg-luxe-cream/60 cursor-not-allowed line-through'
+                  : selectedSize === sizeOption.size
+                    ? 'bg-luxe-espresso text-luxe-ivory scale-105 shadow-lg shadow-luxe-brown/20'
+                    : 'border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream'
               "
               class="px-5 py-3 rounded-full transition"
             >
-              {{ size }}
+              {{ sizeOption.size }}
             </button>
           </div>
 
@@ -182,7 +186,67 @@ const quantity = ref(1);
 const errorMessage = ref("");
 
 const availableSizes = computed(() => {
-  return props.product.sizes || [];
+  const rawSizes =
+    props.product.sizeOptions && props.product.sizeOptions.length > 0
+      ? props.product.sizeOptions
+      : props.product.sizes || [];
+
+  return rawSizes.map((size) => {
+    if (typeof size === "string") {
+      return {
+        size,
+        stock: Number(props.product.stock || 0),
+        isActive: true,
+      };
+    }
+
+    return {
+      size: size.size,
+      stock: Number(size.stock || 0),
+      isActive: size.isActive ?? size.is_active ?? true,
+    };
+  });
+});
+
+const totalAvailableStock = computed(() => {
+  if (availableSizes.value.length === 0) {
+    return Number(props.product.stock || 0);
+  }
+
+  return availableSizes.value
+    .filter((size) => size.isActive)
+    .reduce((total, size) => total + Number(size.stock || 0), 0);
+});
+
+const selectedSizeData = computed(() => {
+  return (
+    availableSizes.value.find((size) => size.size === selectedSize.value) ||
+    null
+  );
+});
+
+const selectedStock = computed(() => {
+  if (selectedSizeData.value) {
+    return Number(selectedSizeData.value.stock || 0);
+  }
+
+  return totalAvailableStock.value;
+});
+
+const selectedStockLabel = computed(() => {
+  if (availableSizes.value.length > 0 && !selectedSize.value) {
+    return `${totalAvailableStock.value} item available`;
+  }
+
+  if (selectedStock.value <= 0) {
+    return "Out of stock";
+  }
+
+  return `${selectedStock.value} item available`;
+});
+
+const isSelectedSizeOutOfStock = computed(() => {
+  return Boolean(selectedSize.value) && selectedStock.value <= 0;
 });
 
 const mainImage = computed(() => {
@@ -194,11 +258,11 @@ const mainImage = computed(() => {
 });
 
 const isOutOfStock = computed(() => {
-  return props.product.stock <= 0;
+  return totalAvailableStock.value <= 0;
 });
 
 const isLowStock = computed(() => {
-  return props.product.stock > 0 && props.product.stock <= 3;
+  return totalAvailableStock.value > 0 && totalAvailableStock.value <= 3;
 });
 
 const stockStatus = computed(() => {
@@ -223,16 +287,27 @@ const closeModal = () => {
   emit("close");
 };
 
-const selectSize = (size) => {
-  selectedSize.value = size;
+const selectSize = (sizeOption) => {
+  if (sizeOption.stock <= 0) {
+    toastStore.showToast({
+      title: "Size Out of Stock",
+      message: `Size ${sizeOption.size} is currently out of stock.`,
+      type: "info",
+    });
+
+    return;
+  }
+
+  selectedSize.value = sizeOption.size;
+  quantity.value = 1;
   errorMessage.value = "";
 };
 
 const increaseQuantity = () => {
-  if (quantity.value >= props.product.stock) {
+  if (quantity.value >= selectedStock.value) {
     toastStore.showToast({
       title: "Stock Limit Reached",
-      message: `Only ${props.product.stock} item available.`,
+      message: `Only ${selectedStock.value} item available for this size.`,
       type: "info",
     });
 
@@ -271,10 +346,35 @@ const addToCart = () => {
     return;
   }
 
+  if (isSelectedSizeOutOfStock.value) {
+    errorMessage.value = "Selected size is out of stock.";
+
+    toastStore.showToast({
+      title: "Out of Stock",
+      message: "Please select another size.",
+      type: "error",
+    });
+
+    return;
+  }
+
+  if (isSelectedSizeOutOfStock.value) {
+    errorMessage.value = "Selected size is out of stock.";
+
+    toastStore.showToast({
+      title: "Out of Stock",
+      message: "Please select another size.",
+      type: "error",
+    });
+
+    return;
+  }
+
   cartStore.addToCart(
     {
       ...props.product,
       size: selectedSize.value || "One Size",
+      stock: selectedStock.value,
     },
     quantity.value,
   );
@@ -304,6 +404,7 @@ const toggleWishlist = () => {
     images: props.product.images,
     description: props.product.description,
     sizes: props.product.sizes,
+    sizeOptions: props.product.sizeOptions,
     stock: props.product.stock,
   });
 
@@ -313,6 +414,9 @@ const toggleWishlist = () => {
     type: wasSaved ? "info" : "success",
   });
 };
+
+console.log("Quick view product:", props.product);
+console.log("Size options:", props.product.sizeOptions);
 
 watch(
   () => props.product.id,

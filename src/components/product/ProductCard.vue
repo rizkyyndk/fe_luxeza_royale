@@ -118,6 +118,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  sizeOptions: {
+    type: Array,
+    default: () => [],
+  },
   stock: {
     type: Number,
     default: null,
@@ -139,6 +143,7 @@ const productPayload = computed(() => {
     images: props.images,
     description: props.description,
     sizes: props.sizes,
+    sizeOptions: props.sizeOptions,
     stock: props.stock,
   };
 });
@@ -181,6 +186,7 @@ const toggleWishlist = () => {
     images: props.images,
     description: props.description,
     sizes: props.sizes,
+    sizeOptions: props.sizeOptions,
     stock: props.stock,
   });
 

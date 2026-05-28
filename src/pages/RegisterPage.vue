@@ -57,12 +57,81 @@
           </div>
 
           <div>
-            <input
-              v-model="form.password"
-              type="password"
-              placeholder="Password"
-              class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition"
-            />
+            <div>
+              <div class="relative">
+                <input
+                  v-model="form.password"
+                  :type="showPassword ? 'text' : 'password'"
+                  placeholder="Password"
+                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 pr-16 outline-none focus:border-luxe-royal transition"
+                />
+
+                <button
+                  @click="showPassword = !showPassword"
+                  type="button"
+                  class="absolute right-5 top-1/2 -translate-y-1/2 text-luxe-brown/70 hover:text-luxe-espresso transition"
+                >
+                  {{ showPassword ? "🙈" : "👁" }}
+                </button>
+              </div>
+
+              <p v-if="errors.password" class="text-red-500 text-sm mt-2">
+                {{ errors.password }}
+              </p>
+
+              <div class="mt-4 grid sm:grid-cols-2 gap-2 text-sm">
+                <p
+                  :class="
+                    passwordRules.minLength
+                      ? 'text-green-600'
+                      : 'text-luxe-brown/60'
+                  "
+                >
+                  ✓ Minimum 8 characters
+                </p>
+
+                <p
+                  :class="
+                    passwordRules.uppercase
+                      ? 'text-green-600'
+                      : 'text-luxe-brown/60'
+                  "
+                >
+                  ✓ Uppercase letter
+                </p>
+
+                <p
+                  :class="
+                    passwordRules.lowercase
+                      ? 'text-green-600'
+                      : 'text-luxe-brown/60'
+                  "
+                >
+                  ✓ Lowercase letter
+                </p>
+
+                <p
+                  :class="
+                    passwordRules.number
+                      ? 'text-green-600'
+                      : 'text-luxe-brown/60'
+                  "
+                >
+                  ✓ Number
+                </p>
+
+                <p
+                  :class="
+                    passwordRules.symbol
+                      ? 'text-green-600'
+                      : 'text-luxe-brown/60'
+                  "
+                  class="sm:col-span-2"
+                >
+                  ✓ Symbol @ $ ! % * # ? &
+                </p>
+              </div>
+            </div>
 
             <p v-if="errors.password" class="text-red-500 text-sm mt-2">
               {{ errors.password }}
@@ -99,7 +168,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import Navbar from "../components/layout/Navbar.vue";
@@ -121,6 +190,8 @@ const toastStore = useToastStore();
 const cartStore = useCartStore();
 const wishlistStore = useWishlistStore();
 
+const showPassword = ref(false);
+
 const errorMessage = ref("");
 const errors = ref({});
 
@@ -128,6 +199,18 @@ const form = reactive({
   name: "",
   email: "",
   password: "",
+});
+
+const passwordRules = computed(() => ({
+  minLength: form.password.length >= 8,
+  uppercase: /[A-Z]/.test(form.password),
+  lowercase: /[a-z]/.test(form.password),
+  number: /[0-9]/.test(form.password),
+  symbol: /[@$!%*#?&]/.test(form.password),
+}));
+
+const isPasswordStrong = computed(() => {
+  return Object.values(passwordRules.value).every(Boolean);
 });
 
 const validateForm = () => {
@@ -143,8 +226,9 @@ const validateForm = () => {
 
   if (!form.password.trim()) {
     validationErrors.password = "Password is required.";
-  } else if (form.password.length < 6) {
-    validationErrors.password = "Password must be at least 6 characters.";
+  } else if (!isPasswordStrong.value) {
+    validationErrors.password =
+      "Password must be at least 8 characters and contain uppercase, lowercase, number, and symbol.";
   }
 
   errors.value = validationErrors;
@@ -158,30 +242,48 @@ const submitRegister = async () => {
   if (!validateForm()) return;
 
   try {
-    await authStore.register({
+    const data = await authStore.register({
       name: form.name,
       email: form.email,
       password: form.password,
     });
 
-    cartStore.switchToUserCart(authStore.user?.id);
-    wishlistStore.switchToUserWishlist(authStore.user?.id);
+    sessionStorage.setItem(
+      "pendingVerificationEmail",
+      data?.email || form.email,
+    );
+
+    if (data?.verification_code) {
+      sessionStorage.setItem("pendingVerificationCode", data.verification_code);
+    } else {
+      sessionStorage.removeItem("pendingVerificationCode");
+    }
 
     toastStore.showToast({
-      title: "Account Created",
-      message: `Welcome, ${authStore.userName}.`,
+      title: "Registration Successful",
+      message: "Please verify your account using the verification code.",
       type: "success",
     });
 
     const redirectPath = route.query.redirect || "/";
 
-    router.push(String(redirectPath));
+    router.push({
+      path: "/verify-account",
+      query: {
+        email: data?.email || form.email,
+        redirect: String(redirectPath),
+      },
+    });
   } catch (error) {
     errorMessage.value = error?.message || "Register failed.";
 
+    const firstError = error?.errors
+      ? Object.values(error.errors).flat()[0]
+      : null;
+
     toastStore.showToast({
       title: "Register Failed",
-      message: errorMessage.value,
+      message: firstError || errorMessage.value,
       type: "error",
     });
   }

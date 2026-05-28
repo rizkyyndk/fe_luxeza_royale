@@ -13,23 +13,37 @@
           <div
             class="w-20 h-20 mx-auto mb-6 rounded-full bg-luxe-cream border border-luxe-sand/60 flex items-center justify-center text-3xl"
           >
-            👤
+            ✉️
           </div>
 
           <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-            Account Login
+            Verify Account
           </p>
 
           <h1 class="text-4xl md:text-5xl font-bold text-luxe-espresso mb-4">
-            Welcome Back
+            Enter Verification Code
           </h1>
 
           <p class="text-luxe-brown/75 leading-7">
-            Login to continue shopping and track your Luxeza Royale orders.
+            We sent a verification code to your email. Enter the code to
+            activate your Luxeza Royale account.
           </p>
         </div>
 
-        <form class="space-y-5" @submit.prevent="submitLogin">
+        <div
+          v-if="devCode"
+          class="mb-6 bg-luxe-cream border border-luxe-sand/70 rounded-3xl p-5 text-center"
+        >
+          <p class="text-sm text-luxe-brown/70 mb-2">
+            Development verification code
+          </p>
+
+          <p class="text-3xl font-bold tracking-[6px] text-luxe-espresso">
+            {{ devCode }}
+          </p>
+        </div>
+
+        <form class="space-y-5" @submit.prevent="submitVerify">
           <div>
             <input
               v-model="form.email"
@@ -44,25 +58,18 @@
           </div>
 
           <div>
-            <div class="relative">
-              <input
-                v-model="form.password"
-                :type="showPassword ? 'text' : 'password'"
-                placeholder="Password"
-                class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 pr-16 outline-none focus:border-luxe-royal transition"
-              />
+            <input
+              v-model="form.code"
+              type="text"
+              inputmode="numeric"
+              maxlength="6"
+              placeholder="6-digit code"
+              class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition text-center text-2xl tracking-[8px]"
+              @input="form.code = form.code.replace(/\D/g, '')"
+            />
 
-              <button
-                @click="showPassword = !showPassword"
-                type="button"
-                class="absolute right-5 top-1/2 -translate-y-1/2 text-luxe-brown/70 hover:text-luxe-espresso transition"
-              >
-                {{ showPassword ? "🙈" : "👁" }}
-              </button>
-            </div>
-
-            <p v-if="errors.password" class="text-red-500 text-sm mt-2">
-              {{ errors.password }}
+            <p v-if="errors.code" class="text-red-500 text-sm mt-2">
+              {{ errors.code }}
             </p>
           </div>
 
@@ -75,17 +82,26 @@
             :disabled="authStore.isLoading"
             class="w-full bg-luxe-espresso text-luxe-ivory py-5 rounded-full text-lg hover:bg-luxe-royal disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg shadow-luxe-brown/20"
           >
-            {{ authStore.isLoading ? "Logging in..." : "Login" }}
+            {{ authStore.isLoading ? "Verifying..." : "Verify Account" }}
           </button>
         </form>
 
+        <button
+          @click="resendCode"
+          type="button"
+          :disabled="authStore.isLoading || !form.email.trim()"
+          class="w-full mt-5 border border-luxe-sand text-luxe-espresso py-4 rounded-full hover:bg-luxe-cream disabled:opacity-50 disabled:cursor-not-allowed transition"
+        >
+          Resend Code
+        </button>
+
         <p class="text-center text-luxe-brown/75 mt-8">
-          Don't have an account?
+          Already verified?
           <RouterLink
-            to="/register"
+            to="/login"
             class="font-semibold text-luxe-espresso hover:underline"
           >
-            Register
+            Login
           </RouterLink>
         </p>
       </div>
@@ -105,7 +121,6 @@ import Footer from "../components/layout/Footer.vue";
 
 import { useAuthStore } from "../stores/authStore";
 import { useToastStore } from "../stores/toastStore";
-
 import { useCartStore } from "../stores/cartStore";
 import { useWishlistStore } from "../stores/wishlistStore";
 
@@ -114,18 +129,19 @@ const route = useRoute();
 
 const authStore = useAuthStore();
 const toastStore = useToastStore();
-
 const cartStore = useCartStore();
 const wishlistStore = useWishlistStore();
 
 const errorMessage = ref("");
 const errors = ref({});
-
-const showPassword = ref(false);
+const devCode = ref(sessionStorage.getItem("pendingVerificationCode") || "");
 
 const form = reactive({
-  email: "",
-  password: "",
+  email:
+    String(route.query.email || "") ||
+    sessionStorage.getItem("pendingVerificationEmail") ||
+    "",
+  code: "",
 });
 
 const validateForm = () => {
@@ -135,8 +151,10 @@ const validateForm = () => {
     validationErrors.email = "Email is required.";
   }
 
-  if (!form.password.trim()) {
-    validationErrors.password = "Password is required.";
+  if (!form.code.trim()) {
+    validationErrors.code = "Verification code is required.";
+  } else if (form.code.length < 6) {
+    validationErrors.code = "Verification code must be 6 digits.";
   }
 
   errors.value = validationErrors;
@@ -144,68 +162,75 @@ const validateForm = () => {
   return Object.keys(validationErrors).length === 0;
 };
 
-const submitLogin = async () => {
+const submitVerify = async () => {
   errorMessage.value = "";
 
   if (!validateForm()) return;
 
   try {
-    await authStore.login({
+    await authStore.verifyAccount({
       email: form.email,
-      password: form.password,
+      code: form.code,
     });
 
     cartStore.switchToUserCart(authStore.user?.id);
     wishlistStore.switchToUserWishlist(authStore.user?.id);
 
+    sessionStorage.removeItem("pendingVerificationEmail");
+    sessionStorage.removeItem("pendingVerificationCode");
+
     toastStore.showToast({
-      title: "Login Successful",
-      message: `Welcome back, ${authStore.userName}.`,
+      title: "Account Verified",
+      message: `Welcome, ${authStore.userName}.`,
       type: "success",
     });
 
     const redirectPath = route.query.redirect || "/";
-
     router.push(String(redirectPath));
   } catch (error) {
-    const verificationData = error?.data?.data;
-
-    if (error?.status === 403 && verificationData?.requires_verification) {
-      sessionStorage.setItem(
-        "pendingVerificationEmail",
-        verificationData.email || form.email,
-      );
-
-      if (verificationData.verification_code) {
-        sessionStorage.setItem(
-          "pendingVerificationCode",
-          verificationData.verification_code,
-        );
-      } else {
-        sessionStorage.removeItem("pendingVerificationCode");
-      }
-
-      toastStore.showToast({
-        title: "Account Not Verified",
-        message: "Please verify your account before login.",
-        type: "info",
-      });
-
-      router.push({
-        path: "/verify-account",
-        query: {
-          email: verificationData.email || form.email,
-          redirect: String(route.query.redirect || "/"),
-        },
-      });
-
-      return;
-    }
-
-    errorMessage.value = error?.message || "Login failed.";
+    errorMessage.value = error?.message || "Verification failed.";
 
     toastStore.showToast({
-      title: "Login Failed",
+      title: "Verification Failed",
+      message: errorMessage.value,
+      type: "error",
+    });
+  }
+};
+
+const resendCode = async () => {
+  errorMessage.value = "";
+
+  if (!form.email.trim()) {
+    errors.value = {
+      email: "Email is required.",
+    };
+
+    return;
+  }
+
+  try {
+    const data = await authStore.resendVerificationCode({
+      email: form.email,
+    });
+
+    if (data?.verification_code) {
+      devCode.value = data.verification_code;
+      sessionStorage.setItem("pendingVerificationCode", data.verification_code);
+    }
+
+    sessionStorage.setItem("pendingVerificationEmail", form.email);
+
+    toastStore.showToast({
+      title: "Code Resent",
+      message: "A new verification code has been sent.",
+      type: "success",
+    });
+  } catch (error) {
+    errorMessage.value = error?.message || "Failed to resend code.";
+
+    toastStore.showToast({
+      title: "Failed to Resend Code",
       message: errorMessage.value,
       type: "error",
     });

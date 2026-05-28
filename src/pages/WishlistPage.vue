@@ -74,6 +74,7 @@
             :images="product.images"
             :description="product.description"
             :sizes="product.sizes"
+            :size-options="product.sizeOptions"
             :stock="product.stock"
           />
         </div>

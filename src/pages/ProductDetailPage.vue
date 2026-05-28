@@ -6,7 +6,7 @@
     <SizeGuideModal
       v-if="isSizeGuideOpen && product"
       :category="product.category"
-      :sizes="availableSizes"
+      :sizes="sizeGuideSizes"
       @close="isSizeGuideOpen = false"
     />
 
@@ -136,7 +136,7 @@
               </span>
 
               <span class="text-sm text-luxe-brown/70">
-                {{ product.stock }} item available
+                {{ selectedStockLabel }}
               </span>
             </div>
 
@@ -181,17 +181,21 @@
 
               <div class="flex flex-wrap gap-4">
                 <button
-                  v-for="size in availableSizes"
-                  :key="size"
-                  @click="selectSize(size)"
+                  v-for="sizeOption in availableSizes"
+                  :key="sizeOption.size"
+                  type="button"
+                  :disabled="!sizeOption.isActive || sizeOption.stock <= 0"
+                  @click="selectSize(sizeOption)"
                   :class="
-                    selectedSize === size
-                      ? 'bg-luxe-espresso text-luxe-ivory scale-105 shadow-lg shadow-luxe-brown/20'
-                      : 'border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream'
+                    !sizeOption.isActive || sizeOption.stock <= 0
+                      ? 'border border-luxe-sand/60 text-luxe-brown/35 bg-luxe-cream/60 cursor-not-allowed line-through'
+                      : selectedSize === sizeOption.size
+                        ? 'bg-luxe-espresso text-luxe-ivory scale-105 shadow-lg shadow-luxe-brown/20'
+                        : 'border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream'
                   "
-                  class="px-6 py-3 rounded-full transition"
+                  class="px-5 py-3 rounded-full transition"
                 >
-                  {{ size }}
+                  {{ sizeOption.size }}
                 </button>
               </div>
 
@@ -312,6 +316,7 @@
               :images="item.images"
               :description="item.description"
               :sizes="item.sizes"
+              :size-options="item.sizeOptions"
               :stock="item.stock"
             />
           </div>
@@ -359,6 +364,9 @@ import { useRoute, useRouter } from "vue-router";
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
 import ProductCard from "../components/product/ProductCard.vue";
+import ProductImage from "../components/ui/ProductImage.vue";
+import SizeGuideModal from "../components/ui/SizeGuideModal.vue";
+import Footer from "../components/layout/Footer.vue";
 
 import { productService } from "../services/productService";
 import { useCartStore } from "../stores/cartStore";
@@ -366,10 +374,6 @@ import { useUiStore } from "../stores/uiStore";
 import { useWishlistStore } from "../stores/wishlistStore";
 import { useToastStore } from "../stores/toastStore";
 import { formatCurrency } from "../utils/formatCurrency";
-import ProductImage from "../components/ui/ProductImage.vue";
-import SizeGuideModal from "../components/ui/SizeGuideModal.vue";
-
-import Footer from "../components/layout/Footer.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -390,10 +394,6 @@ const errorMessage = ref("");
 const selectedImageIndex = ref(0);
 const isSizeGuideOpen = ref(false);
 
-const hasStockLimit = (stock) => {
-  return typeof stock === "number" && Number.isFinite(stock);
-};
-
 const resetProductState = () => {
   selectedSize.value = "";
   quantity.value = 1;
@@ -405,9 +405,7 @@ const resetProductState = () => {
 const loadProduct = async () => {
   const productIdOrSlug = route.params.id;
 
-  if (!productIdOrSlug) {
-    return;
-  }
+  if (!productIdOrSlug) return;
 
   isLoading.value = true;
   loadError.value = "";
@@ -437,49 +435,121 @@ const loadProduct = async () => {
   }
 };
 
+/*
+|--------------------------------------------------------------------------
+| Size Stock Logic
+|--------------------------------------------------------------------------
+*/
+
 const availableSizes = computed(() => {
-  return product.value?.sizes?.length
-    ? product.value.sizes
-    : ["S", "M", "L", "XL"];
+  const rawSizes =
+    product.value?.sizeOptions && product.value.sizeOptions.length > 0
+      ? product.value.sizeOptions
+      : product.value?.sizes || [];
+
+  return rawSizes.map((size) => {
+    if (typeof size === "string") {
+      return {
+        id: null,
+        size,
+        stock: Number(product.value?.stock || 0),
+        isActive: true,
+      };
+    }
+
+    return {
+      id: size.id || null,
+      size: size.size,
+      stock: Number(size.stock || 0),
+      isActive: size.isActive ?? size.is_active ?? true,
+    };
+  });
+});
+
+const activeSizes = computed(() => {
+  return availableSizes.value.filter((size) => size.isActive);
+});
+
+const sizeGuideSizes = computed(() => {
+  return activeSizes.value.map((size) => size.size);
+});
+
+const totalAvailableStock = computed(() => {
+  if (availableSizes.value.length === 0) {
+    return Number(product.value?.stock || 0);
+  }
+
+  return activeSizes.value.reduce(
+    (total, size) => total + Number(size.stock || 0),
+    0,
+  );
+});
+
+const selectedSizeData = computed(() => {
+  return (
+    availableSizes.value.find((size) => size.size === selectedSize.value) ||
+    null
+  );
+});
+
+const selectedStock = computed(() => {
+  if (selectedSizeData.value) {
+    return Number(selectedSizeData.value.stock || 0);
+  }
+
+  return totalAvailableStock.value;
+});
+
+const selectedStockLabel = computed(() => {
+  if (availableSizes.value.length > 0 && !selectedSize.value) {
+    return `${totalAvailableStock.value} item available`;
+  }
+
+  if (selectedStock.value <= 0) {
+    return "Out of stock";
+  }
+
+  return `${selectedStock.value} item available`;
+});
+
+const isSelectedSizeOutOfStock = computed(() => {
+  return Boolean(selectedSize.value) && selectedStock.value <= 0;
+});
+
+const isOutOfStock = computed(() => {
+  return totalAvailableStock.value <= 0;
+});
+
+const isLowStock = computed(() => {
+  return totalAvailableStock.value > 0 && totalAvailableStock.value <= 3;
 });
 
 const stockStatus = computed(() => {
   if (!product.value) return "Unavailable";
 
-  if (!hasStockLimit(product.value.stock)) return "In Stock";
-
-  if (product.value.stock <= 0) return "Out of Stock";
-  if (product.value.stock <= 3) return "Low Stock";
+  if (isOutOfStock.value) return "Out of Stock";
+  if (isLowStock.value) return "Low Stock";
 
   return "In Stock";
 });
 
 const stockStatusClass = computed(() => {
-  if (!product.value) {
+  if (!product.value || isOutOfStock.value) {
     return "bg-red-50 text-red-600";
   }
 
-  if (!hasStockLimit(product.value.stock)) {
-    return "bg-luxe-espresso text-luxe-ivory";
-  }
-
-  if (product.value.stock <= 0) {
-    return "bg-red-50 text-red-600";
-  }
-
-  if (product.value.stock <= 3) {
+  if (isLowStock.value) {
     return "bg-orange-50 text-orange-600";
   }
 
   return "bg-luxe-espresso text-luxe-ivory";
 });
 
-const isOutOfStock = computed(() => {
-  return (
-    !product.value ||
-    (hasStockLimit(product.value.stock) && product.value.stock <= 0)
-  );
-});
+/*
+|--------------------------------------------------------------------------
+| Gallery
+|--------------------------------------------------------------------------
+*/
 
 const galleryImages = computed(() => {
   if (!product.value) return [];
@@ -496,42 +566,6 @@ const selectedImage = computed(() => {
     galleryImages.value[selectedImageIndex.value] || product.value?.image || ""
   );
 });
-
-const productAttributes = computed(() => {
-  return Array.isArray(product.value?.attributes)
-    ? product.value.attributes
-    : [];
-});
-
-const selectSize = (size) => {
-  selectedSize.value = size;
-  errorMessage.value = "";
-};
-
-const increaseQuantity = () => {
-  if (!product.value) return;
-
-  if (
-    hasStockLimit(product.value.stock) &&
-    quantity.value >= product.value.stock
-  ) {
-    toastStore.showToast({
-      title: "Stock Limit Reached",
-      message: `Only ${product.value.stock} item available.`,
-      type: "info",
-    });
-
-    return;
-  }
-
-  quantity.value++;
-};
-
-const decreaseQuantity = () => {
-  if (quantity.value > 1) {
-    quantity.value--;
-  }
-};
 
 const selectImage = (index) => {
   selectedImageIndex.value = index;
@@ -555,8 +589,80 @@ const previousImage = () => {
       : selectedImageIndex.value - 1;
 };
 
+/*
+|--------------------------------------------------------------------------
+| Product Attributes
+|--------------------------------------------------------------------------
+*/
+
+const productAttributes = computed(() => {
+  return Array.isArray(product.value?.attributes)
+    ? product.value.attributes
+    : [];
+});
+
+/*
+|--------------------------------------------------------------------------
+| Size and Quantity
+|--------------------------------------------------------------------------
+*/
+
+const selectSize = (sizeOption) => {
+  if (!sizeOption.isActive || sizeOption.stock <= 0) {
+    toastStore.showToast({
+      title: "Size Out of Stock",
+      message: `Size ${sizeOption.size} is currently out of stock.`,
+      type: "info",
+    });
+
+    return;
+  }
+
+  selectedSize.value = sizeOption.size;
+  quantity.value = 1;
+  errorMessage.value = "";
+};
+
+const increaseQuantity = () => {
+  if (quantity.value >= selectedStock.value) {
+    toastStore.showToast({
+      title: "Stock Limit Reached",
+      message: `Only ${selectedStock.value} item available for this size.`,
+      type: "info",
+    });
+
+    return;
+  }
+
+  quantity.value++;
+};
+
+const decreaseQuantity = () => {
+  if (quantity.value > 1) {
+    quantity.value--;
+  }
+};
+
+/*
+|--------------------------------------------------------------------------
+| Cart and Wishlist
+|--------------------------------------------------------------------------
+*/
+
 const addToCart = () => {
-  if (!selectedSize.value) {
+  if (!product.value) return;
+
+  if (isOutOfStock.value) {
+    toastStore.showToast({
+      title: "Out of Stock",
+      message: "This product is currently unavailable.",
+      type: "error",
+    });
+
+    return;
+  }
+
+  if (availableSizes.value.length > 0 && !selectedSize.value) {
     errorMessage.value = "Please select a size before adding to cart.";
 
     toastStore.showToast({
@@ -568,36 +674,35 @@ const addToCart = () => {
     return;
   }
 
-  if (!product.value) return;
+  if (isSelectedSizeOutOfStock.value) {
+    errorMessage.value = "Selected size is out of stock.";
 
-  if (hasStockLimit(product.value.stock) && product.value.stock <= 0) {
     toastStore.showToast({
       title: "Out of Stock",
-      message: "This product is currently unavailable.",
+      message: "Please select another size.",
       type: "error",
     });
 
     return;
   }
 
-  if (
-    hasStockLimit(product.value.stock) &&
-    quantity.value > product.value.stock
-  ) {
+  if (quantity.value > selectedStock.value) {
+    quantity.value = selectedStock.value;
+
     toastStore.showToast({
       title: "Stock Limit Reached",
-      message: `Only ${product.value.stock} item available.`,
+      message: `Only ${selectedStock.value} item available for this size.`,
       type: "info",
     });
 
-    quantity.value = product.value.stock;
     return;
   }
 
   cartStore.addToCart(
     {
       ...product.value,
-      size: selectedSize.value,
+      size: selectedSize.value || "One Size",
+      stock: selectedStock.value,
     },
     quantity.value,
   );
@@ -606,7 +711,9 @@ const addToCart = () => {
 
   toastStore.showToast({
     title: "Added to Cart",
-    message: `${product.value.title} • Size ${selectedSize.value}`,
+    message: `${product.value.title} • Size ${
+      selectedSize.value || "One Size"
+    }`,
     type: "success",
   });
 };
@@ -625,6 +732,7 @@ const toggleWishlist = () => {
     images: product.value.images,
     description: product.value.description,
     sizes: product.value.sizes,
+    sizeOptions: product.value.sizeOptions,
     stock: product.value.stock,
   });
 
@@ -634,6 +742,12 @@ const toggleWishlist = () => {
     type: wasSaved ? "info" : "success",
   });
 };
+
+/*
+|--------------------------------------------------------------------------
+| Navigation
+|--------------------------------------------------------------------------
+*/
 
 const goToProducts = async () => {
   await router.push("/");
@@ -652,6 +766,12 @@ const goToProducts = async () => {
   }, 150);
 };
 
+/*
+|--------------------------------------------------------------------------
+| Lifecycle
+|--------------------------------------------------------------------------
+*/
+
 onMounted(() => {
   loadProduct();
 });
@@ -659,9 +779,7 @@ onMounted(() => {
 watch(
   () => route.params.id,
   (newId) => {
-    if (!newId) {
-      return;
-    }
+    if (!newId) return;
 
     loadProduct();
 

@@ -12,6 +12,8 @@ import AdminPaymentsPage from "../pages/AdminPaymentsPage.vue";
 import LoginPage from "../pages/LoginPage.vue";
 import RegisterPage from "../pages/RegisterPage.vue";
 import { useAuthStore } from "../stores/authStore";
+import AdminProductsPage from "../pages/AdminProductsPage.vue";
+import VerifyAccountPage from "../pages/VerifyAccountPage.vue";
 
 const routes = [
   {
@@ -61,8 +63,20 @@ const routes = [
     },
   },
   {
+    path: "/admin/products",
+    component: AdminProductsPage,
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+    },
+  },
+  {
     path: "/login",
     component: LoginPage,
+  },
+  {
+    path: "/verify-account",
+    component: VerifyAccountPage,
   },
   {
     path: "/register",
