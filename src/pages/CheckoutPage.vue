@@ -107,69 +107,96 @@
               </div>
 
               <!-- ADDRESS -->
-              <div>
-                <!-- ADDRESS DETAIL -->
+              <div
+                class="bg-luxe-cream border border-luxe-sand/70 rounded-[2rem] p-5 md:p-6 space-y-5"
+              >
+                <div
+                  class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3"
+                >
+                  <div>
+                    <p
+                      class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2"
+                    >
+                      Shipping Address
+                    </p>
+
+                    <h3 class="text-2xl font-bold text-luxe-espresso">
+                      Delivery Destination
+                    </h3>
+                  </div>
+
+                  <p class="text-sm text-luxe-brown/65">
+                    Select region step by step for accurate shipping details.
+                  </p>
+                </div>
+
                 <div class="grid md:grid-cols-2 gap-5">
+                  <!-- PROVINCE -->
+                  <SearchableSelect
+                    v-model="form.provinceId"
+                    label="Province"
+                    :options="provinces"
+                    :loading="isLoadingProvinces"
+                    placeholder="Select Province"
+                    search-placeholder="Search province..."
+                    :error="errors.province"
+                    @change="handleProvinceChange"
+                  />
+
+                  <!-- CITY -->
+                  <SearchableSelect
+                    v-model="form.cityId"
+                    label="City / Regency"
+                    :options="cities"
+                    :loading="isLoadingCities"
+                    :disabled="!form.provinceId || isLoadingCities"
+                    placeholder="Select City / Regency"
+                    search-placeholder="Search city or regency..."
+                    :error="errors.city"
+                    @change="handleCityChange"
+                  />
+
+                  <!-- DISTRICT -->
+                  <SearchableSelect
+                    v-model="form.districtId"
+                    label="District / Kecamatan"
+                    :options="districts"
+                    :loading="isLoadingDistricts"
+                    :disabled="!form.cityId || isLoadingDistricts"
+                    placeholder="Select District / Kecamatan"
+                    search-placeholder="Search district..."
+                    :error="errors.district"
+                    @change="handleDistrictChange"
+                  />
+
+                  <!-- VILLAGE -->
+                  <SearchableSelect
+                    v-model="form.villageId"
+                    label="Village / Kelurahan"
+                    :options="villages"
+                    :loading="isLoadingVillages"
+                    :disabled="!form.districtId || isLoadingVillages"
+                    placeholder="Select Village / Kelurahan"
+                    search-placeholder="Search village..."
+                    :error="errors.village"
+                    @change="handleVillageChange"
+                  />
+
+                  <!-- RT -->
                   <div>
-                    <input
-                      v-model="form.province"
-                      type="text"
-                      placeholder="Province"
-                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
-                    />
+                    <label
+                      class="block text-sm font-medium text-luxe-brown/75 mb-2"
+                    >
+                      RT
+                    </label>
 
-                    <p v-if="errors.province" class="text-red-500 text-sm mt-2">
-                      {{ errors.province }}
-                    </p>
-                  </div>
-
-                  <div>
-                    <input
-                      v-model="form.city"
-                      type="text"
-                      placeholder="City / Regency"
-                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
-                    />
-
-                    <p v-if="errors.city" class="text-red-500 text-sm mt-2">
-                      {{ errors.city }}
-                    </p>
-                  </div>
-
-                  <div>
-                    <input
-                      v-model="form.district"
-                      type="text"
-                      placeholder="District / Kecamatan"
-                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
-                    />
-
-                    <p v-if="errors.district" class="text-red-500 text-sm mt-2">
-                      {{ errors.district }}
-                    </p>
-                  </div>
-
-                  <div>
-                    <input
-                      v-model="form.village"
-                      type="text"
-                      placeholder="Village / Kelurahan"
-                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
-                    />
-
-                    <p v-if="errors.village" class="text-red-500 text-sm mt-2">
-                      {{ errors.village }}
-                    </p>
-                  </div>
-
-                  <div>
                     <input
                       v-model="form.rt"
                       @input="handleNumericInput('rt')"
                       type="text"
                       inputmode="numeric"
-                      placeholder="RT"
-                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                      placeholder="Example: 001"
+                      class="w-full border border-luxe-sand rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
                     />
 
                     <p v-if="errors.rt" class="text-red-500 text-sm mt-2">
@@ -177,14 +204,21 @@
                     </p>
                   </div>
 
+                  <!-- RW -->
                   <div>
+                    <label
+                      class="block text-sm font-medium text-luxe-brown/75 mb-2"
+                    >
+                      RW
+                    </label>
+
                     <input
                       v-model="form.rw"
                       @input="handleNumericInput('rw')"
                       type="text"
                       inputmode="numeric"
-                      placeholder="RW"
-                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                      placeholder="Example: 002"
+                      class="w-full border border-luxe-sand rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
                     />
 
                     <p v-if="errors.rw" class="text-red-500 text-sm mt-2">
@@ -192,14 +226,21 @@
                     </p>
                   </div>
 
+                  <!-- POSTAL CODE -->
                   <div class="md:col-span-2">
+                    <label
+                      class="block text-sm font-medium text-luxe-brown/75 mb-2"
+                    >
+                      Postal Code
+                    </label>
+
                     <input
                       v-model="form.postalCode"
                       @input="handleNumericInput('postalCode')"
                       type="text"
                       inputmode="numeric"
-                      placeholder="Postal Code"
-                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                      placeholder="Example: 12710"
+                      class="w-full border border-luxe-sand rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
                     />
 
                     <p
@@ -210,12 +251,19 @@
                     </p>
                   </div>
 
+                  <!-- ADDRESS DETAIL -->
                   <div class="md:col-span-2">
+                    <label
+                      class="block text-sm font-medium text-luxe-brown/75 mb-2"
+                    >
+                      Address Detail
+                    </label>
+
                     <textarea
                       v-model="form.addressDetail"
-                      placeholder="Street name, house number, building, landmark"
+                      placeholder="Street name, house number, building, floor, landmark"
                       rows="5"
-                      class="w-full border border-luxe-sand rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition resize-none bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
+                      class="w-full border border-luxe-sand rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition resize-none bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
                     ></textarea>
 
                     <p
@@ -225,11 +273,32 @@
                       {{ errors.addressDetail }}
                     </p>
                   </div>
+
+                  <p
+                    v-if="regionError"
+                    class="text-red-500 text-sm md:col-span-2"
+                  >
+                    {{ regionError }}
+                  </p>
                 </div>
 
-                <p v-if="errors.address" class="text-red-500 text-sm mt-2">
-                  {{ errors.address }}
-                </p>
+                <div
+                  v-if="
+                    form.province || form.city || form.district || form.village
+                  "
+                  class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-5"
+                >
+                  <p class="text-sm font-semibold text-luxe-espresso mb-2">
+                    Selected Region
+                  </p>
+
+                  <p class="text-sm text-luxe-brown/75 leading-6">
+                    {{ form.village || "Village" }},
+                    {{ form.district || "District" }},
+                    {{ form.city || "City" }},
+                    {{ form.province || "Province" }}
+                  </p>
+                </div>
               </div>
 
               <!-- SHIPPING METHOD -->
@@ -394,6 +463,10 @@
                   </p>
                 </div>
               </div>
+
+              <p v-if="regionError" class="text-red-500 text-sm md:col-span-2">
+                {{ regionError }}
+              </p>
             </form>
           </div>
 
@@ -611,6 +684,8 @@ import { formatCurrency } from "../utils/formatCurrency";
 import { voucherService } from "../services/voucherService";
 import { orderService } from "../services/orderService";
 import { paymentMethodService } from "../services/paymentMethodService";
+import { regionService } from "../services/regionService";
+import SearchableSelect from "../components/ui/SearchableSelect.vue";
 
 const router = useRouter();
 
@@ -632,14 +707,24 @@ const form = reactive({
   fullName: "",
   email: "",
   phone: "",
+
+  provinceId: "",
   province: "",
+
+  cityId: "",
   city: "",
+
+  districtId: "",
   district: "",
+
+  villageId: "",
   village: "",
+
   rt: "",
   rw: "",
   postalCode: "",
   addressDetail: "",
+
   shippingMethod: "standard",
   paymentMethod: "",
 });
@@ -661,10 +746,19 @@ const checkoutDraftFields = [
   "fullName",
   "email",
   "phone",
+
+  "provinceId",
   "province",
+
+  "cityId",
   "city",
+
+  "districtId",
   "district",
+
+  "villageId",
   "village",
+
   "rt",
   "rw",
   "postalCode",
@@ -774,8 +868,127 @@ const shippingLabel = computed(() => {
 */
 
 const paymentMethods = ref([]);
+const provinces = ref([]);
+const cities = ref([]);
+const districts = ref([]);
+const villages = ref([]);
+
+const isLoadingProvinces = ref(false);
+const isLoadingCities = ref(false);
+const isLoadingDistricts = ref(false);
+const isLoadingVillages = ref(false);
+
+const regionError = ref("");
 const isLoadingPaymentMethods = ref(false);
 const paymentMethodError = ref("");
+
+const findRegionName = (items, id) => {
+  return items.find((item) => item.id === String(id))?.name || "";
+};
+
+const loadProvinces = async () => {
+  isLoadingProvinces.value = true;
+  regionError.value = "";
+
+  try {
+    provinces.value = await regionService.getProvinces();
+  } catch (error) {
+    regionError.value = error?.message || "Failed to load provinces.";
+  } finally {
+    isLoadingProvinces.value = false;
+  }
+};
+
+const loadCities = async (provinceId) => {
+  cities.value = [];
+  districts.value = [];
+  villages.value = [];
+
+  if (!provinceId) return;
+
+  isLoadingCities.value = true;
+  regionError.value = "";
+
+  try {
+    cities.value = await regionService.getCities(provinceId);
+  } catch (error) {
+    regionError.value = error?.message || "Failed to load cities.";
+  } finally {
+    isLoadingCities.value = false;
+  }
+};
+
+const loadDistricts = async (cityId) => {
+  districts.value = [];
+  villages.value = [];
+
+  if (!cityId) return;
+
+  isLoadingDistricts.value = true;
+  regionError.value = "";
+
+  try {
+    districts.value = await regionService.getDistricts(cityId);
+  } catch (error) {
+    regionError.value = error?.message || "Failed to load districts.";
+  } finally {
+    isLoadingDistricts.value = false;
+  }
+};
+
+const loadVillages = async (districtId) => {
+  villages.value = [];
+
+  if (!districtId) return;
+
+  isLoadingVillages.value = true;
+  regionError.value = "";
+
+  try {
+    villages.value = await regionService.getVillages(districtId);
+  } catch (error) {
+    regionError.value = error?.message || "Failed to load villages.";
+  } finally {
+    isLoadingVillages.value = false;
+  }
+};
+
+const handleProvinceChange = async () => {
+  form.province = findRegionName(provinces.value, form.provinceId);
+
+  form.cityId = "";
+  form.city = "";
+  form.districtId = "";
+  form.district = "";
+  form.villageId = "";
+  form.village = "";
+
+  await loadCities(form.provinceId);
+};
+
+const handleCityChange = async () => {
+  form.city = findRegionName(cities.value, form.cityId);
+
+  form.districtId = "";
+  form.district = "";
+  form.villageId = "";
+  form.village = "";
+
+  await loadDistricts(form.cityId);
+};
+
+const handleDistrictChange = async () => {
+  form.district = findRegionName(districts.value, form.districtId);
+
+  form.villageId = "";
+  form.village = "";
+
+  await loadVillages(form.districtId);
+};
+
+const handleVillageChange = () => {
+  form.village = findRegionName(villages.value, form.villageId);
+};
 
 const selectedPaymentMethod = computed(() => {
   return (
@@ -1170,6 +1383,20 @@ const placeOrder = async () => {
 
 onMounted(async () => {
   loadCheckoutDraft();
+
+  await loadProvinces();
+
+  if (form.provinceId) {
+    await loadCities(form.provinceId);
+  }
+
+  if (form.cityId) {
+    await loadDistricts(form.cityId);
+  }
+
+  if (form.districtId) {
+    await loadVillages(form.districtId);
+  }
 
   await loadPaymentMethods();
 });
