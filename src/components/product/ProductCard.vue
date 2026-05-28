@@ -37,9 +37,9 @@
 
       <!-- QUICK VIEW BUTTON -->
       <button
-        @click.stop="isQuickViewOpen = true"
+        @click.stop.prevent="openQuickView"
         type="button"
-        class="absolute left-5 right-5 bottom-5 bg-luxe-ivory/90 backdrop-blur-xl text-luxe-espresso py-4 rounded-full font-medium translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-luxe-espresso hover:text-luxe-ivory transition duration-300"
+        class="absolute z-20 left-5 right-5 bottom-5 bg-luxe-ivory/95 backdrop-blur-xl text-luxe-espresso py-4 rounded-full font-medium shadow-lg border border-luxe-sand/60 translate-y-0 opacity-100 md:translate-y-6 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 hover:bg-luxe-espresso hover:text-luxe-ivory transition duration-300"
       >
         Quick View
       </button>
@@ -132,6 +132,10 @@ const wishlistStore = useWishlistStore();
 const toastStore = useToastStore();
 
 const isQuickViewOpen = ref(false);
+
+const openQuickView = () => {
+  isQuickViewOpen.value = true;
+};
 
 const productPayload = computed(() => {
   return {

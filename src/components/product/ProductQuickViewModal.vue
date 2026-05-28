@@ -1,17 +1,19 @@
 <template>
   <div
-    class="fixed inset-0 z-[999] bg-luxe-espresso/60 backdrop-blur-sm px-6 flex items-center justify-center"
+    class="fixed inset-0 z-[999] bg-luxe-espresso/60 backdrop-blur-sm px-4 md:px-6 py-6 md:py-10 overflow-y-auto overscroll-contain flex items-start md:items-center justify-center"
     @click.self="closeModal"
   >
     <div
-      class="bg-luxe-ivory rounded-[2rem] w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-[0_30px_90px_rgba(43,26,18,0.28)] border border-luxe-sand/60 grid lg:grid-cols-2"
+      class="bg-luxe-ivory rounded-[2rem] w-full max-w-5xl max-h-none md:max-h-[90vh] overflow-visible md:overflow-hidden shadow-[0_30px_90px_rgba(43,26,18,0.28)] border border-luxe-sand/60 grid lg:grid-cols-2 my-auto"
     >
       <!-- IMAGE -->
-      <div class="relative bg-luxe-cream min-h-[420px]">
+      <div
+        class="relative bg-luxe-cream min-h-[260px] sm:min-h-[360px] lg:min-h-[420px] rounded-t-[2rem] lg:rounded-none overflow-hidden"
+      >
         <ProductImage
           :src="mainImage"
           :alt="product.title"
-          class="w-full h-full min-h-[420px] object-cover"
+          class="w-full h-[280px] sm:h-[360px] lg:h-full lg:min-h-[420px] object-cover"
         />
 
         <button
@@ -30,7 +32,9 @@
       </div>
 
       <!-- CONTENT -->
-      <div class="p-8 md:p-10 overflow-y-auto max-h-[90vh]">
+      <div
+        class="p-6 md:p-10 overflow-visible lg:overflow-y-auto lg:max-h-[90vh]"
+      >
         <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
           {{ product.category }}
         </p>
@@ -157,7 +161,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import ProductImage from "../ui/ProductImage.vue";
 
@@ -184,6 +188,22 @@ const toastStore = useToastStore();
 const selectedSize = ref("");
 const quantity = ref(1);
 const errorMessage = ref("");
+
+const previousBodyOverflow = ref("");
+const previousHtmlOverflow = ref("");
+
+onMounted(() => {
+  previousBodyOverflow.value = document.body.style.overflow;
+  previousHtmlOverflow.value = document.documentElement.style.overflow;
+
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
+});
+
+onBeforeUnmount(() => {
+  document.body.style.overflow = previousBodyOverflow.value;
+  document.documentElement.style.overflow = previousHtmlOverflow.value;
+});
 
 const availableSizes = computed(() => {
   const rawSizes =
@@ -340,18 +360,6 @@ const addToCart = () => {
     toastStore.showToast({
       title: "Size Required",
       message: "Please select a size before adding this item.",
-      type: "error",
-    });
-
-    return;
-  }
-
-  if (isSelectedSizeOutOfStock.value) {
-    errorMessage.value = "Selected size is out of stock.";
-
-    toastStore.showToast({
-      title: "Out of Stock",
-      message: "Please select another size.",
       type: "error",
     });
 

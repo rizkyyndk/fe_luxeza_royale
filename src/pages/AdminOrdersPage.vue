@@ -57,18 +57,11 @@
                 Status
               </label>
 
-              <select
+              <LuxeSelect
                 v-model="statusFilter"
-                class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition shadow-sm"
-              >
-                <option
-                  v-for="option in statusOptions"
-                  :key="option.value"
-                  :value="option.value"
-                >
-                  {{ option.label }}
-                </option>
-              </select>
+                :options="statusOptions"
+                placeholder="Select status"
+              />
             </div>
 
             <!-- PERIOD -->
@@ -77,16 +70,11 @@
                 Period
               </label>
 
-              <select
+              <LuxeSelect
                 v-model="periodFilter"
-                class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition shadow-sm"
-              >
-                <option value="all">All Time</option>
-                <option value="today">Today</option>
-                <option value="last-7-days">Last 7 Days</option>
-                <option value="last-30-days">Last 30 Days</option>
-                <option value="custom">Custom Date</option>
-              </select>
+                :options="periodOptions"
+                placeholder="Select period"
+              />
             </div>
 
             <!-- SORT -->
@@ -95,13 +83,11 @@
                 Sort
               </label>
 
-              <select
+              <LuxeSelect
                 v-model="sortOrder"
-                class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition shadow-sm"
-              >
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-              </select>
+                :options="sortOptions"
+                placeholder="Select sort"
+              />
             </div>
           </div>
 
@@ -398,6 +384,80 @@
                     </span>
                   </div>
 
+                  <!-- PAYMENT PROOF -->
+                  <div
+                    class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 mt-5"
+                  >
+                    <div class="flex items-start justify-between gap-4 mb-4">
+                      <div>
+                        <p class="text-sm font-semibold text-luxe-espresso">
+                          Payment Proof
+                        </p>
+
+                        <p
+                          v-if="order.paymentProofUrl"
+                          class="text-xs text-luxe-brown/70 mt-1 leading-5"
+                        >
+                          Customer has uploaded payment proof. Please verify
+                          before marking as paid.
+                        </p>
+
+                        <p
+                          v-else
+                          class="text-xs text-luxe-brown/70 mt-1 leading-5"
+                        >
+                          Customer has not uploaded payment proof yet.
+                        </p>
+                      </div>
+
+                      <span
+                        v-if="order.paymentProofUrl"
+                        class="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold"
+                      >
+                        Review
+                      </span>
+
+                      <span
+                        v-else
+                        class="bg-red-50 text-red-700 px-3 py-1 rounded-full text-xs font-semibold"
+                      >
+                        No Proof
+                      </span>
+                    </div>
+
+                    <div v-if="order.paymentProofUrl">
+                      <a
+                        :href="order.paymentProofUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-block"
+                      >
+                        <img
+                          :src="order.paymentProofUrl"
+                          alt="Payment proof"
+                          class="w-full max-w-[220px] h-[220px] object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-ivory"
+                        />
+                      </a>
+
+                      <p
+                        v-if="order.paymentProofUploadedAt"
+                        class="text-xs text-luxe-brown/60 mt-3"
+                      >
+                        Uploaded at
+                        {{ formatDate(order.paymentProofUploadedAt) }}
+                      </p>
+
+                      <a
+                        :href="order.paymentProofUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-block mt-4 text-sm font-semibold text-luxe-espresso hover:text-luxe-royal transition"
+                      >
+                        Open Full Image
+                      </a>
+                    </div>
+                  </div>
+
                   <div
                     class="border-t border-luxe-sand/60 pt-5 flex justify-between gap-4"
                   >
@@ -420,11 +480,32 @@
                       @click="updateOrderStatus(order, 'paid')"
                       :disabled="
                         updatingOrderCode === order.orderNumber ||
-                        order.status === 'paid'
+                        order.status === 'paid' ||
+                        order.status === 'cancelled'
                       "
                       class="px-4 py-3 rounded-full text-sm border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream disabled:opacity-40 disabled:cursor-not-allowed transition"
                     >
-                      Mark Paid
+                      {{
+                        order.status === "payment_submitted"
+                          ? "Verify & Mark Paid"
+                          : "Mark Paid"
+                      }}
+                    </button>
+
+                    <button
+                      type="button"
+                      @click="updateOrderStatus(order, 'payment_submitted')"
+                      :disabled="
+                        updatingOrderCode === order.orderNumber ||
+                        order.status === 'payment_submitted' ||
+                        order.status === 'paid' ||
+                        order.status === 'processing' ||
+                        order.status === 'completed' ||
+                        order.status === 'cancelled'
+                      "
+                      class="px-4 py-3 rounded-full text-sm border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream disabled:opacity-40 disabled:cursor-not-allowed transition"
+                    >
+                      Payment Submitted
                     </button>
 
                     <button
@@ -494,6 +575,7 @@ import { useToastStore } from "../stores/toastStore";
 import { formatCurrency } from "../utils/formatCurrency";
 import { orderService } from "../services/orderService";
 import AddressSummaryCard from "../components/order/AddressSummaryCard.vue";
+import LuxeSelect from "../components/ui/LuxeSelect.vue";
 
 const toastStore = useToastStore();
 
@@ -509,9 +591,47 @@ const sortOrder = ref("newest");
 const customStartDate = ref("");
 const customEndDate = ref("");
 
+const periodOptions = [
+  {
+    label: "All Time",
+    value: "all",
+  },
+  {
+    label: "Today",
+    value: "today",
+  },
+  {
+    label: "Last 7 Days",
+    value: "last-7-days",
+  },
+  {
+    label: "Last 30 Days",
+    value: "last-30-days",
+  },
+  {
+    label: "Custom Date",
+    value: "custom",
+  },
+];
+
+const sortOptions = [
+  {
+    label: "Newest First",
+    value: "newest",
+  },
+  {
+    label: "Oldest First",
+    value: "oldest",
+  },
+];
+
 const statusOptions = [
   { label: "All Status", value: "all" },
   { label: "Pending", value: "pending" },
+  {
+    label: "Payment Submitted",
+    value: "payment_submitted",
+  },
   { label: "Paid", value: "paid" },
   { label: "Processing", value: "processing" },
   { label: "Completed", value: "completed" },
@@ -590,7 +710,7 @@ const loadOrders = async () => {
 };
 
 const updateOrderStatus = async (order, status) => {
-  if (!order?.orderNumber || updatingOrderCode.value) return;
+  if (updatingOrderCode.value) return;
 
   updatingOrderCode.value = order.orderNumber;
 
@@ -605,16 +725,16 @@ const updateOrderStatus = async (order, status) => {
     );
 
     toastStore.showToast({
-      title: "Order Status Updated",
-      message: `Order ${order.orderNumber} is now ${formatStatus(status)}.`,
+      title: "Order Updated",
+      message: `Order ${order.orderNumber} has been updated to ${formatStatus(
+        status,
+      )}.`,
       type: "success",
     });
   } catch (error) {
-    console.error("Failed to update order status:", error);
-
     toastStore.showToast({
-      title: "Failed to Update Status",
-      message: error?.message || "Unable to update order status.",
+      title: "Update Failed",
+      message: error?.message || "Failed to update order status.",
       type: "error",
     });
   } finally {
@@ -712,8 +832,12 @@ const formatPaymentMethod = (method) => {
 const formatStatus = (status) => {
   if (!status) return "Pending";
 
+  if (status === "payment_submitted") {
+    return "Payment Submitted";
+  }
+
   return status
-    .split("-")
+    .split(/[-_]/)
     .join(" ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
 };
@@ -721,6 +845,10 @@ const formatStatus = (status) => {
 const getStatusClass = (status) => {
   if (status === "paid") {
     return "bg-green-50 text-green-700";
+  }
+
+  if (status === "payment_submitted") {
+    return "bg-amber-50 text-amber-700";
   }
 
   if (status === "cancelled") {

@@ -155,13 +155,11 @@
                 <label class="block text-sm text-luxe-brown/75 mb-2"
                   >Type</label
                 >
-                <select
+                <LuxeSelect
                   v-model="form.type"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                >
-                  <option value="qris">QRIS</option>
-                  <option value="bank_transfer">Bank Transfer</option>
-                </select>
+                  :options="paymentTypeOptions"
+                  placeholder="Select payment type"
+                />
               </div>
 
               <div>
@@ -314,13 +312,11 @@
                   <label class="block text-sm text-luxe-brown/75 mb-2"
                     >Status</label
                   >
-                  <select
+                  <LuxeSelect
                     v-model="form.is_active"
-                    class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                  >
-                    <option :value="true">Active</option>
-                    <option :value="false">Inactive</option>
-                  </select>
+                    :options="paymentStatusOptions"
+                    placeholder="Select status"
+                  />
                 </div>
 
                 <div>
@@ -375,6 +371,7 @@ import Footer from "../components/layout/Footer.vue";
 
 import { paymentMethodService } from "../services/paymentMethodService";
 import { useToastStore } from "../stores/toastStore";
+import LuxeSelect from "../components/ui/LuxeSelect.vue";
 
 const toastStore = useToastStore();
 
@@ -382,6 +379,28 @@ const paymentMethods = ref([]);
 const isLoading = ref(false);
 const isSubmitting = ref(false);
 const isUploadingPaymentImage = ref(false);
+
+const paymentTypeOptions = [
+  {
+    label: "QRIS",
+    value: "qris",
+  },
+  {
+    label: "Bank Transfer",
+    value: "bank_transfer",
+  },
+];
+
+const paymentStatusOptions = [
+  {
+    label: "Active",
+    value: true,
+  },
+  {
+    label: "Inactive",
+    value: false,
+  },
+];
 
 const defaultForm = () => ({
   id: null,

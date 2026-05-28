@@ -13,6 +13,7 @@ import LoginPage from "../pages/LoginPage.vue";
 import RegisterPage from "../pages/RegisterPage.vue";
 import { useAuthStore } from "../stores/authStore";
 import AdminProductsPage from "../pages/AdminProductsPage.vue";
+import AdminContentPage from "../pages/AdminContentPage.vue";
 import VerifyAccountPage from "../pages/VerifyAccountPage.vue";
 import MyAddressesPage from "../pages/MyAddressesPage.vue";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage.vue";
@@ -75,6 +76,14 @@ const routes = [
   {
     path: "/admin/products",
     component: AdminProductsPage,
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+    },
+  },
+  {
+    path: "/admin/content",
+    component: AdminContentPage,
     meta: {
       requiresAuth: true,
       requiresAdmin: true,

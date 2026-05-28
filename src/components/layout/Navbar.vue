@@ -4,16 +4,25 @@
   >
     <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
       <!-- LOGO -->
-      <RouterLink to="/" class="flex flex-col leading-none group">
-        <span
-          class="text-2xl font-bold tracking-wide text-luxe-espresso group-hover:text-luxe-royal transition"
-        >
-          LUXEZA
-        </span>
+      <RouterLink to="/" class="flex items-center gap-3 group">
+        <img
+          v-if="cmsImage('navbar.logo.image')"
+          :src="cmsImage('navbar.logo.image')"
+          :alt="content('navbar.brand.main', 'LUXEZA')"
+          class="w-11 h-11 object-contain rounded-2xl bg-luxe-cream border border-luxe-sand/60 p-1"
+        />
 
-        <span class="text-[10px] tracking-[4px] text-luxe-gold uppercase">
-          Royale
-        </span>
+        <div class="flex flex-col leading-none">
+          <span
+            class="text-2xl font-bold tracking-wide text-luxe-espresso group-hover:text-luxe-royal transition"
+          >
+            {{ content("navbar.brand.main", "LUXEZA") }}
+          </span>
+
+          <span class="text-[10px] tracking-[4px] text-luxe-gold uppercase">
+            {{ content("navbar.brand.sub", "Royale") }}
+          </span>
+        </div>
       </RouterLink>
 
       <!-- DESKTOP MENU -->
@@ -23,21 +32,21 @@
           :class="route.path === '/' ? 'text-luxe-espresso' : 'text-luxe-brown'"
           class="hover:text-luxe-espresso transition"
         >
-          Home
+          {{ content("navbar.home", "Home") }}
         </RouterLink>
 
         <button
           @click="goToProducts"
           class="text-luxe-brown hover:text-luxe-espresso transition"
         >
-          Shop
+          {{ content("navbar.shop", "Shop") }}
         </button>
 
         <button
           @click="goToProducts"
           class="text-luxe-brown hover:text-luxe-espresso transition"
         >
-          Collections
+          {{ content("navbar.collections", "Collections") }}
         </button>
 
         <RouterLink
@@ -49,7 +58,7 @@
           "
           class="hover:text-luxe-espresso transition"
         >
-          Wishlist
+          {{ content("navbar.wishlist", "Wishlist") }}
         </RouterLink>
       </nav>
 
@@ -172,6 +181,15 @@
               Admin Products
             </RouterLink>
 
+            <RouterLink
+              v-if="authStore.isAdmin"
+              to="/admin/content"
+              @click="isAccountMenuOpen = false"
+              class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
+            >
+              Website Content
+            </RouterLink>
+
             <button
               @click="logout"
               type="button"
@@ -231,21 +249,21 @@
           @click="isMobileMenuOpen = false"
           class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
-          Home
+          {{ content("navbar.home", "Home") }}
         </RouterLink>
 
         <button
           @click="goToProductsFromMobile"
           class="text-left px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
-          Shop
+          {{ content("navbar.shop", "Shop") }}
         </button>
 
         <button
           @click="goToProductsFromMobile"
           class="text-left px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
-          Collections
+          {{ content("navbar.collections", "Collections") }}
         </button>
 
         <RouterLink
@@ -253,7 +271,7 @@
           @click="isMobileMenuOpen = false"
           class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
-          Checkout
+          {{ content("navbar.checkout", "Checkout") }}
         </RouterLink>
 
         <RouterLink
@@ -261,7 +279,7 @@
           @click="isMobileMenuOpen = false"
           class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
-          Wishlist
+          {{ content("navbar.wishlist", "Wishlist") }}
         </RouterLink>
 
         <div class="border-t border-luxe-sand/60 mt-4 pt-4">
@@ -328,6 +346,15 @@
               Admin Products
             </RouterLink>
 
+            <RouterLink
+              v-if="authStore.isAdmin"
+              to="/admin/content"
+              @click="isMobileMenuOpen = false"
+              class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
+            >
+              Website Content
+            </RouterLink>
+
             <button
               @click="logout"
               type="button"
@@ -350,15 +377,36 @@ import { useCartStore } from "../../stores/cartStore";
 import { useUiStore } from "../../stores/uiStore";
 import { useWishlistStore } from "../../stores/wishlistStore";
 import { useAuthStore } from "../../stores/authStore";
+import { useSiteContentStore } from "../../stores/siteContentStore";
 
 const cartStore = useCartStore();
 const wishlistStore = useWishlistStore();
 const uiStore = useUiStore();
+const authStore = useAuthStore();
+const siteContentStore = useSiteContentStore();
+
 const router = useRouter();
 const route = useRoute();
-const authStore = useAuthStore();
 
 const isMobileMenuOpen = ref(false);
+const isAccountMenuOpen = ref(false);
+
+const content = (key, fallback = "") => {
+  return siteContentStore.getContent(key, fallback);
+};
+
+const cmsImage = (key, fallback = "") => {
+  const url = content(key, fallback);
+
+  if (!url) return "";
+
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+
+  return url.startsWith("/") ? url : `/${url}`;
+};
+
 watch(
   () => isMobileMenuOpen.value,
   (isOpen) => {
@@ -369,7 +417,6 @@ watch(
 onBeforeUnmount(() => {
   document.body.style.overflow = "";
 });
-const isAccountMenuOpen = ref(false);
 
 const goToProducts = async () => {
   if (route.path !== "/") {

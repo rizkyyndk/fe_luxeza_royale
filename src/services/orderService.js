@@ -1,4 +1,5 @@
 import { httpClient } from "./httpClient";
+import { API_CONFIG } from "../config/apiConfig";
 
 const LAST_ORDER_KEY = "lastOrder";
 
@@ -153,6 +154,13 @@ const normalizeOrder = (order, summary = {}) => {
       ? normalizePaymentMethodFromBackend(order.payment_method)
       : order.paymentMethodData || null,
 
+    paymentProofUrl: order.payment_proof_url || order.paymentProofUrl || "",
+
+    paymentProofUploadedAt:
+      order.payment_proof_uploaded_at || order.paymentProofUploadedAt || null,
+
+    hasPaymentProof: Boolean(order.payment_proof_url || order.paymentProofUrl),
+
     status: order.status || "pending",
     createdAt: order.created_at,
     updatedAt: order.updated_at,
@@ -190,6 +198,37 @@ const normalizeOrderPayload = (orderPayload) => {
 };
 
 export const orderService = {
+  async uploadPaymentProof(orderCode, file) {
+    const formData = new FormData();
+
+    formData.append("payment_proof", file);
+
+    const token = sessionStorage.getItem("authToken");
+
+    const response = await fetch(
+      `${API_CONFIG.baseURL}/orders/${orderCode}/payment-proof`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: formData,
+      },
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || result?.success === false) {
+      throw new Error(
+        result?.errors?.payment_proof?.[0] ||
+          result?.message ||
+          "Failed to upload payment proof.",
+      );
+    }
+
+    return normalizeOrder(result.data);
+  },
   async createOrder(orderPayload) {
     const payload = normalizeOrderPayload(orderPayload);
     const response = await httpClient.post("/orders", payload);

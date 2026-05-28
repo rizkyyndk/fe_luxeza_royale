@@ -9,6 +9,14 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
+import { useSiteContentStore } from "./stores/siteContentStore";
+
+const siteContentStore = useSiteContentStore();
+
+onMounted(() => {
+  siteContentStore.loadPublicContents();
+});
 import ToastNotification from "./components/ui/ToastNotification.vue";
 </script>
 

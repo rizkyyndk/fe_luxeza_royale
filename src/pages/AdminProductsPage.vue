@@ -46,29 +46,17 @@
               @keyup.enter="loadProducts"
             />
 
-            <select
+            <LuxeSelect
               v-model="filters.categoryId"
-              class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-            >
-              <option value="">All Categories</option>
+              :options="categoryFilterOptions"
+              placeholder="All Categories"
+            />
 
-              <option
-                v-for="category in categories"
-                :key="category.id"
-                :value="category.id"
-              >
-                {{ category.name }}
-              </option>
-            </select>
-
-            <select
+            <LuxeSelect
               v-model="filters.status"
-              class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-            >
-              <option value="">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
+              :options="productStatusFilterOptions"
+              placeholder="All Status"
+            />
 
             <button
               @click="loadProducts"
@@ -684,6 +672,7 @@ import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
 import Footer from "../components/layout/Footer.vue";
 import ProductImage from "../components/ui/ProductImage.vue";
+import LuxeSelect from "../components/ui/LuxeSelect.vue";
 
 import { adminProductService } from "../services/adminProductService";
 import { useToastStore } from "../stores/toastStore";
@@ -702,6 +691,34 @@ const filters = reactive({
   categoryId: "",
   status: "",
 });
+
+const categoryFilterOptions = computed(() => {
+  return [
+    {
+      label: "All Categories",
+      value: "",
+    },
+    ...categories.value.map((category) => ({
+      label: category.name,
+      value: category.id,
+    })),
+  ];
+});
+
+const productStatusFilterOptions = [
+  {
+    label: "All Status",
+    value: "",
+  },
+  {
+    label: "Active",
+    value: "active",
+  },
+  {
+    label: "Inactive",
+    value: "inactive",
+  },
+];
 
 const isProductModalOpen = ref(false);
 const isSavingProduct = ref(false);

@@ -11,17 +11,23 @@
       <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
         <!-- HERO CONTENT -->
         <div>
-          <p class="uppercase tracking-[6px] text-sm mb-6 text-luxe-brown/75">
-            Luxury Fashion
+          <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-5">
+            {{ content("home.hero.eyebrow", "Luxury Fashion") }}
           </p>
 
           <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-8">
-            Modern Luxury for Everyday Elegance.
+            {{
+              content("home.hero.title", "Modern Luxury for Everyday Elegance.")
+            }}
           </h1>
 
           <p class="max-w-xl text-gray-600 leading-8 mb-10">
-            Discover minimalist fashion pieces crafted for premium aesthetics,
-            refined comfort, and modern lifestyle.
+            {{
+              content(
+                "home.hero.subtitle",
+                "Discover minimalist fashion pieces crafted for premium aesthetics, refined comfort, and modern lifestyle.",
+              )
+            }}
           </p>
 
           <div class="flex flex-col sm:flex-row gap-4">
@@ -29,14 +35,14 @@
               @click="goToProducts"
               class="bg-luxe-espresso text-luxe-ivory px-10 py-5 rounded-full hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
             >
-              Shop Collection
+              {{ content("home.hero.primary_button", "Shop Collection") }}
             </button>
 
             <button
               @click="goToCategories"
               class="border border-luxe-espresso text-luxe-espresso px-10 py-5 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition"
             >
-              Explore Categories
+              {{ content("home.hero.secondary_button", "Explore Categories") }}
             </button>
           </div>
 
@@ -78,21 +84,66 @@
             />
 
             <div
-              class="absolute bottom-6 left-6 right-6 bg-luxe-ivory/90 backdrop-blur-xl rounded-3xl p-5 flex items-center justify-between gap-4 border border-luxe-sand/50"
+              class="absolute bottom-6 left-6 right-6 bg-luxe-ivory/90 backdrop-blur-xl rounded-3xl p-5 border border-luxe-sand/50"
             >
-              <div>
-                <p class="text-sm text-luxe-brown/70 mb-1">Featured Piece</p>
-                <h3 class="font-bold text-lg text-luxe-espresso">
-                  {{ heroProduct.title }}
-                </h3>
+              <div class="flex items-center justify-between gap-4">
+                <div class="min-w-0">
+                  <p class="text-sm text-luxe-brown/70 mb-1">Featured Piece</p>
+
+                  <h3 class="font-bold text-lg text-luxe-espresso truncate">
+                    {{ heroProduct.title }}
+                  </h3>
+
+                  <p class="text-xs text-luxe-brown/60 mt-1">
+                    {{ heroProduct.category }}
+                  </p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <button
+                    v-if="heroProducts.length > 1"
+                    @click="previousHeroProduct"
+                    type="button"
+                    class="w-10 h-10 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+                  >
+                    ←
+                  </button>
+
+                  <button
+                    v-if="heroProducts.length > 1"
+                    @click="nextHeroProduct"
+                    type="button"
+                    class="w-10 h-10 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+                  >
+                    →
+                  </button>
+
+                  <RouterLink
+                    :to="`/product/${heroProduct.id}`"
+                    class="bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full text-sm hover:bg-luxe-royal hover:scale-105 transition"
+                  >
+                    View
+                  </RouterLink>
+                </div>
               </div>
 
-              <RouterLink
-                :to="`/product/${heroProduct.id}`"
-                class="bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full text-sm hover:bg-luxe-royal hover:scale-105 transition"
+              <div
+                v-if="heroProducts.length > 1"
+                class="mt-4 flex items-center justify-center gap-2"
               >
-                View
-              </RouterLink>
+                <button
+                  v-for="(item, index) in heroProducts"
+                  :key="item.id"
+                  @click="selectHeroProduct(index)"
+                  type="button"
+                  :class="
+                    heroProductIndex === index
+                      ? 'w-6 bg-luxe-espresso'
+                      : 'w-2 bg-luxe-brown/30 hover:bg-luxe-brown/50'
+                  "
+                  class="h-2 rounded-full transition-all"
+                ></button>
+              </div>
             </div>
           </div>
         </div>
@@ -172,16 +223,20 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown/75 mb-3">
-              Luxury Collection
+              {{ content("home.products.eyebrow", "Luxury Collection") }}
             </p>
 
             <h2 class="text-4xl md:text-5xl font-bold mb-6">
-              Featured Products
+              {{ content("home.products.title", "Featured Products") }}
             </h2>
 
             <p class="text-luxe-brown/75 max-w-xl leading-7">
-              Discover curated premium fashion pieces designed for modern
-              lifestyle.
+              {{
+                content(
+                  "home.products.subtitle",
+                  "Discover curated premium fashion pieces designed for modern lifestyle.",
+                )
+              }}
             </p>
           </div>
 
@@ -560,6 +615,12 @@ import ProductImage from "../components/ui/ProductImage.vue";
 import { formatCurrency } from "../utils/formatCurrency";
 
 import { productService } from "../services/productService";
+import { useSiteContentStore } from "../stores/siteContentStore";
+const siteContentStore = useSiteContentStore();
+
+const content = (key, fallback = "") => {
+  return siteContentStore.getContent(key, fallback);
+};
 
 const products = ref([]);
 const search = ref("");
@@ -679,9 +740,39 @@ onMounted(() => {
   loadProducts();
 });
 
-const heroProduct = computed(() => {
-  return products.value[0] || null;
+const heroProductIndex = ref(0);
+
+const heroProducts = computed(() => {
+  return products.value.slice(0, 5);
 });
+
+const heroProduct = computed(() => {
+  if (heroProducts.value.length === 0) return null;
+
+  return heroProducts.value[heroProductIndex.value] || heroProducts.value[0];
+});
+
+const nextHeroProduct = () => {
+  if (heroProducts.value.length <= 1) return;
+
+  heroProductIndex.value =
+    heroProductIndex.value === heroProducts.value.length - 1
+      ? 0
+      : heroProductIndex.value + 1;
+};
+
+const previousHeroProduct = () => {
+  if (heroProducts.value.length <= 1) return;
+
+  heroProductIndex.value =
+    heroProductIndex.value === 0
+      ? heroProducts.value.length - 1
+      : heroProductIndex.value - 1;
+};
+
+const selectHeroProduct = (index) => {
+  heroProductIndex.value = index;
+};
 
 const editorialProduct = computed(() => {
   return products.value[4] || products.value[0] || null;

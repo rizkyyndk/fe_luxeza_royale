@@ -212,6 +212,157 @@
           </div>
         </div>
 
+        <!-- PAYMENT PROOF UPLOAD -->
+        <div
+          v-if="lastOrder"
+          class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-6 text-left mb-8 shadow-sm"
+        >
+          <div
+            class="flex flex-col md:flex-row md:items-start md:justify-between gap-5"
+          >
+            <div>
+              <p
+                class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2"
+              >
+                Payment Confirmation
+              </p>
+
+              <h2 class="text-xl font-bold text-luxe-espresso mb-2">
+                Upload Payment Proof
+              </h2>
+
+              <p class="text-luxe-brown/75 leading-7">
+                Upload your transfer receipt or QRIS payment screenshot.
+                Accepted file: JPG, PNG, or WEBP image only. Maximum size 5 MB.
+              </p>
+            </div>
+
+            <span
+              v-if="lastOrder.hasPaymentProof"
+              class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-semibold w-fit"
+            >
+              Proof Submitted
+            </span>
+
+            <span
+              v-else
+              class="bg-amber-50 text-amber-700 px-4 py-2 rounded-full text-sm font-semibold w-fit"
+            >
+              Waiting for Proof
+            </span>
+          </div>
+
+          <!-- CURRENT PROOF -->
+          <div
+            v-if="lastOrder.paymentProofUrl"
+            class="mt-6 bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5"
+          >
+            <p class="text-sm font-semibold text-luxe-espresso mb-4">
+              Uploaded Payment Proof
+            </p>
+
+            <a
+              :href="lastOrder.paymentProofUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-block"
+            >
+              <img
+                :src="lastOrder.paymentProofUrl"
+                alt="Payment proof"
+                class="w-44 h-44 object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-ivory"
+              />
+            </a>
+
+            <p class="text-sm text-luxe-brown/70 mt-4">
+              Status: {{ formatStatus(lastOrder.status) }}
+            </p>
+          </div>
+
+          <!-- UPLOAD FORM -->
+          <div v-else class="mt-6">
+            <div
+              class="bg-luxe-cream border border-dashed border-luxe-sand rounded-3xl p-5"
+            >
+              <div
+                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+              >
+                <div>
+                  <p class="font-semibold text-luxe-espresso mb-1">
+                    Select payment proof image
+                  </p>
+
+                  <p class="text-sm text-luxe-brown/70">
+                    JPG, PNG, or WEBP only.
+                  </p>
+                </div>
+
+                <label
+                  class="inline-flex items-center justify-center bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full cursor-pointer hover:bg-luxe-royal transition w-fit"
+                >
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    class="hidden"
+                    @change="handlePaymentProofChange"
+                  />
+
+                  Choose Image
+                </label>
+              </div>
+
+              <div
+                v-if="paymentProofFile"
+                class="mt-5 bg-luxe-ivory border border-luxe-sand/60 rounded-2xl p-4"
+              >
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <p class="font-semibold text-luxe-espresso">
+                      {{ paymentProofFile.name }}
+                    </p>
+
+                    <p class="text-sm text-luxe-brown/70 mt-1">
+                      {{ (paymentProofFile.size / 1024 / 1024).toFixed(2) }} MB
+                    </p>
+                  </div>
+
+                  <button
+                    @click="removePaymentProof"
+                    type="button"
+                    class="text-red-600 hover:text-red-700 text-sm font-semibold"
+                  >
+                    Remove
+                  </button>
+                </div>
+
+                <img
+                  v-if="paymentProofPreview"
+                  :src="paymentProofPreview"
+                  alt="Payment proof preview"
+                  class="mt-4 w-44 h-44 object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-cream"
+                />
+
+                <button
+                  @click="uploadPaymentProof"
+                  :disabled="isUploadingPaymentProof"
+                  type="button"
+                  class="mt-5 w-full bg-luxe-espresso text-luxe-ivory py-4 rounded-full hover:bg-luxe-royal disabled:opacity-60 disabled:cursor-not-allowed transition"
+                >
+                  {{
+                    isUploadingPaymentProof
+                      ? "Uploading Proof..."
+                      : "Submit Payment Proof"
+                  }}
+                </button>
+              </div>
+
+              <p v-if="paymentProofError" class="text-red-500 text-sm mt-3">
+                {{ paymentProofError }}
+              </p>
+            </div>
+          </div>
+        </div>
+
         <!-- ACTION BUTTONS -->
         <div
           class="flex flex-col sm:flex-row items-center justify-center gap-4"
@@ -239,6 +390,8 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { orderService } from "../services/orderService";
+import { useToastStore } from "../stores/toastStore";
 
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
@@ -258,6 +411,121 @@ const loadLastOrder = () => {
 
 const lastOrder = ref(loadLastOrder());
 
+const toastStore = useToastStore();
+
+const paymentProofFile = ref(null);
+const paymentProofPreview = ref("");
+const paymentProofError = ref("");
+const isUploadingPaymentProof = ref(false);
+
+const orderCode = computed(() => {
+  return lastOrder.value?.orderNumber || lastOrder.value?.order_code || "";
+});
+
+const canUploadPaymentProof = computed(() => {
+  return (
+    lastOrder.value &&
+    orderCode.value &&
+    !lastOrder.value.hasPaymentProof &&
+    ["pending", "payment_submitted"].includes(
+      lastOrder.value.status || "pending",
+    )
+  );
+});
+
+const handlePaymentProofChange = (event) => {
+  const file = event.target.files?.[0];
+
+  event.target.value = "";
+
+  paymentProofFile.value = null;
+  paymentProofPreview.value = "";
+  paymentProofError.value = "";
+
+  if (!file) return;
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+  if (!allowedTypes.includes(file.type)) {
+    paymentProofError.value = "Payment proof must be JPG, PNG, or WEBP image.";
+
+    toastStore.showToast({
+      title: "Invalid File",
+      message: paymentProofError.value,
+      type: "error",
+    });
+
+    return;
+  }
+
+  const maxSize = 5 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    paymentProofError.value = "Maximum payment proof size is 5 MB.";
+
+    toastStore.showToast({
+      title: "File Too Large",
+      message: paymentProofError.value,
+      type: "error",
+    });
+
+    return;
+  }
+
+  paymentProofFile.value = file;
+  paymentProofPreview.value = URL.createObjectURL(file);
+};
+
+const removePaymentProof = () => {
+  paymentProofFile.value = null;
+  paymentProofPreview.value = "";
+  paymentProofError.value = "";
+};
+
+const uploadPaymentProof = async () => {
+  if (
+    !paymentProofFile.value ||
+    !orderCode.value ||
+    isUploadingPaymentProof.value
+  ) {
+    return;
+  }
+
+  isUploadingPaymentProof.value = true;
+  paymentProofError.value = "";
+
+  try {
+    const updatedOrder = await orderService.uploadPaymentProof(
+      orderCode.value,
+      paymentProofFile.value,
+    );
+
+    lastOrder.value = updatedOrder;
+    sessionStorage.setItem("lastOrder", JSON.stringify(updatedOrder));
+
+    paymentProofFile.value = null;
+    paymentProofPreview.value = "";
+
+    toastStore.showToast({
+      title: "Payment Proof Uploaded",
+      message:
+        "Your payment proof has been submitted and is waiting for admin review.",
+      type: "success",
+    });
+  } catch (error) {
+    paymentProofError.value =
+      error?.message || "Failed to upload payment proof.";
+
+    toastStore.showToast({
+      title: "Upload Failed",
+      message: paymentProofError.value,
+      type: "error",
+    });
+  } finally {
+    isUploadingPaymentProof.value = false;
+  }
+};
+
 const formatPaymentMethod = (method) => {
   if (method === "qris-main") return "QRIS GoPay Merchant";
   if (method === "bca-001") return "Bank BCA";
@@ -272,8 +540,12 @@ const paymentMethodData = computed(() => {
 const formatStatus = (status) => {
   if (!status) return "Pending";
 
+  if (status === "payment_submitted") {
+    return "Payment Submitted";
+  }
+
   return status
-    .split("-")
+    .split(/[-_]/)
     .join(" ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
 };

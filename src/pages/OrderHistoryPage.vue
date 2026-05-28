@@ -59,18 +59,11 @@
                 Status
               </label>
 
-              <select
+              <LuxeSelect
                 v-model="statusFilter"
-                class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition shadow-sm"
-              >
-                <option
-                  v-for="option in statusOptions"
-                  :key="option.value"
-                  :value="option.value"
-                >
-                  {{ option.label }}
-                </option>
-              </select>
+                :options="statusOptions"
+                placeholder="Select status"
+              />
             </div>
 
             <!-- PERIOD -->
@@ -79,16 +72,11 @@
                 Period
               </label>
 
-              <select
+              <LuxeSelect
                 v-model="periodFilter"
-                class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition shadow-sm"
-              >
-                <option value="all">All Time</option>
-                <option value="today">Today</option>
-                <option value="last-7-days">Last 7 Days</option>
-                <option value="last-30-days">Last 30 Days</option>
-                <option value="custom">Custom Date</option>
-              </select>
+                :options="periodOptions"
+                placeholder="Select period"
+              />
             </div>
 
             <!-- SORT -->
@@ -97,13 +85,11 @@
                 Sort
               </label>
 
-              <select
+              <LuxeSelect
                 v-model="sortOrder"
-                class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition shadow-sm"
-              >
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-              </select>
+                :options="sortOptions"
+                placeholder="Select sort"
+              />
             </div>
           </div>
 
@@ -417,6 +403,186 @@
                   eyebrow="Delivery Information"
                   class="mt-6"
                 />
+
+                <!-- PAYMENT PROOF -->
+                <div
+                  class="mt-6 bg-luxe-cream border border-luxe-sand/50 rounded-3xl p-5"
+                >
+                  <div
+                    class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4"
+                  >
+                    <div>
+                      <p class="text-sm font-semibold text-luxe-espresso mb-2">
+                        Payment Confirmation
+                      </p>
+
+                      <p
+                        v-if="order.paymentProofUrl"
+                        class="text-sm text-luxe-brown/75 leading-6"
+                      >
+                        Payment proof has been submitted and is waiting for
+                        admin review.
+                      </p>
+
+                      <p
+                        v-else-if="order.status === 'paid'"
+                        class="text-sm text-green-700 leading-6"
+                      >
+                        Payment has been verified.
+                      </p>
+
+                      <p v-else class="text-sm text-luxe-brown/75 leading-6">
+                        Upload your transfer receipt or QRIS payment screenshot
+                        here.
+                      </p>
+                    </div>
+
+                    <span
+                      v-if="order.paymentProofUrl"
+                      class="bg-amber-50 text-amber-700 px-4 py-2 rounded-full text-xs font-semibold w-fit"
+                    >
+                      Waiting Review
+                    </span>
+
+                    <span
+                      v-else-if="order.status === 'paid'"
+                      class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-xs font-semibold w-fit"
+                    >
+                      Paid
+                    </span>
+
+                    <span
+                      v-else
+                      class="bg-red-50 text-red-700 px-4 py-2 rounded-full text-xs font-semibold w-fit"
+                    >
+                      Waiting Proof
+                    </span>
+                  </div>
+
+                  <!-- EXISTING PROOF -->
+                  <div
+                    v-if="order.paymentProofUrl"
+                    class="mt-5 bg-luxe-ivory border border-luxe-sand/60 rounded-2xl p-4"
+                  >
+                    <p class="text-sm font-semibold text-luxe-espresso mb-3">
+                      Uploaded Proof
+                    </p>
+
+                    <a
+                      :href="order.paymentProofUrl"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-block"
+                    >
+                      <img
+                        :src="order.paymentProofUrl"
+                        alt="Payment proof"
+                        class="w-40 h-40 object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-cream"
+                      />
+                    </a>
+
+                    <p
+                      v-if="order.paymentProofUploadedAt"
+                      class="text-xs text-luxe-brown/60 mt-3"
+                    >
+                      Uploaded at {{ formatDate(order.paymentProofUploadedAt) }}
+                    </p>
+                  </div>
+
+                  <!-- UPLOAD FORM -->
+                  <div
+                    v-else-if="canUploadPaymentProof(order)"
+                    class="mt-5 bg-luxe-ivory border border-dashed border-luxe-sand rounded-2xl p-4"
+                  >
+                    <div class="flex flex-col gap-4">
+                      <div
+                        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                      >
+                        <div>
+                          <p class="font-semibold text-luxe-espresso">
+                            Upload payment proof image
+                          </p>
+
+                          <p class="text-sm text-luxe-brown/70 mt-1">
+                            JPG, PNG, or WEBP only. Maximum 5 MB.
+                          </p>
+                        </div>
+
+                        <label
+                          class="inline-flex items-center justify-center bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full cursor-pointer hover:bg-luxe-royal transition w-fit"
+                        >
+                          <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            class="hidden"
+                            @change="handlePaymentProofChange($event, order)"
+                          />
+
+                          Choose Image
+                        </label>
+                      </div>
+
+                      <div
+                        v-if="paymentProofFiles[getOrderKey(order)]"
+                        class="bg-luxe-cream border border-luxe-sand/60 rounded-2xl p-4"
+                      >
+                        <div class="flex items-start justify-between gap-4">
+                          <div>
+                            <p class="font-semibold text-luxe-espresso">
+                              {{ paymentProofFiles[getOrderKey(order)].name }}
+                            </p>
+
+                            <p class="text-sm text-luxe-brown/70 mt-1">
+                              {{
+                                (
+                                  paymentProofFiles[getOrderKey(order)].size /
+                                  1024 /
+                                  1024
+                                ).toFixed(2)
+                              }}
+                              MB
+                            </p>
+                          </div>
+
+                          <button
+                            @click="removePaymentProof(order)"
+                            type="button"
+                            class="text-red-600 hover:text-red-700 text-sm font-semibold"
+                          >
+                            Remove
+                          </button>
+                        </div>
+
+                        <img
+                          v-if="paymentProofPreviews[getOrderKey(order)]"
+                          :src="paymentProofPreviews[getOrderKey(order)]"
+                          alt="Payment proof preview"
+                          class="mt-4 w-40 h-40 object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-ivory"
+                        />
+
+                        <button
+                          @click="uploadPaymentProof(order)"
+                          :disabled="isUploadingPaymentProof(order)"
+                          type="button"
+                          class="mt-5 w-full bg-luxe-espresso text-luxe-ivory py-4 rounded-full hover:bg-luxe-royal disabled:opacity-60 disabled:cursor-not-allowed transition"
+                        >
+                          {{
+                            isUploadingPaymentProof(order)
+                              ? "Uploading Proof..."
+                              : "Submit Payment Proof"
+                          }}
+                        </button>
+                      </div>
+
+                      <p
+                        v-if="paymentProofErrors[getOrderKey(order)]"
+                        class="text-red-500 text-sm"
+                      >
+                        {{ paymentProofErrors[getOrderKey(order)] }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -440,7 +606,7 @@ import AddressSummaryCard from "../components/order/AddressSummaryCard.vue";
 import { useToastStore } from "../stores/toastStore";
 import { formatCurrency } from "../utils/formatCurrency";
 import { orderService } from "../services/orderService";
-
+import LuxeSelect from "../components/ui/LuxeSelect.vue";
 const toastStore = useToastStore();
 
 const orders = ref([]);
@@ -453,6 +619,44 @@ const periodFilter = ref("all");
 const sortOrder = ref("newest");
 const customStartDate = ref("");
 const customEndDate = ref("");
+const paymentProofFiles = ref({});
+const paymentProofPreviews = ref({});
+const paymentProofErrors = ref({});
+const uploadingPaymentProofOrderNumbers = ref([]);
+
+const periodOptions = [
+  {
+    label: "All Time",
+    value: "all",
+  },
+  {
+    label: "Today",
+    value: "today",
+  },
+  {
+    label: "Last 7 Days",
+    value: "last-7-days",
+  },
+  {
+    label: "Last 30 Days",
+    value: "last-30-days",
+  },
+  {
+    label: "Custom Date",
+    value: "custom",
+  },
+];
+
+const sortOptions = [
+  {
+    label: "Newest First",
+    value: "newest",
+  },
+  {
+    label: "Oldest First",
+    value: "oldest",
+  },
+];
 
 const statusOptions = [
   {
@@ -462,6 +666,10 @@ const statusOptions = [
   {
     label: "Pending",
     value: "pending",
+  },
+  {
+    label: "Payment Submitted",
+    value: "payment_submitted",
   },
   {
     label: "Processing",
@@ -541,6 +749,169 @@ const latestOrders = computed(() => {
 
   return result;
 });
+
+const getOrderKey = (order) => {
+  return order.orderNumber || order.order_code || order.id;
+};
+
+const canUploadPaymentProof = (order) => {
+  const status = String(order.status || "pending").toLowerCase();
+
+  return (
+    order &&
+    getOrderKey(order) &&
+    !order.hasPaymentProof &&
+    !order.paymentProofUrl &&
+    status === "pending"
+  );
+};
+
+const isUploadingPaymentProof = (order) => {
+  return uploadingPaymentProofOrderNumbers.value.includes(getOrderKey(order));
+};
+
+const handlePaymentProofChange = (event, order) => {
+  const file = event.target.files?.[0];
+  const orderKey = getOrderKey(order);
+
+  event.target.value = "";
+
+  paymentProofFiles.value = {
+    ...paymentProofFiles.value,
+    [orderKey]: null,
+  };
+
+  paymentProofPreviews.value = {
+    ...paymentProofPreviews.value,
+    [orderKey]: "",
+  };
+
+  paymentProofErrors.value = {
+    ...paymentProofErrors.value,
+    [orderKey]: "",
+  };
+
+  if (!file) return;
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+  if (!allowedTypes.includes(file.type)) {
+    paymentProofErrors.value = {
+      ...paymentProofErrors.value,
+      [orderKey]: "Payment proof must be JPG, PNG, or WEBP image.",
+    };
+
+    toastStore.showToast({
+      title: "Invalid File",
+      message: "Payment proof must be JPG, PNG, or WEBP image.",
+      type: "error",
+    });
+
+    return;
+  }
+
+  const maxSize = 5 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    paymentProofErrors.value = {
+      ...paymentProofErrors.value,
+      [orderKey]: "Maximum payment proof size is 5 MB.",
+    };
+
+    toastStore.showToast({
+      title: "File Too Large",
+      message: "Maximum payment proof size is 5 MB.",
+      type: "error",
+    });
+
+    return;
+  }
+
+  paymentProofFiles.value = {
+    ...paymentProofFiles.value,
+    [orderKey]: file,
+  };
+
+  paymentProofPreviews.value = {
+    ...paymentProofPreviews.value,
+    [orderKey]: URL.createObjectURL(file),
+  };
+};
+
+const removePaymentProof = (order) => {
+  const orderKey = getOrderKey(order);
+
+  paymentProofFiles.value = {
+    ...paymentProofFiles.value,
+    [orderKey]: null,
+  };
+
+  paymentProofPreviews.value = {
+    ...paymentProofPreviews.value,
+    [orderKey]: "",
+  };
+
+  paymentProofErrors.value = {
+    ...paymentProofErrors.value,
+    [orderKey]: "",
+  };
+};
+
+const updateOrderInList = (updatedOrder) => {
+  orders.value = orders.value.map((order) => {
+    const currentKey = getOrderKey(order);
+    const updatedKey = getOrderKey(updatedOrder);
+
+    return currentKey === updatedKey ? updatedOrder : order;
+  });
+};
+
+const uploadPaymentProof = async (order) => {
+  const orderKey = getOrderKey(order);
+  const file = paymentProofFiles.value[orderKey];
+
+  if (!file || isUploadingPaymentProof(order)) return;
+
+  uploadingPaymentProofOrderNumbers.value = [
+    ...uploadingPaymentProofOrderNumbers.value,
+    orderKey,
+  ];
+
+  paymentProofErrors.value = {
+    ...paymentProofErrors.value,
+    [orderKey]: "",
+  };
+
+  try {
+    const updatedOrder = await orderService.uploadPaymentProof(orderKey, file);
+
+    updateOrderInList(updatedOrder);
+    removePaymentProof(updatedOrder);
+
+    toastStore.showToast({
+      title: "Payment Proof Uploaded",
+      message:
+        "Your payment proof has been submitted and is waiting for admin review.",
+      type: "success",
+    });
+  } catch (error) {
+    paymentProofErrors.value = {
+      ...paymentProofErrors.value,
+      [orderKey]: error?.message || "Failed to upload payment proof.",
+    };
+
+    toastStore.showToast({
+      title: "Upload Failed",
+      message: error?.message || "Failed to upload payment proof.",
+      type: "error",
+    });
+  } finally {
+    uploadingPaymentProofOrderNumbers.value =
+      uploadingPaymentProofOrderNumbers.value.filter(
+        (item) => item !== orderKey,
+      );
+  }
+};
 
 const loadOrders = async () => {
   isLoadingOrders.value = true;
@@ -656,8 +1027,12 @@ const formatPaymentMethod = (method) => {
 const formatStatus = (status) => {
   if (!status) return "Pending";
 
+  if (status === "payment_submitted") {
+    return "Payment Submitted";
+  }
+
   return status
-    .split("-")
+    .split(/[-_]/)
     .join(" ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
 };
@@ -665,6 +1040,10 @@ const formatStatus = (status) => {
 const getStatusClass = (status) => {
   if (status === "paid") {
     return "bg-green-50 text-green-700";
+  }
+
+  if (status === "payment_submitted") {
+    return "bg-amber-50 text-amber-700";
   }
 
   if (status === "cancelled") {

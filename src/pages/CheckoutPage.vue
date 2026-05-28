@@ -844,7 +844,13 @@
                 ></span>
 
                 <span>
-                  {{ isSubmitting ? "Processing Order..." : "Place Order" }}
+                  {{
+                    isSubmitting
+                      ? isUploadingPaymentProof
+                        ? "Uploading Payment Proof..."
+                        : "Processing Order..."
+                      : "Place Order"
+                  }}
                 </span>
               </button>
 
@@ -1428,6 +1434,10 @@ const shippingLabel = computed(() => {
 */
 
 const paymentMethods = ref([]);
+const paymentProofFile = ref(null);
+const paymentProofPreview = ref("");
+const paymentProofError = ref("");
+const isUploadingPaymentProof = ref(false);
 const provinces = ref([]);
 const cities = ref([]);
 const districts = ref([]);
@@ -1560,6 +1570,63 @@ const selectedPaymentMethod = computed(() => {
     null
   );
 });
+
+const handlePaymentProofChange = (event) => {
+  const file = event.target.files?.[0];
+
+  event.target.value = "";
+
+  paymentProofError.value = "";
+  paymentProofFile.value = null;
+  paymentProofPreview.value = "";
+
+  if (!file) return;
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "application/pdf",
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    paymentProofError.value = "Payment proof must be JPG, PNG, WEBP, or PDF.";
+
+    toastStore.showToast({
+      title: "Invalid File",
+      message: paymentProofError.value,
+      type: "error",
+    });
+
+    return;
+  }
+
+  const maxSize = 5 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    paymentProofError.value = "Maximum payment proof size is 5 MB.";
+
+    toastStore.showToast({
+      title: "File Too Large",
+      message: paymentProofError.value,
+      type: "error",
+    });
+
+    return;
+  }
+
+  paymentProofFile.value = file;
+
+  if (file.type.startsWith("image/")) {
+    paymentProofPreview.value = URL.createObjectURL(file);
+  }
+};
+
+const removePaymentProof = () => {
+  paymentProofFile.value = null;
+  paymentProofPreview.value = "";
+  paymentProofError.value = "";
+};
 
 const loadPaymentMethods = async () => {
   isLoadingPaymentMethods.value = true;
@@ -1816,6 +1883,18 @@ const placeOrder = async () => {
   try {
     const fullAddress = buildFullAddress();
 
+    let paymentProofUrl = "";
+
+    if (paymentProofFile.value) {
+      isUploadingPaymentProof.value = true;
+
+      const uploadedProof = await orderService.uploadPaymentProof(
+        paymentProofFile.value,
+      );
+
+      paymentProofUrl = uploadedProof?.payment_proof_url || "";
+    }
+
     const orderPayload = {
       customer_name: form.fullName,
       customer_email: form.email,
@@ -1871,6 +1950,9 @@ const placeOrder = async () => {
       shippingMethodLabel: selectedShippingMethod.value?.label,
       paymentMethod: form.paymentMethod,
       paymentMethodData: selectedPaymentMethod.value,
+      paymentProofUrl,
+      paymentProofUploadedAt: paymentProofUrl ? new Date().toISOString() : null,
+      hasPaymentProof: Boolean(paymentProofUrl),
 
       items: cartStore.selectedItems,
 
@@ -1938,6 +2020,7 @@ const placeOrder = async () => {
     });
   } finally {
     isSubmitting.value = false;
+    isUploadingPaymentProof.value = false;
   }
 };
 

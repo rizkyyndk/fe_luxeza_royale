@@ -1,9 +1,29 @@
 import { API_CONFIG } from "../config/apiConfig";
 
 const AUTH_TOKEN_KEY = "authToken";
+const AUTH_USER_KEY = "authUser";
 
 const getAuthToken = () => {
   return sessionStorage.getItem(AUTH_TOKEN_KEY);
+};
+
+const clearExpiredAuth = () => {
+  sessionStorage.removeItem(AUTH_TOKEN_KEY);
+  sessionStorage.removeItem(AUTH_USER_KEY);
+};
+
+const redirectToLoginIfNeeded = () => {
+  const currentHash = window.location.hash || "";
+
+  if (currentHash.includes("/login")) {
+    return;
+  }
+
+  const currentRoute = currentHash.replace("#", "") || "/";
+
+  window.location.href = `/app/#/login?redirect=${encodeURIComponent(
+    currentRoute,
+  )}`;
 };
 
 const buildUrl = (endpoint) => {
@@ -38,6 +58,16 @@ const handleResponse = async (response) => {
   const data = await parseResponse(response);
 
   if (!response.ok) {
+    if (response.status === 401) {
+      clearExpiredAuth();
+
+      const isLogoutRequest = response.url.includes("/auth/logout");
+
+      if (!isLogoutRequest) {
+        redirectToLoginIfNeeded();
+      }
+    }
+
     throw {
       status: response.status,
       message: data?.message || "Request failed",
