@@ -178,8 +178,8 @@ const showConfirmPassword = ref(false);
 const validatePassword = (password) => {
   if (!password) return "New password is required.";
   if (password.length < 8) return "Password must be at least 8 characters.";
-  if (!/^[@$!%*#?&]/.test(password)) {
-    return "Password must start with a symbol, example: @ # ! $";
+  if (!/[@$!%*#?&]/.test(password)) {
+    return "Password must contain a symbol, example: @ # ! $";
   }
   if (!/[a-z]/.test(password)) {
     return "Password must contain a lowercase letter.";
