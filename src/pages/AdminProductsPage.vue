@@ -404,7 +404,7 @@
                 </h3>
 
                 <p class="text-sm text-luxe-brown/70 mt-1">
-                  Use image URL for now. File upload can be added later.
+                  Paste image URL or upload product image from your device.
                 </p>
               </div>
 
@@ -421,15 +421,60 @@
               <div
                 v-for="(image, index) in productForm.images"
                 :key="index"
-                class="bg-luxe-ivory border border-luxe-sand/60 rounded-3xl p-4 grid md:grid-cols-[1fr_auto_auto] gap-4 md:items-center"
+                class="bg-luxe-ivory border border-luxe-sand/60 rounded-3xl p-4 grid md:grid-cols-[120px_1fr_auto_auto] gap-4 md:items-center"
               >
-                <input
-                  v-model="image.image_url"
-                  type="text"
-                  placeholder="https://images.unsplash.com/..."
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                />
+                <!-- PREVIEW -->
+                <div class="w-full md:w-[120px]">
+                  <ProductImage
+                    v-if="image.image_url"
+                    :src="image.image_url"
+                    alt="Product image preview"
+                    class="w-full h-32 md:h-[100px] object-cover rounded-2xl bg-luxe-cream border border-luxe-sand/60"
+                  />
 
+                  <div
+                    v-else
+                    class="w-full h-32 md:h-[100px] rounded-2xl bg-luxe-cream border border-dashed border-luxe-sand flex items-center justify-center text-luxe-brown/50 text-sm text-center px-3"
+                  >
+                    No Image
+                  </div>
+                </div>
+
+                <!-- URL + UPLOAD -->
+                <div class="space-y-3">
+                  <input
+                    v-model="image.image_url"
+                    type="text"
+                    placeholder="https://images.unsplash.com/... or uploaded image URL"
+                    class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
+                  />
+
+                  <input
+                    :id="`product-image-upload-${index}`"
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                    class="hidden"
+                    @change="handleImageUpload($event, index)"
+                  />
+
+                  <label
+                    :for="`product-image-upload-${index}`"
+                    :class="
+                      imageUploadStates[index]
+                        ? 'opacity-60 pointer-events-none'
+                        : 'hover:bg-luxe-cream cursor-pointer'
+                    "
+                    class="inline-flex items-center justify-center px-5 py-3 rounded-2xl border border-luxe-sand bg-luxe-ivory text-luxe-espresso transition text-sm font-medium"
+                  >
+                    {{
+                      imageUploadStates[index]
+                        ? "Uploading..."
+                        : "Upload from Device"
+                    }}
+                  </label>
+                </div>
+
+                <!-- PRIMARY -->
                 <label
                   class="min-h-[48px] px-4 py-3 rounded-2xl bg-luxe-cream border border-luxe-sand/60 flex items-center gap-3 cursor-pointer"
                 >
@@ -446,6 +491,7 @@
                   </span>
                 </label>
 
+                <!-- REMOVE -->
                 <button
                   @click="removeImageRow(index)"
                   type="button"
@@ -650,7 +696,7 @@ const categories = ref([]);
 const isLoading = ref(false);
 const errorMessage = ref("");
 const updatingProductId = ref(null);
-
+const imageUploadStates = ref({});
 const filters = reactive({
   search: "",
   categoryId: "",
@@ -845,6 +891,73 @@ const closeProductModal = () => {
   isProductModalOpen.value = false;
   editingProductId.value = null;
   resetProductForm();
+};
+
+const setImageUploading = (index, isUploading) => {
+  imageUploadStates.value = {
+    ...imageUploadStates.value,
+    [index]: isUploading,
+  };
+};
+
+const handleImageUpload = async (event, index) => {
+  const file = event.target.files?.[0];
+
+  if (!file) return;
+
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+  if (!allowedTypes.includes(file.type)) {
+    toastStore.showToast({
+      title: "Invalid Image",
+      message: "Please upload jpg, jpeg, png, or webp image.",
+      type: "error",
+    });
+
+    event.target.value = "";
+    return;
+  }
+
+  const maxSize = 5 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    toastStore.showToast({
+      title: "Image Too Large",
+      message: "Maximum image size is 5MB.",
+      type: "error",
+    });
+
+    event.target.value = "";
+    return;
+  }
+
+  setImageUploading(index, true);
+
+  try {
+    const uploadedImage = await adminProductService.uploadProductImage(file);
+
+    productForm.images[index].image_url =
+      uploadedImage.image_url || uploadedImage.imageUrl || "";
+
+    if (!productForm.images.some((image) => image.is_primary)) {
+      productForm.images[index].is_primary = true;
+    }
+
+    toastStore.showToast({
+      title: "Image Uploaded",
+      message: "Product image has been uploaded successfully.",
+      type: "success",
+    });
+  } catch (error) {
+    toastStore.showToast({
+      title: "Upload Failed",
+      message: error?.message || "Failed to upload image.",
+      type: "error",
+    });
+  } finally {
+    setImageUploading(index, false);
+    event.target.value = "";
+  }
 };
 
 const addImageRow = () => {

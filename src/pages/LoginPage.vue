@@ -77,6 +77,15 @@
           >
             {{ authStore.isLoading ? "Logging in..." : "Login" }}
           </button>
+
+          <div class="text-right">
+            <RouterLink
+              to="/forgot-password"
+              class="text-sm text-luxe-brown/70 hover:text-luxe-espresso underline underline-offset-4 transition"
+            >
+              Forgot password?
+            </RouterLink>
+          </div>
         </form>
 
         <p class="text-center text-luxe-brown/75 mt-8">

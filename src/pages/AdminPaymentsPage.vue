@@ -227,25 +227,73 @@
               </div>
 
               <div v-if="form.type === 'qris'">
-                <label class="block text-sm text-luxe-brown/75 mb-2"
-                  >QR Image URL</label
-                >
-                <input
-                  v-model="form.qr_image_url"
-                  type="text"
-                  placeholder="/app/payment/qris-placeholder.svg"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                />
+                <label class="block text-sm text-luxe-brown/75 mb-2">
+                  QR Image / Payment Image
+                </label>
 
                 <div
-                  v-if="form.qr_image_url"
-                  class="mt-4 bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-4 flex justify-center"
+                  class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-4 space-y-4"
                 >
-                  <img
-                    :src="form.qr_image_url"
-                    alt="QR Preview"
-                    class="w-40 h-40 object-cover rounded-2xl bg-luxe-ivory"
+                  <div v-if="form.qr_image_url" class="flex items-start gap-4">
+                    <img
+                      :src="form.qr_image_url"
+                      alt="QR Preview"
+                      class="w-32 h-32 object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-ivory"
+                    />
+
+                    <div class="min-w-0 flex-1">
+                      <p class="text-sm font-semibold text-luxe-espresso mb-1">
+                        Image Preview
+                      </p>
+
+                      <p class="text-xs text-luxe-brown/60 break-all leading-5">
+                        {{ form.qr_image_url }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    v-else
+                    class="h-32 rounded-2xl border border-dashed border-luxe-sand bg-luxe-ivory flex items-center justify-center text-luxe-brown/50 text-sm"
+                  >
+                    No QR image selected
+                  </div>
+
+                  <input
+                    v-model="form.qr_image_url"
+                    type="text"
+                    placeholder="/uploads/payments/payment-image.png or external image URL"
+                    class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                   />
+
+                  <input
+                    id="payment-image-upload"
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                    class="hidden"
+                    @change="handlePaymentImageUpload"
+                  />
+
+                  <label
+                    for="payment-image-upload"
+                    :class="
+                      isUploadingPaymentImage
+                        ? 'opacity-60 pointer-events-none'
+                        : 'hover:bg-luxe-ivory cursor-pointer'
+                    "
+                    class="inline-flex items-center justify-center px-5 py-3 rounded-2xl border border-luxe-sand bg-luxe-cream text-luxe-espresso transition text-sm font-medium"
+                  >
+                    {{
+                      isUploadingPaymentImage
+                        ? "Uploading..."
+                        : "Upload from Device"
+                    }}
+                  </label>
+
+                  <p class="text-xs text-luxe-brown/60 leading-5">
+                    Upload QRIS image from your device, or paste an external QR
+                    image URL.
+                  </p>
                 </div>
               </div>
 
@@ -320,8 +368,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from "vue";
-
+import { computed, onMounted, reactive, ref } from "vue";
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
 import Footer from "../components/layout/Footer.vue";
@@ -334,6 +381,7 @@ const toastStore = useToastStore();
 const paymentMethods = ref([]);
 const isLoading = ref(false);
 const isSubmitting = ref(false);
+const isUploadingPaymentImage = ref(false);
 
 const defaultForm = () => ({
   id: null,
@@ -343,7 +391,7 @@ const defaultForm = () => ({
   bank_name: "",
   account_name: "",
   account_number: "",
-  qr_image_url: "/app/payment/qris-placeholder.svg",
+  qr_image_url: "",
   instructions: "",
   is_active: true,
   sort_order: 0,
@@ -372,26 +420,27 @@ const resetForm = () => {
 };
 
 const editMethod = (method) => {
-  Object.assign(form, {
-    id: method.id,
-    type: method.type,
-    code: method.code,
-    name: method.name,
-    bank_name: method.bankName,
-    account_name: method.accountName,
-    account_number: method.accountNumber,
-    qr_image_url: method.qrImageUrl,
-    instructions: method.instructions,
-    is_active: method.isActive,
-    sort_order: method.sortOrder,
-  });
+  form.id = method.id;
+  form.type = method.type || "qris";
+  form.code = method.code || "";
+  form.name = method.name || "";
+
+  form.bank_name = method.raw?.bank_name || method.bankName || "";
+  form.account_name = method.raw?.account_name || method.accountName || "";
+  form.account_number =
+    method.raw?.account_number || method.accountNumber || "";
+
+  form.qr_image_url = method.raw?.qr_image_url || method.qrImageUrl || "";
+
+  form.instructions = method.raw?.instructions || method.instructions || "";
+  form.is_active = Boolean(method.raw?.is_active ?? method.isActive);
+  form.sort_order = Number(method.raw?.sort_order ?? method.sortOrder ?? 0);
 
   window.scrollTo({
     top: 0,
     behavior: "smooth",
   });
 };
-
 const buildPayload = () => {
   return {
     type: form.type,
@@ -452,6 +501,61 @@ const submitForm = async () => {
     });
   } finally {
     isSubmitting.value = false;
+  }
+};
+
+const handlePaymentImageUpload = async (event) => {
+  const file = event.target.files?.[0];
+
+  if (!file) return;
+
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+  if (!allowedTypes.includes(file.type)) {
+    toastStore.showToast({
+      title: "Invalid Image",
+      message: "Please upload jpg, jpeg, png, or webp image.",
+      type: "error",
+    });
+
+    event.target.value = "";
+    return;
+  }
+
+  const maxSize = 5 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    toastStore.showToast({
+      title: "Image Too Large",
+      message: "Maximum image size is 5MB.",
+      type: "error",
+    });
+
+    event.target.value = "";
+    return;
+  }
+
+  isUploadingPaymentImage.value = true;
+
+  try {
+    const uploadedImage = await paymentMethodService.uploadPaymentImage(file);
+
+    form.qr_image_url = uploadedImage.image_url || "";
+
+    toastStore.showToast({
+      title: "Image Uploaded",
+      message: "Payment image has been uploaded successfully.",
+      type: "success",
+    });
+  } catch (error) {
+    toastStore.showToast({
+      title: "Upload Failed",
+      message: error?.message || "Failed to upload payment image.",
+      type: "error",
+    });
+  } finally {
+    isUploadingPaymentImage.value = false;
+    event.target.value = "";
   }
 };
 

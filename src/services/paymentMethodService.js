@@ -10,6 +10,24 @@ const unwrapData = (response, fallback = null) => {
   return payload ?? fallback;
 };
 
+const getApiBaseUrl = () => {
+  return (import.meta.env.VITE_API_BASE_URL || "/api").replace(/\/$/, "");
+};
+
+const getApiOrigin = () => {
+  const apiBaseUrl = getApiBaseUrl();
+
+  if (apiBaseUrl.startsWith("http://") || apiBaseUrl.startsWith("https://")) {
+    return new URL(apiBaseUrl).origin;
+  }
+
+  return window.location.origin;
+};
+
+const getAuthToken = () => {
+  return sessionStorage.getItem("authToken");
+};
+
 const normalizeImageUrl = (url) => {
   if (!url || typeof url !== "string") return "";
 
@@ -17,11 +35,9 @@ const normalizeImageUrl = (url) => {
     return url;
   }
 
-  if (url.startsWith("/")) {
-    return url;
-  }
+  const cleanPath = url.startsWith("/") ? url : `/${url}`;
 
-  return `/${url}`;
+  return `${getApiOrigin()}${cleanPath}`;
 };
 
 export const normalizePaymentMethod = (method) => {
@@ -62,6 +78,41 @@ export const paymentMethodService = {
     const data = unwrapData(response, []);
 
     return normalizePaymentMethods(data);
+  },
+
+  async uploadPaymentImage(file) {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${getApiBaseUrl()}/admin/payment-methods/images/upload`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: formData,
+      },
+    );
+
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok || result?.success === false) {
+      const error = new Error(
+        result?.message || "Failed to upload payment image.",
+      );
+
+      error.status = response.status;
+      error.errors = result?.errors || null;
+      error.data = result;
+
+      throw error;
+    }
+
+    return result?.data || result;
   },
 
   async createPaymentMethod(payload) {

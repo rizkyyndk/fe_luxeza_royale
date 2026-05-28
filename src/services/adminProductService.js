@@ -89,6 +89,14 @@ const normalizeCategory = (category) => {
   };
 };
 
+const getApiBaseUrl = () => {
+  return (import.meta.env.VITE_API_BASE_URL || "/api").replace(/\/$/, "");
+};
+
+const getAuthToken = () => {
+  return sessionStorage.getItem("authToken");
+};
+
 export const adminProductService = {
   async getProducts(params = {}) {
     const query = new URLSearchParams(params).toString();
@@ -107,6 +115,41 @@ export const adminProductService = {
     return Array.isArray(data)
       ? data.map(normalizeCategory).filter(Boolean)
       : [];
+  },
+
+  async uploadProductImage(file) {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${getApiBaseUrl()}/admin/products/images/upload`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: formData,
+      },
+    );
+
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok || result?.success === false) {
+      const error = new Error(
+        result?.message || "Failed to upload product image.",
+      );
+
+      error.status = response.status;
+      error.errors = result?.errors || null;
+      error.data = result;
+
+      throw error;
+    }
+
+    return result?.data || result;
   },
 
   async createProduct(payload) {

@@ -15,6 +15,8 @@ import { useAuthStore } from "../stores/authStore";
 import AdminProductsPage from "../pages/AdminProductsPage.vue";
 import VerifyAccountPage from "../pages/VerifyAccountPage.vue";
 import MyAddressesPage from "../pages/MyAddressesPage.vue";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage.vue";
+import ResetPasswordPage from "../pages/ResetPasswordPage.vue";
 
 const routes = [
   {
@@ -89,6 +91,20 @@ const routes = [
   {
     path: "/register",
     component: RegisterPage,
+  },
+  {
+    path: "/forgot-password",
+    component: ForgotPasswordPage,
+    meta: {
+      guestOnly: true,
+    },
+  },
+  {
+    path: "/reset-password",
+    component: ResetPasswordPage,
+    meta: {
+      guestOnly: true,
+    },
   },
 
   // Wajib paling bawah

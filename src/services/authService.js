@@ -21,6 +21,20 @@ export const authService = {
     return unwrapData(response, null);
   },
 
+  async forgotPassword(email) {
+    const response = await httpClient.post("/auth/forgot-password", {
+      email,
+    });
+
+    return response?.data ?? response;
+  },
+
+  async resetPassword(payload) {
+    const response = await httpClient.post("/auth/reset-password", payload);
+
+    return response?.data ?? response;
+  },
+
   async verifyAccount(payload) {
     const response = await httpClient.post("/auth/verify", payload);
     return unwrapData(response, null);
