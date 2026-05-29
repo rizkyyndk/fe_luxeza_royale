@@ -572,17 +572,25 @@
       >
         <div class="p-10 md:p-16 flex flex-col justify-center">
           <p class="uppercase tracking-[4px] text-sm text-luxe-brown/75 mb-4">
-            Editorial Collection
+            {{ content("home.editorial.eyebrow", "Editorial Collection") }}
           </p>
 
           <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
-            Built as a scalable frontend for modern fashion commerce.
+            {{
+              content(
+                "home.editorial.title",
+                "Refined essentials for effortless everyday style.",
+              )
+            }}
           </h2>
 
           <p class="text-gray-600 leading-8 mb-8">
-            Luxeza Royale is designed with modular components, reusable product
-            cards, Pinia cart state, route-based product rendering, and checkout
-            flow ready for future Spring Boot API integration.
+            {{
+              content(
+                "home.editorial.subtitle",
+                "Discover curated Luxeza Royale pieces designed with clean silhouettes, premium comfort, and timeless modern details.",
+              )
+            }}
           </p>
 
           <button
@@ -593,12 +601,38 @@
           </button>
         </div>
 
-        <div v-if="editorialProduct" class="min-h-[420px]">
-          <ProductImage
-            :src="editorialProduct.image"
-            :alt="editorialProduct.title"
-            class="w-full h-full object-cover"
-          />
+        <div
+          v-if="editorialProduct"
+          class="relative min-h-[420px] lg:min-h-full bg-luxe-cream overflow-hidden"
+        >
+          <RouterLink
+            :to="`/product/${editorialProduct.id}`"
+            class="block h-full"
+          >
+            <ProductImage
+              :src="editorialProduct.image"
+              :alt="editorialProduct.title"
+              class="w-full h-[420px] sm:h-[520px] lg:h-full object-contain object-center bg-luxe-cream transition duration-700"
+            />
+          </RouterLink>
+
+          <div
+            v-if="editorialProducts.length > 1"
+            class="absolute bottom-5 left-0 right-0 flex items-center justify-center gap-2"
+          >
+            <button
+              v-for="(item, index) in editorialProducts"
+              :key="item.id"
+              @click="selectEditorialSlide(index)"
+              type="button"
+              :class="
+                editorialSlideIndex === index
+                  ? 'w-6 bg-luxe-espresso'
+                  : 'w-2 bg-luxe-brown/30 hover:bg-luxe-brown/50'
+              "
+              class="h-2 rounded-full transition-all"
+            ></button>
+          </div>
         </div>
       </div>
     </section>
@@ -608,7 +642,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
@@ -742,6 +776,16 @@ const loadProducts = async () => {
 
 onMounted(() => {
   loadProducts();
+
+  editorialSlideInterval = setInterval(() => {
+    nextEditorialSlide();
+  }, 4000);
+});
+
+onBeforeUnmount(() => {
+  if (editorialSlideInterval) {
+    clearInterval(editorialSlideInterval);
+  }
 });
 
 const heroProductIndex = ref(0);
@@ -778,8 +822,39 @@ const selectHeroProduct = (index) => {
   heroProductIndex.value = index;
 };
 
+const editorialSlideIndex = ref(0);
+let editorialSlideInterval = null;
+
+const editorialProducts = computed(() => {
+  return products.value.slice(0, 5);
+});
+
 const editorialProduct = computed(() => {
-  return products.value[4] || products.value[0] || null;
+  if (editorialProducts.value.length === 0) return null;
+
+  return (
+    editorialProducts.value[editorialSlideIndex.value] ||
+    editorialProducts.value[0]
+  );
+});
+
+const nextEditorialSlide = () => {
+  if (editorialProducts.value.length <= 1) return;
+
+  editorialSlideIndex.value =
+    editorialSlideIndex.value === editorialProducts.value.length - 1
+      ? 0
+      : editorialSlideIndex.value + 1;
+};
+
+const selectEditorialSlide = (index) => {
+  editorialSlideIndex.value = index;
+};
+
+const editorialImage = computed(() => {
+  return (
+    content("home.editorial.image", "") || editorialProduct.value?.image || ""
+  );
 });
 
 const categories = computed(() => {
