@@ -3,11 +3,14 @@
     <div
       class="relative overflow-hidden rounded-3xl bg-luxe-cream mb-5 shadow-[0_18px_50px_rgba(92,56,36,0.12)] border border-luxe-sand/50"
     >
-      <RouterLink :to="`/product/${id}`" class="block">
+      <RouterLink
+        :to="`/product/${id}`"
+        class="flex h-[420px] sm:h-[460px] md:h-[420px] items-center justify-center bg-luxe-cream"
+      >
         <ProductImage
           :src="image"
           :alt="title"
-          class="w-full h-[420px] object-cover group-hover:scale-110 transition duration-700"
+          class="max-w-[92%] max-h-[92%] w-full h-full object-contain object-center transition duration-700"
         />
       </RouterLink>
 

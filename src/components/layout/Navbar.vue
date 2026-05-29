@@ -183,6 +183,15 @@
 
             <RouterLink
               v-if="authStore.isAdmin"
+              to="/admin/vouchers"
+              @click="isAccountMenuOpen = false"
+              class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
+            >
+              Admin Vouchers
+            </RouterLink>
+
+            <RouterLink
+              v-if="authStore.isAdmin"
               to="/admin/products"
               @click="isAccountMenuOpen = false"
               class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
@@ -353,6 +362,15 @@
               class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
             >
               Admin Shipping
+            </RouterLink>
+
+            <RouterLink
+              v-if="authStore.isAdmin"
+              to="/admin/vouchers"
+              @click="isMobileMenuOpen = false"
+              class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
+            >
+              Admin Vouchers
             </RouterLink>
 
             <RouterLink

@@ -80,13 +80,15 @@
             <ProductImage
               :src="heroProduct.image"
               :alt="heroProduct.title"
-              class="w-full h-[520px] md:h-[680px] object-cover"
+              class="w-full h-[460px] sm:h-[560px] md:h-[680px] object-contain object-top bg-luxe-cream"
             />
 
             <div
-              class="absolute bottom-6 left-6 right-6 bg-luxe-ivory/90 backdrop-blur-xl rounded-3xl p-5 border border-luxe-sand/50"
+              class="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-luxe-ivory/90 backdrop-blur-xl rounded-3xl p-4 sm:p-5 border border-luxe-sand/50"
             >
-              <div class="flex items-center justify-between gap-4">
+              <div
+                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+              >
                 <div class="min-w-0">
                   <p class="text-sm text-luxe-brown/70 mb-1">Featured Piece</p>
 
@@ -99,12 +101,14 @@
                   </p>
                 </div>
 
-                <div class="flex items-center gap-2">
+                <div
+                  class="flex items-center justify-between sm:justify-end gap-2"
+                >
                   <button
                     v-if="heroProducts.length > 1"
                     @click="previousHeroProduct"
                     type="button"
-                    class="w-10 h-10 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+                    class="w-10 h-10 shrink-0 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory transition"
                   >
                     ←
                   </button>
@@ -113,14 +117,14 @@
                     v-if="heroProducts.length > 1"
                     @click="nextHeroProduct"
                     type="button"
-                    class="w-10 h-10 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+                    class="w-10 h-10 shrink-0 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory transition"
                   >
                     →
                   </button>
 
                   <RouterLink
                     :to="`/product/${heroProduct.id}`"
-                    class="bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full text-sm hover:bg-luxe-royal hover:scale-105 transition"
+                    class="shrink-0 bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full text-sm hover:bg-luxe-royal hover:scale-105 transition"
                   >
                     View
                   </RouterLink>
@@ -188,12 +192,12 @@
             v-for="category in categoryCards"
             :key="category.name"
             @click="selectCategoryFromCard(category.name)"
-            class="group relative overflow-hidden rounded-[2rem] h-[320px] text-left"
+            class="group relative overflow-hidden rounded-[2rem] h-[360px] sm:h-[340px] lg:h-[320px] text-left bg-luxe-cream"
           >
             <ProductImage
               :src="category.image"
               :alt="category.name"
-              class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-700"
+              class="absolute inset-0 w-full h-full object-contain object-top bg-luxe-cream group-hover:scale-105 transition duration-700"
             />
 
             <div
