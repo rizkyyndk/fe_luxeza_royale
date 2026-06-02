@@ -32,7 +32,7 @@
 
             <li>
               <a href="/#products" class="hover:text-white transition">
-                {{ content("navbar.collections", "Collection") }}
+                {{ content("navbar.shop", "Shop") }}
               </a>
             </li>
 

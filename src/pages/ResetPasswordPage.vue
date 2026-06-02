@@ -85,8 +85,8 @@
             </p>
 
             <p class="text-xs text-luxe-brown/60 mt-2 leading-5">
-              Password must start with a symbol, contain uppercase letter,
-              lowercase letter, number, and at least 8 characters.
+              Password wajib minimal 8 karakter, mengandung huruf besar, huruf
+              kecil, angka, dan simbol.
             </p>
           </div>
 

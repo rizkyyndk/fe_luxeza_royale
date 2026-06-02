@@ -26,13 +26,13 @@ export const authService = {
       email,
     });
 
-    return response?.data ?? response;
+    return unwrapData(response, null);
   },
 
   async resetPassword(payload) {
     const response = await httpClient.post("/auth/reset-password", payload);
 
-    return response?.data ?? response;
+    return unwrapData(response, null);
   },
 
   async verifyAccount(payload) {

@@ -11,23 +11,23 @@
       >
         <div class="text-center mb-8">
           <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3">
-            Account Recovery
+            Pemulihan Akun
           </p>
 
           <h1 class="text-4xl md:text-5xl font-bold text-luxe-espresso mb-4">
-            Forgot Password
+            Lupa Password
           </h1>
 
           <p class="text-luxe-brown/70 leading-7">
-            Enter your registered email address. We will generate a verification
-            code to reset your password.
+            Masukkan email yang terdaftar. Kami akan membuat kode reset untuk
+            membantu Anda mengganti password.
           </p>
         </div>
 
         <form class="space-y-5" @submit.prevent="submitForgotPassword">
           <div>
             <label class="block text-sm font-medium text-luxe-brown/75 mb-2">
-              Email Address
+              Alamat Email
             </label>
 
             <input
@@ -47,20 +47,25 @@
             :disabled="isSubmitting"
             class="w-full bg-luxe-espresso text-luxe-ivory py-4 rounded-full hover:bg-luxe-royal disabled:opacity-50 transition shadow-lg shadow-luxe-brown/20"
           >
-            {{ isSubmitting ? "Sending Code..." : "Send Reset Code" }}
+            {{ isSubmitting ? "Mengirim Kode..." : "Kirim Kode Reset" }}
           </button>
         </form>
 
         <div
           v-if="resetCode"
-          class="mt-6 bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-5"
+          class="mt-6 bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-5 text-center"
         >
           <p class="text-sm text-luxe-brown/70 mb-2">
-            Reset code for local testing:
+            Kode reset password Anda:
           </p>
 
           <p class="text-3xl font-bold tracking-[6px] text-luxe-espresso">
             {{ resetCode }}
+          </p>
+
+          <p class="text-xs text-luxe-brown/60 mt-3 leading-5">
+            Kode ini berlaku selama 10 menit. Gunakan kode ini pada halaman
+            reset password.
           </p>
         </div>
 
@@ -69,14 +74,14 @@
             to="/login"
             class="flex-1 text-center border border-luxe-sand text-luxe-espresso py-4 rounded-full hover:bg-luxe-ivory transition"
           >
-            Back to Login
+            Kembali ke Login
           </RouterLink>
 
           <RouterLink
             :to="resetPasswordLink"
             class="flex-1 text-center bg-luxe-ivory border border-luxe-sand text-luxe-espresso py-4 rounded-full hover:bg-white transition"
           >
-            I Have a Code
+            Lanjut Reset Password
           </RouterLink>
         </div>
       </div>
@@ -106,9 +111,19 @@ const errorMessage = ref("");
 const isSubmitting = ref(false);
 
 const resetPasswordLink = computed(() => {
-  const query = email.value ? `?email=${encodeURIComponent(email.value)}` : "";
+  const params = new URLSearchParams();
 
-  return `/reset-password${query}`;
+  if (email.value.trim()) {
+    params.set("email", email.value.trim());
+  }
+
+  if (resetCode.value) {
+    params.set("code", resetCode.value);
+  }
+
+  const query = params.toString();
+
+  return query ? `/reset-password?${query}` : "/reset-password";
 });
 
 const isValidEmail = (value) => {
@@ -119,42 +134,49 @@ const submitForgotPassword = async () => {
   errorMessage.value = "";
   resetCode.value = "";
 
-  if (!email.value.trim()) {
-    errorMessage.value = "Email address is required.";
+  const cleanEmail = email.value.trim();
+
+  if (!cleanEmail) {
+    errorMessage.value = "Alamat email wajib diisi.";
     return;
   }
 
-  if (!isValidEmail(email.value)) {
-    errorMessage.value = "Please enter a valid email address.";
+  if (!isValidEmail(cleanEmail)) {
+    errorMessage.value = "Masukkan alamat email yang valid.";
     return;
   }
 
   isSubmitting.value = true;
 
   try {
-    const response = await authService.forgotPassword(email.value.trim());
+    const response = await authService.forgotPassword(cleanEmail);
 
-    resetCode.value = response?.reset_code || response?.data?.reset_code || "";
+    resetCode.value = response?.reset_code || "";
+
+    if (!resetCode.value) {
+      errorMessage.value =
+        "Kode reset berhasil dibuat, tetapi tidak ditemukan pada response API.";
+
+      toastStore.showToast({
+        title: "Kode Tidak Ditemukan",
+        message: errorMessage.value,
+        type: "error",
+      });
+
+      return;
+    }
 
     toastStore.showToast({
-      title: "Reset Code Generated",
-      message: "Please use the verification code to reset your password.",
+      title: "Kode Reset Berhasil Dibuat",
+      message: "Gunakan kode yang tampil untuk membuat password baru.",
       type: "success",
-    });
-
-    router.push({
-      path: "/reset-password",
-      query: {
-        email: email.value.trim(),
-        code: resetCode.value || undefined,
-      },
     });
   } catch (error) {
     errorMessage.value =
-      error?.message || "Failed to generate reset code. Please try again.";
+      error?.message || "Gagal membuat kode reset. Silakan coba lagi.";
 
     toastStore.showToast({
-      title: "Failed",
+      title: "Gagal",
       message: errorMessage.value,
       type: "error",
     });

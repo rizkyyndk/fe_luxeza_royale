@@ -161,9 +161,7 @@
 
         <p class="text-sm tracking-[3px] uppercase">Minimalist Luxury Design</p>
 
-        <p class="text-sm tracking-[3px] uppercase">
-          Ready for Backend Integration
-        </p>
+        <p class="text-sm tracking-[3px] uppercase">Nyaman untuk Setiap Hari</p>
       </div>
     </section>
 
@@ -182,8 +180,8 @@
           </div>
 
           <p class="text-luxe-brown/75 max-w-md leading-7">
-            Explore refined essentials across jackets, hoodies, t-shirts, pants,
-            and shoes.
+            Pilih koleksi fashion esensial dengan desain rapi, nyaman, dan mudah
+            dipadukan untuk berbagai kesempatan.
           </p>
         </div>
 
