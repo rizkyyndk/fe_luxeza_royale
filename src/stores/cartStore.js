@@ -26,6 +26,7 @@ const normalizeCartItems = (items) => {
 
   return items.map((item) => ({
     ...item,
+    price: Number(item.price || 0),
     quantity: Number(item.quantity) > 0 ? Number(item.quantity) : 1,
     selected: item.selected ?? true,
   }));
@@ -172,6 +173,11 @@ export const useCartStore = defineStore("cart", {
       );
 
       if (existingProduct) {
+        existingProduct.price = Number(
+          product.price || existingProduct.price || 0,
+        );
+        existingProduct.stock = product.stock;
+
         const nextQuantity = existingProduct.quantity + requestedQuantity;
 
         existingProduct.quantity = hasStockLimit(existingProduct.stock)

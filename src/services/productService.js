@@ -108,6 +108,7 @@ const normalizeSizes = (product) => {
         return {
           id: item,
           size: item,
+          price: Number(product.price || product.selling_price || 0),
           stock: null,
           isActive: true,
         };
@@ -116,6 +117,10 @@ const normalizeSizes = (product) => {
       return {
         id: item.id,
         size: item.size || item.name || item.label,
+        price:
+          item.price === null || item.price === undefined
+            ? Number(product.price || product.selling_price || 0)
+            : Number(item.price),
         stock:
           item.stock === null || item.stock === undefined
             ? null

@@ -44,7 +44,7 @@
         </h2>
 
         <p class="text-3xl font-bold mb-6 text-luxe-espresso">
-          {{ formatCurrency(product.price) }}
+          {{ formatCurrency(selectedPrice) }}
         </p>
 
         <p class="text-luxe-brown/80 leading-8 mb-8">
@@ -80,7 +80,12 @@
               "
               class="px-5 py-3 rounded-full transition"
             >
-              {{ sizeOption.size }}
+              <span class="flex flex-col leading-tight">
+                <span>{{ sizeOption.size }}</span>
+                <span class="text-xs opacity-80">
+                  {{ formatCurrency(sizeOption.price) }}
+                </span>
+              </span>
             </button>
           </div>
 
@@ -215,6 +220,7 @@ const availableSizes = computed(() => {
     if (typeof size === "string") {
       return {
         size,
+        price: Number(props.product.price || 0),
         stock: Number(props.product.stock || 0),
         isActive: true,
       };
@@ -222,6 +228,7 @@ const availableSizes = computed(() => {
 
     return {
       size: size.size,
+      price: Number(size.price ?? props.product.price ?? 0),
       stock: Number(size.stock || 0),
       isActive: size.isActive ?? size.is_active ?? true,
     };
@@ -243,6 +250,14 @@ const selectedSizeData = computed(() => {
     availableSizes.value.find((size) => size.size === selectedSize.value) ||
     null
   );
+});
+
+const selectedPrice = computed(() => {
+  if (selectedSizeData.value?.price !== undefined) {
+    return Number(selectedSizeData.value.price || 0);
+  }
+
+  return Number(props.product.price || 0);
 });
 
 const selectedStock = computed(() => {
@@ -381,8 +396,10 @@ const addToCart = () => {
   cartStore.addToCart(
     {
       ...props.product,
+      price: selectedPrice.value,
       size: selectedSize.value || "One Size",
       stock: selectedStock.value,
+      selectedSizePrice: selectedPrice.value,
     },
     quantity.value,
   );

@@ -125,7 +125,7 @@
             <!-- PRICE -->
             <div class="mb-8 flex flex-wrap items-center gap-4">
               <p class="text-3xl font-bold">
-                {{ formatCurrency(product.price) }}
+                {{ formatCurrency(selectedPrice) }}
               </p>
 
               <span
@@ -195,7 +195,12 @@
                   "
                   class="px-5 py-3 rounded-full transition"
                 >
-                  {{ sizeOption.size }}
+                  <span class="flex flex-col leading-tight">
+                    <span>{{ sizeOption.size }}</span>
+                    <span class="text-xs opacity-80">
+                      {{ formatCurrency(sizeOption.price) }}
+                    </span>
+                  </span>
                 </button>
               </div>
 
@@ -452,6 +457,7 @@ const availableSizes = computed(() => {
       return {
         id: null,
         size,
+        price: Number(product.value?.price || 0),
         stock: Number(product.value?.stock || 0),
         isActive: true,
       };
@@ -460,6 +466,7 @@ const availableSizes = computed(() => {
     return {
       id: size.id || null,
       size: size.size,
+      price: Number(size.price ?? product.value?.price ?? 0),
       stock: Number(size.stock || 0),
       isActive: size.isActive ?? size.is_active ?? true,
     };
@@ -490,6 +497,14 @@ const selectedSizeData = computed(() => {
     availableSizes.value.find((size) => size.size === selectedSize.value) ||
     null
   );
+});
+
+const selectedPrice = computed(() => {
+  if (selectedSizeData.value?.price !== undefined) {
+    return Number(selectedSizeData.value.price || 0);
+  }
+
+  return Number(product.value?.price || 0);
 });
 
 const selectedStock = computed(() => {
@@ -699,13 +714,15 @@ const addToCart = () => {
   }
 
   cartStore.addToCart(
-    {
-      ...product.value,
-      size: selectedSize.value || "One Size",
-      stock: selectedStock.value,
-    },
-    quantity.value,
-  );
+  {
+    ...product.value,
+    price: selectedPrice.value,
+    size: selectedSize.value || "One Size",
+    stock: selectedStock.value,
+    selectedSizePrice: selectedPrice.value,
+  },
+  quantity.value,
+);
 
   uiStore.openCart();
 

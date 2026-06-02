@@ -517,12 +517,20 @@
               <div
                 v-for="(size, index) in productForm.sizes"
                 :key="index"
-                class="bg-luxe-ivory border border-luxe-sand/60 rounded-3xl p-4 grid md:grid-cols-[1fr_130px_130px_150px_auto] gap-4 md:items-center"
+                class="bg-luxe-ivory border border-luxe-sand/60 rounded-3xl p-4 grid md:grid-cols-[1fr_150px_130px_130px_150px_auto] gap-4 md:items-center"
               >
                 <input
                   v-model="size.size"
                   type="text"
                   placeholder="S / M / L / XL"
+                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
+                />
+
+                <input
+                  v-model.number="size.price"
+                  type="number"
+                  min="0"
+                  placeholder="Price"
                   class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                 />
 
@@ -743,6 +751,7 @@ const createEmptyProductForm = () => ({
   sizes: [
     {
       size: "M",
+      price: 0,
       stock: 0,
       sort_order: 1,
       is_active: true,
@@ -802,6 +811,7 @@ const fillProductForm = (product) => {
     product.sizes.length > 0
       ? product.sizes.map((size) => ({
           size: size.size,
+          price: Number(size.price ?? product.price ?? 0),
           stock: size.stock,
           sort_order: size.sortOrder,
           is_active: size.isActive,
@@ -1005,6 +1015,7 @@ const setPrimaryImage = (selectedIndex) => {
 const addSizeRow = () => {
   productForm.sizes.push({
     size: "",
+    price: Number(productForm.price || 0),
     stock: 0,
     sort_order: productForm.sizes.length + 1,
     is_active: true,
@@ -1040,6 +1051,7 @@ const buildProductPayload = () => {
     .filter((size) => size.size.trim() !== "")
     .map((size, index) => ({
       size: size.size.trim(),
+      price: Number(size.price ?? productForm.price ?? 0),
       stock: Number(size.stock || 0),
       sort_order: Number(size.sort_order || index + 1),
       is_active: Boolean(size.is_active),
@@ -1086,6 +1098,20 @@ const validateProductForm = () => {
     toastStore.showToast({
       title: "Invalid Price",
       message: "Product price cannot be negative.",
+      type: "error",
+    });
+
+    return false;
+  }
+
+  const invalidSizePrice = productForm.sizes.find(
+    (size) => size.size.trim() !== "" && Number(size.price) < 0,
+  );
+
+  if (invalidSizePrice) {
+    toastStore.showToast({
+      title: "Invalid Size Price",
+      message: "Size price cannot be negative.",
       type: "error",
     });
 

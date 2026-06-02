@@ -61,7 +61,7 @@
 
       <div class="flex items-center justify-between gap-4">
         <p class="font-bold text-luxe-espresso">
-          {{ formatCurrency(price) }}
+          {{ displayPrice }}
         </p>
 
         <p class="text-sm text-luxe-brown/70">
@@ -153,6 +153,28 @@ const productPayload = computed(() => {
     sizeOptions: props.sizeOptions,
     stock: props.stock,
   };
+});
+
+const activeSizePrices = computed(() => {
+  return props.sizeOptions
+    .filter((size) => size.isActive ?? size.is_active ?? true)
+    .map((size) => Number(size.price ?? props.price ?? 0))
+    .filter((price) => price > 0);
+});
+
+const displayPrice = computed(() => {
+  if (activeSizePrices.value.length === 0) {
+    return formatCurrency(props.price);
+  }
+
+  const minPrice = Math.min(...activeSizePrices.value);
+  const maxPrice = Math.max(...activeSizePrices.value);
+
+  if (minPrice === maxPrice) {
+    return formatCurrency(minPrice);
+  }
+
+  return `Mulai dari ${formatCurrency(minPrice)}`;
 });
 
 const isOutOfStock = computed(() => {

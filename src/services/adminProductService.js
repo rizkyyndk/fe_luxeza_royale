@@ -51,6 +51,7 @@ const normalizeProduct = (product) => {
       ? product.sizes.map((size) => ({
           id: size.id,
           size: size.size,
+          price: Number(size.price ?? product.price ?? 0),
           stock: Number(size.stock || 0),
           sortOrder: Number(size.sort_order || 0),
           isActive: Boolean(size.is_active),
