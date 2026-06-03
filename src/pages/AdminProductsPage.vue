@@ -355,16 +355,20 @@
 
             <div>
               <label class="block text-sm text-luxe-brown/75 mb-2">
-                Stock
+                Berat Produk Default (gram)
               </label>
 
               <input
-                v-model.number="productForm.stock"
+                v-model.number="productForm.weight_gram"
                 type="number"
-                min="0"
-                placeholder="10"
+                min="1"
+                placeholder="1000"
                 class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
               />
+
+              <p class="text-xs text-luxe-brown/60 mt-2">
+                Berat ini digunakan untuk menghitung ongkir.
+              </p>
             </div>
           </div>
 
@@ -741,6 +745,7 @@ const createEmptyProductForm = () => ({
   description: "",
   price: 0,
   stock: 0,
+  weight_gram: 1000,
   is_active: true,
   images: [
     {
@@ -792,6 +797,7 @@ const fillProductForm = (product) => {
   productForm.description = product.description || "";
   productForm.price = product.price || 0;
   productForm.stock = product.stock || 0;
+  productForm.weight_gram = product.weightGram || product.weight_gram || 1000;
   productForm.is_active = product.isActive;
 
   productForm.images =
@@ -1076,6 +1082,7 @@ const buildProductPayload = () => {
     description: productForm.description.trim(),
     price: Number(productForm.price || 0),
     stock: Number(productForm.stock || 0),
+    weight_gram: Number(productForm.weight_gram || 1000),
     is_active: Boolean(productForm.is_active),
     images,
     sizes,
@@ -1122,6 +1129,16 @@ const validateProductForm = () => {
     toastStore.showToast({
       title: "Invalid Stock",
       message: "Product stock cannot be negative.",
+      type: "error",
+    });
+
+    return false;
+  }
+
+  if (Number(productForm.weight_gram) <= 0) {
+    toastStore.showToast({
+      title: "Invalid Product Weight",
+      message: "Product weight must be greater than 0 gram.",
       type: "error",
     });
 

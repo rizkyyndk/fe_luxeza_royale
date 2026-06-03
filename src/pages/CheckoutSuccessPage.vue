@@ -80,13 +80,29 @@
           <div class="flex justify-between gap-4">
             <span class="text-luxe-brown/70">Shipping</span>
 
-            <span class="font-semibold text-luxe-espresso">
-              {{
-                Number(lastOrder.shippingCost || 0) === 0
-                  ? "Free"
-                  : formatCurrency(lastOrder.shippingCost)
-              }}
-            </span>
+            <div class="text-right">
+              <p class="font-semibold text-luxe-espresso">
+                {{
+                  Number(lastOrder.shippingCost || 0) === 0
+                    ? "Free"
+                    : formatCurrency(lastOrder.shippingCost)
+                }}
+              </p>
+
+              <p
+                v-if="shippingCourierLabel"
+                class="text-sm text-luxe-brown/70 mt-1"
+              >
+                {{ shippingCourierLabel }}
+              </p>
+
+              <p
+                v-if="shippingDestinationLabel"
+                class="text-xs text-luxe-brown/60 mt-1 max-w-[260px]"
+              >
+                {{ shippingDestinationLabel }}
+              </p>
+            </div>
           </div>
 
           <div class="flex justify-between gap-4">
@@ -116,6 +132,63 @@
           eyebrow="Delivery Information"
           class="text-left mb-8"
         />
+
+        <!-- SHIPPING COURIER DETAIL -->
+        <div
+          v-if="lastOrder && hasShippingDetail"
+          class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-6 text-left mb-8 shadow-sm"
+        >
+          <p class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2">
+            Shipping Courier
+          </p>
+
+          <h2 class="text-xl font-bold text-luxe-espresso mb-5">
+            Delivery Service
+          </h2>
+
+          <div class="space-y-3">
+            <div v-if="shippingCourierLabel" class="flex justify-between gap-4">
+              <span class="text-luxe-brown/70">Courier</span>
+
+              <span class="font-semibold text-luxe-espresso text-right">
+                {{ shippingCourierLabel }}
+              </span>
+            </div>
+
+            <div
+              v-if="shippingDestinationLabel"
+              class="flex justify-between gap-4"
+            >
+              <span class="text-luxe-brown/70">Destination</span>
+
+              <span
+                class="font-semibold text-luxe-espresso text-right max-w-[320px]"
+              >
+                {{ shippingDestinationLabel }}
+              </span>
+            </div>
+
+            <div v-if="shippingEtdLabel" class="flex justify-between gap-4">
+              <span class="text-luxe-brown/70">Estimated Delivery</span>
+
+              <span class="font-semibold text-luxe-espresso text-right">
+                {{ shippingEtdLabel }}
+              </span>
+            </div>
+
+            <div class="flex justify-between gap-4">
+              <span class="text-luxe-brown/70">Shipping Cost</span>
+
+              <span class="font-semibold text-luxe-espresso text-right">
+                {{
+                  Number(lastOrder.shippingCost || 0) === 0
+                    ? "Free"
+                    : formatCurrency(lastOrder.shippingCost)
+                }}
+              </span>
+            </div>
+          </div>
+        </div>
 
         <!-- PAYMENT INSTRUCTION -->
         <div
@@ -535,6 +608,74 @@ const formatPaymentMethod = (method) => {
 
 const paymentMethodData = computed(() => {
   return lastOrder.value?.paymentMethodData || null;
+});
+
+const backendOrderData = computed(() => {
+  return (
+    lastOrder.value?.backendOrder?.order ||
+    lastOrder.value?.backendOrder?.data?.order ||
+    lastOrder.value?.backendOrder ||
+    {}
+  );
+});
+
+const formatCourierName = (codeOrName) => {
+  const value = String(codeOrName || "").trim();
+
+  if (!value) return "";
+
+  if (value.toLowerCase() === "jnt") return "J&T";
+  if (value.toLowerCase() === "jne") return "JNE";
+
+  return value.toUpperCase();
+};
+
+const shippingCourierLabel = computed(() => {
+  const rate = lastOrder.value?.shippingRate || {};
+  const backendOrder = backendOrderData.value;
+
+  const courierName =
+    rate.name ||
+    lastOrder.value?.shippingCourier ||
+    backendOrder.shipping_courier ||
+    "";
+
+  const service =
+    rate.service ||
+    lastOrder.value?.shippingService ||
+    backendOrder.shipping_service ||
+    "";
+
+  const formattedCourier = formatCourierName(courierName);
+
+  return [formattedCourier, service].filter(Boolean).join(" ");
+});
+
+const shippingDestinationLabel = computed(() => {
+  return (
+    lastOrder.value?.shippingDestination?.label ||
+    lastOrder.value?.shippingDestinationLabel ||
+    backendOrderData.value?.shipping_destination_label ||
+    ""
+  );
+});
+
+const shippingEtdLabel = computed(() => {
+  const etd =
+    lastOrder.value?.shippingRate?.etd ||
+    lastOrder.value?.shippingEtd ||
+    backendOrderData.value?.shipping_etd ||
+    "";
+
+  return etd ? `${etd} hari` : "";
+});
+
+const hasShippingDetail = computed(() => {
+  return Boolean(
+    shippingCourierLabel.value ||
+    shippingDestinationLabel.value ||
+    shippingEtdLabel.value,
+  );
 });
 
 const formatStatus = (status) => {

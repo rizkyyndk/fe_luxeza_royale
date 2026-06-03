@@ -503,7 +503,7 @@
               <div>
                 <div class="flex items-center justify-between gap-4 mb-3">
                   <label class="block text-sm text-luxe-brown/75">
-                    Shipping Method
+                    Ongkir Pengiriman
                   </label>
 
                   <span
@@ -514,108 +514,178 @@
                   </span>
                 </div>
 
-                <div class="grid sm:grid-cols-2 gap-4">
+                <!-- SEARCH DESTINATION -->
+                <div
+                  class="bg-luxe-cream border border-luxe-sand/70 rounded-[2rem] p-5 md:p-6 space-y-5"
+                >
+                  <div>
+                    <p
+                      class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2"
+                    >
+                      Ongkir Otomatis
+                    </p>
+
+                    <h3 class="text-2xl font-bold text-luxe-espresso">
+                      Estimasi Ongkir dari Alamat
+                    </h3>
+
+                    <p class="text-sm text-luxe-brown/65 mt-2 leading-6">
+                      Sistem akan menghitung ongkir berdasarkan alamat
+                      pengiriman yang sudah Anda isi.
+                    </p>
+                  </div>
+
+                  <div class="flex flex-col sm:flex-row gap-3">
+                    <button
+                      type="button"
+                      @click="searchShippingDestinations"
+                      :disabled="isSearchingDestinations"
+                      class="bg-luxe-espresso text-luxe-ivory px-6 py-4 rounded-2xl hover:bg-luxe-royal disabled:opacity-50 transition"
+                    >
+                      {{ isSearchingDestinations ? "Mencari..." : "Cari" }}
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    @click="useAddressAsShippingSearch"
+                    class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso px-5 py-4 rounded-2xl hover:bg-white hover:border-luxe-royal transition"
+                  >
+                    Gunakan Alamat Checkout untuk Pencarian
+                  </button>
+
+                  <p
+                    v-if="shippingDestinationError"
+                    class="text-red-500 text-sm"
+                  >
+                    {{ shippingDestinationError }}
+                  </p>
+
+                  <!-- DESTINATION RESULT -->
+                  <div v-if="shippingDestinations.length > 0" class="space-y-3">
+                    <button
+                      v-for="destination in shippingDestinations"
+                      :key="destination.id"
+                      type="button"
+                      @click="selectShippingDestination(destination)"
+                      class="w-full text-left bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-5 hover:border-luxe-royal hover:bg-white transition"
+                    >
+                      <p class="font-semibold text-luxe-espresso">
+                        {{ destination.label }}
+                      </p>
+                    </button>
+                  </div>
+
+                  <!-- SELECTED DESTINATION -->
                   <div
-                    v-if="isLoadingShippingMethods"
+                    v-if="selectedShippingDestination"
+                    class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-5"
+                  >
+                    <p class="text-sm text-luxe-brown/70 mb-2">
+                      Tujuan ongkir dipilih:
+                    </p>
+
+                    <p class="font-semibold text-luxe-espresso leading-6">
+                      {{ selectedShippingDestination.label }}
+                    </p>
+                  </div>
+
+                  <button
+                    v-if="selectedShippingDestination"
+                    type="button"
+                    @click="loadShippingRates"
+                    :disabled="isLoadingShippingRates"
+                    class="w-full bg-luxe-espresso text-luxe-ivory px-5 py-4 rounded-2xl hover:bg-luxe-royal disabled:opacity-50 transition"
+                  >
+                    {{
+                      isLoadingShippingRates
+                        ? "Menghitung Ongkir..."
+                        : "Hitung Ulang Ongkir"
+                    }}
+                  </button>
+                </div>
+
+                <!-- RATES -->
+                <div class="mt-5">
+                  <div
+                    v-if="isLoadingShippingRates"
                     class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 text-luxe-brown/75"
                   >
-                    Loading shipping methods...
+                    Menghitung ongkir...
                   </div>
 
                   <div
-                    v-else-if="shippingMethodError"
+                    v-else-if="shippingRateError"
                     class="bg-red-50 border border-red-100 text-red-600 rounded-3xl p-5"
                   >
-                    {{ shippingMethodError }}
+                    {{ shippingRateError }}
                   </div>
 
                   <div
-                    v-else-if="shippingMethods.length === 0"
-                    class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 text-luxe-brown/75"
+                    v-else-if="shippingRates.length > 0"
+                    class="grid grid-cols-1 gap-4"
                   >
-                    No active shipping method available. Please contact admin.
-                  </div>
+                    <div
+                      v-if="totalShippingWeightGram > 0"
+                      class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-4 text-sm text-luxe-brown/75"
+                    >
+                      Total berat pengiriman:
+                      <span class="font-semibold text-luxe-espresso">
+                        {{ totalShippingWeightGram }} gram
+                      </span>
+                    </div>
 
-                  <div v-else class="grid grid-cols-1 gap-4">
                     <button
-                      v-for="method in shippingMethods"
-                      :key="method.value"
+                      v-for="rate in shippingRates"
+                      :key="rate.id"
                       type="button"
-                      @click="form.shippingMethod = method.value"
+                      @click="selectedShippingRateId = rate.id"
                       :class="
-                        form.shippingMethod === method.value
+                        selectedShippingRateId === rate.id
                           ? 'bg-luxe-espresso text-luxe-ivory border-luxe-espresso shadow-lg shadow-luxe-brown/20'
                           : 'bg-luxe-ivory text-luxe-espresso border-luxe-sand hover:border-luxe-royal hover:bg-luxe-cream'
                       "
                       class="w-full rounded-3xl border px-5 py-5 text-left transition hover:shadow-md"
                     >
-                      <div class="flex items-start gap-4">
-                        <span
-                          :class="
-                            form.shippingMethod === method.value
-                              ? 'bg-luxe-ivory/15 text-luxe-ivory border-luxe-ivory/20'
-                              : 'bg-luxe-cream text-luxe-espresso border-luxe-sand/60'
-                          "
-                          class="w-11 h-11 rounded-2xl border flex items-center justify-center text-lg shrink-0 mt-1"
-                        >
-                          🚚
-                        </span>
-
-                        <div class="min-w-0 flex-1">
-                          <p class="font-bold text-lg leading-snug break-words">
-                            {{ method.label }}
+                      <div class="flex items-start justify-between gap-4">
+                        <div>
+                          <p class="font-bold text-lg">
+                            {{ rate.name }} {{ rate.service }}
                           </p>
 
                           <p
                             :class="
-                              form.shippingMethod === method.value
+                              selectedShippingRateId === rate.id
                                 ? 'text-luxe-sand'
                                 : 'text-luxe-brown/70'
                             "
-                            class="text-sm mt-2 leading-6 break-words"
+                            class="text-sm mt-2 leading-6"
                           >
-                            {{ method.description }}
+                            {{ rate.description || "Layanan pengiriman" }}
+                            <span v-if="rate.etd">
+                              • Estimasi {{ rate.etd }} hari
+                            </span>
                           </p>
                         </div>
-                      </div>
 
-                      <div
-                        :class="
-                          form.shippingMethod === method.value
-                            ? 'border-luxe-ivory/20'
-                            : 'border-luxe-sand/60'
-                        "
-                        class="mt-5 pt-4 border-t flex items-center justify-between gap-4"
-                      >
-                        <span
-                          :class="
-                            form.shippingMethod === method.value
-                              ? 'text-luxe-sand'
-                              : 'text-luxe-brown/65'
-                          "
-                          class="text-sm"
-                        >
-                          Shipping Fee
-                        </span>
-
-                        <span
-                          :class="
-                            form.shippingMethod === method.value
-                              ? 'text-luxe-ivory'
-                              : 'text-luxe-espresso'
-                          "
-                          class="text-lg font-bold whitespace-nowrap"
-                        >
+                        <p class="font-bold whitespace-nowrap">
                           {{
                             isFreeShippingUnlocked
                               ? "Free"
-                              : formatCurrency(method.cost)
+                              : formatCurrency(rate.cost)
                           }}
-                        </span>
+                        </p>
                       </div>
                     </button>
                   </div>
                 </div>
+
+                <p
+                  v-if="errors.shippingDestination"
+                  class="text-red-500 text-sm mt-2"
+                >
+                  {{ errors.shippingDestination }}
+                </p>
 
                 <p
                   v-if="errors.shippingMethod"
@@ -649,13 +719,12 @@
 
                   <p class="text-sm text-luxe-brown/75 leading-6">
                     <span v-if="remainingForFreeShipping > 0">
-                      Add {{ formatCurrency(remainingForFreeShipping) }} more
-                      selected items to unlock free shipping.
+                      Tambah {{ formatCurrency(remainingForFreeShipping) }} lagi
+                      untuk mendapatkan gratis ongkir.
                     </span>
 
                     <span v-else>
-                      Congratulations, your selected items qualify for free
-                      shipping.
+                      Selamat, pesanan ini memenuhi syarat gratis ongkir.
                     </span>
                   </p>
                 </div>
@@ -949,7 +1018,7 @@ import { formatCurrency } from "../utils/formatCurrency";
 import { voucherService } from "../services/voucherService";
 import { orderService } from "../services/orderService";
 import { paymentMethodService } from "../services/paymentMethodService";
-import { shippingMethodService } from "../services/shippingMethodService";
+import { shippingRateService } from "../services/shippingRateService";
 import { regionService } from "../services/regionService";
 import SearchableSelect from "../components/ui/SearchableSelect.vue";
 import { userAddressService } from "../services/userAddressService";
@@ -1439,46 +1508,271 @@ watch(
 
 /*
 |--------------------------------------------------------------------------
-| Shipping
+| RajaOngkir Shipping
 |--------------------------------------------------------------------------
 */
 
-const shippingMethods = ref([]);
-const isLoadingShippingMethods = ref(false);
-const shippingMethodError = ref("");
+const shippingDestinationKeyword = ref("");
+const shippingDestinations = ref([]);
+const selectedShippingDestination = ref(null);
+
+const shippingRates = ref([]);
+const selectedShippingRateId = ref("");
+const totalShippingWeightGram = ref(0);
+
+const isSearchingDestinations = ref(false);
+const isLoadingShippingRates = ref(false);
+
+const shippingDestinationError = ref("");
+const shippingRateError = ref("");
+
+const buildShippingItems = () => {
+  return cartStore.selectedItems.map((item) => ({
+    product_id: item.product_id || item.productId || item.id,
+    slug: item.slug || null,
+    size: item.size || null,
+    quantity: Number(item.quantity || 1),
+  }));
+};
 
 const selectedShippingMethod = computed(() => {
   return (
-    shippingMethods.value.find(
-      (method) => method.value === form.shippingMethod,
+    shippingRates.value.find(
+      (rate) => rate.id === selectedShippingRateId.value,
     ) || null
   );
 });
 
-const loadShippingMethods = async () => {
-  isLoadingShippingMethods.value = true;
-  shippingMethodError.value = "";
+const searchShippingDestinations = async () => {
+  shippingDestinationError.value = "";
+  shippingDestinations.value = [];
+
+  const keyword = shippingDestinationKeyword.value.trim();
+
+  if (keyword.length < 3) {
+    shippingDestinationError.value =
+      "Masukkan minimal 3 karakter untuk mencari tujuan ongkir.";
+    return;
+  }
+
+  isSearchingDestinations.value = true;
 
   try {
-    shippingMethods.value =
-      await shippingMethodService.getActiveShippingMethods();
-
-    const selectedMethodStillExists = shippingMethods.value.some(
-      (method) => method.value === form.shippingMethod,
+    shippingDestinations.value = await shippingRateService.searchDestinations(
+      keyword,
+      10,
     );
 
-    if (!form.shippingMethod || !selectedMethodStillExists) {
-      form.shippingMethod = shippingMethods.value[0]?.value || "";
+    if (shippingDestinations.value.length === 0) {
+      shippingDestinationError.value =
+        "Tujuan ongkir tidak ditemukan. Coba gunakan nama kecamatan atau kota.";
     }
   } catch (error) {
-    console.error("Failed to load shipping methods:", error);
-
-    shippingMethods.value = [];
-
-    shippingMethodError.value =
-      error?.message || "Failed to load shipping methods.";
+    shippingDestinationError.value =
+      error?.message || "Gagal mencari tujuan ongkir.";
   } finally {
-    isLoadingShippingMethods.value = false;
+    isSearchingDestinations.value = false;
+  }
+};
+
+const normalizeShippingText = (value) => {
+  return String(value || "")
+    .toUpperCase()
+    .replace(/^KABUPATEN\s+/i, "")
+    .replace(/^KOTA\s+/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+const hasCompleteShippingAddress = computed(() => {
+  return Boolean(
+    form.province?.trim() &&
+    form.city?.trim() &&
+    form.district?.trim() &&
+    form.village?.trim(),
+  );
+});
+
+const getShippingAddressSignature = () => {
+  return [
+    normalizeShippingText(form.province),
+    normalizeShippingText(form.city),
+    normalizeShippingText(form.district),
+    normalizeShippingText(form.village),
+    normalizeShippingText(form.postalCode),
+  ].join("|");
+};
+
+const buildShippingDestinationKeyword = () => {
+  return [
+    form.village,
+    form.district,
+    form.city,
+    form.province,
+    form.postalCode,
+  ]
+    .filter(Boolean)
+    .join(" ");
+};
+
+const findBestShippingDestination = (destinations) => {
+  const province = normalizeShippingText(form.province);
+  const city = normalizeShippingText(form.city);
+  const district = normalizeShippingText(form.district);
+  const village = normalizeShippingText(form.village);
+
+  const matchValue = (value, target) => {
+    const normalizedValue = normalizeShippingText(value);
+    const normalizedTarget = normalizeShippingText(target);
+
+    return (
+      normalizedValue === normalizedTarget ||
+      normalizedValue.includes(normalizedTarget) ||
+      normalizedTarget.includes(normalizedValue)
+    );
+  };
+
+  return (
+    destinations.find((destination) => {
+      return (
+        matchValue(destination.provinceName, province) &&
+        matchValue(destination.cityName, city) &&
+        matchValue(destination.districtName, district) &&
+        matchValue(destination.subdistrictName || destination.label, village)
+      );
+    }) ||
+    destinations.find((destination) => {
+      return (
+        matchValue(destination.provinceName, province) &&
+        matchValue(destination.cityName, city) &&
+        matchValue(destination.districtName, district)
+      );
+    }) ||
+    destinations.find((destination) => {
+      return (
+        matchValue(destination.cityName, city) &&
+        matchValue(destination.districtName, district)
+      );
+    }) ||
+    destinations[0] ||
+    null
+  );
+};
+
+const lastResolvedShippingAddressSignature = ref("");
+
+const useAddressAsShippingSearch = async () => {
+  shippingDestinationError.value = "";
+  shippingRateError.value = "";
+
+  if (!hasCompleteShippingAddress.value) {
+    shippingDestinationError.value =
+      "Lengkapi provinsi, kota, kecamatan, dan kelurahan terlebih dahulu.";
+    return;
+  }
+
+  const currentSignature = getShippingAddressSignature();
+
+  if (
+    selectedShippingDestination.value?.id &&
+    lastResolvedShippingAddressSignature.value === currentSignature
+  ) {
+    return;
+  }
+
+  const keyword = buildShippingDestinationKeyword();
+
+  shippingDestinationKeyword.value = keyword;
+  shippingDestinations.value = [];
+  shippingRates.value = [];
+  selectedShippingRateId.value = "";
+  selectedShippingDestination.value = null;
+  totalShippingWeightGram.value = 0;
+
+  isSearchingDestinations.value = true;
+
+  try {
+    const destinations = await shippingRateService.searchDestinations(
+      keyword,
+      10,
+    );
+
+    if (destinations.length === 0) {
+      shippingDestinationError.value =
+        "Tujuan ongkir tidak ditemukan dari alamat ini. Coba periksa kembali kelurahan atau kecamatan.";
+      return;
+    }
+
+    const bestDestination = findBestShippingDestination(destinations);
+
+    if (!bestDestination) {
+      shippingDestinations.value = destinations;
+      shippingDestinationError.value =
+        "Ada beberapa hasil tujuan. Pilih alamat yang paling sesuai.";
+      return;
+    }
+
+    lastResolvedShippingAddressSignature.value = currentSignature;
+
+    await selectShippingDestination(bestDestination);
+  } catch (error) {
+    shippingDestinationError.value =
+      error?.message || "Gagal mencari tujuan ongkir dari alamat.";
+  } finally {
+    isSearchingDestinations.value = false;
+  }
+};
+
+const selectShippingDestination = async (destination) => {
+  selectedShippingDestination.value = destination;
+  shippingDestinationKeyword.value = destination.label;
+
+  shippingDestinations.value = [];
+  shippingRates.value = [];
+  selectedShippingRateId.value = "";
+  totalShippingWeightGram.value = 0;
+  shippingRateError.value = "";
+
+  await loadShippingRates();
+};
+
+const loadShippingRates = async () => {
+  shippingRateError.value = "";
+  shippingRates.value = [];
+  selectedShippingRateId.value = "";
+  totalShippingWeightGram.value = 0;
+
+  if (!selectedShippingDestination.value?.id) {
+    shippingRateError.value = "Pilih tujuan ongkir terlebih dahulu.";
+    return;
+  }
+
+  if (!cartStore.hasSelectedItems) {
+    shippingRateError.value = "Pilih item checkout terlebih dahulu.";
+    return;
+  }
+
+  isLoadingShippingRates.value = true;
+
+  try {
+    const result = await shippingRateService.getRates(
+      selectedShippingDestination.value.id,
+      buildShippingItems(),
+    );
+
+    shippingRates.value = result.rates;
+    totalShippingWeightGram.value = result.totalWeightGram;
+
+    if (shippingRates.value.length > 0) {
+      selectedShippingRateId.value = shippingRates.value[0].id;
+    } else {
+      shippingRateError.value =
+        "Tidak ada layanan ongkir tersedia untuk tujuan ini.";
+    }
+  } catch (error) {
+    shippingRateError.value = error?.message || "Gagal menghitung ongkir.";
+  } finally {
+    isLoadingShippingRates.value = false;
   }
 };
 
@@ -1500,14 +1794,56 @@ const freeShippingProgress = computed(() => {
 });
 
 const shippingCost = computed(() => {
+  if (!selectedShippingMethod.value) return 0;
+
   if (isFreeShippingUnlocked.value) return 0;
 
-  return selectedShippingMethod.value?.cost || 0;
+  return Number(selectedShippingMethod.value.cost || 0);
 });
 
 const shippingLabel = computed(() => {
+  if (!selectedShippingMethod.value) return "-";
+
   return shippingCost.value === 0 ? "Free" : formatCurrency(shippingCost.value);
 });
+
+watch(
+  () =>
+    cartStore.selectedItems
+      .map((item) => `${item.id}-${item.size}-${item.quantity}`)
+      .join("|"),
+  async () => {
+    if (selectedShippingDestination.value?.id) {
+      await loadShippingRates();
+    }
+  },
+);
+
+let shippingAddressSearchTimer = null;
+
+watch(
+  () =>
+    [
+      form.province,
+      form.city,
+      form.district,
+      form.village,
+      form.postalCode,
+    ].join("|"),
+  () => {
+    if (!hasCompleteShippingAddress.value || !cartStore.hasSelectedItems) {
+      return;
+    }
+
+    if (shippingAddressSearchTimer) {
+      clearTimeout(shippingAddressSearchTimer);
+    }
+
+    shippingAddressSearchTimer = setTimeout(() => {
+      useAddressAsShippingSearch();
+    }, 700);
+  },
+);
 
 /*
 |--------------------------------------------------------------------------
@@ -1777,10 +2113,10 @@ const isFormValid = computed(() => {
     form.rw.trim() !== "" &&
     form.postalCode.trim() !== "" &&
     form.addressDetail.trim() !== "" &&
+    Boolean(selectedShippingDestination.value?.id) &&
+    Boolean(selectedShippingMethod.value) &&
     String(form.paymentMethod || "").trim() !== "" &&
     !cartStore.isEmpty &&
-    String(form.shippingMethod || "").trim() !== "" &&
-    String(form.paymentMethod || "").trim() !== "" &&
     cartStore.hasSelectedItems
   );
 });
@@ -1868,8 +2204,12 @@ const validateForm = () => {
     validationErrors.addressDetail = "Address detail is required.";
   }
 
-  if (!form.shippingMethod) {
-    validationErrors.shippingMethod = "Shipping method is required.";
+  if (!selectedShippingDestination.value?.id) {
+    validationErrors.shippingDestination = "Tujuan ongkir wajib dipilih.";
+  }
+
+  if (!selectedShippingMethod.value) {
+    validationErrors.shippingMethod = "Layanan ongkir wajib dipilih.";
   }
 
   if (!form.paymentMethod) {
@@ -1998,7 +2338,13 @@ const placeOrder = async () => {
       customer_postal_code: form.postalCode,
       customer_address_detail: form.addressDetail,
 
-      shipping_method: form.shippingMethod,
+      shipping_method: selectedShippingMethod.value?.id || "",
+      shipping_destination_id: selectedShippingDestination.value?.id || null,
+      shipping_destination_label:
+        selectedShippingDestination.value?.label || null,
+      shipping_courier: selectedShippingMethod.value?.code || null,
+      shipping_service: selectedShippingMethod.value?.service || null,
+
       payment_method_code: form.paymentMethod,
       voucher_code: appliedVoucher.value ? appliedVoucher.value.code : null,
 
@@ -2035,8 +2381,16 @@ const placeOrder = async () => {
         addressDetail: form.addressDetail,
       },
 
-      shippingMethod: form.shippingMethod,
-      shippingMethodLabel: selectedShippingMethod.value?.label,
+      shippingMethod: selectedShippingMethod.value?.id || "",
+      shippingMethodLabel: selectedShippingMethod.value?.label || "",
+      shippingDestination: selectedShippingDestination.value,
+      shippingRate: selectedShippingMethod.value,
+
+      shippingCourier: selectedShippingMethod.value?.code || "",
+      shippingService: selectedShippingMethod.value?.service || "",
+      shippingEtd: selectedShippingMethod.value?.etd || "",
+      shippingDestinationLabel: selectedShippingDestination.value?.label || "",
+
       paymentMethod: form.paymentMethod,
       paymentMethodData: selectedPaymentMethod.value,
       paymentProofUrl,
@@ -2137,7 +2491,7 @@ onMounted(async () => {
   }
 
   await loadSavedAddresses();
-  await loadShippingMethods();
+  await useAddressAsShippingSearch();
   await loadPaymentMethods();
 });
 </script>

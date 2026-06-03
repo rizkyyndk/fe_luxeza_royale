@@ -285,6 +285,71 @@
                   class="mb-6"
                 />
 
+                <!-- SHIPPING COURIER DETAIL -->
+                <div
+                  v-if="hasShippingDetail(order)"
+                  class="mb-6 bg-luxe-ivory border border-luxe-sand/60 rounded-3xl p-5 shadow-sm"
+                >
+                  <p
+                    class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2"
+                  >
+                    Shipping Courier
+                  </p>
+
+                  <h3 class="text-xl font-bold text-luxe-espresso mb-5">
+                    Delivery Detail
+                  </h3>
+
+                  <div class="space-y-3">
+                    <div
+                      v-if="getShippingCourierLabel(order)"
+                      class="flex justify-between gap-4"
+                    >
+                      <span class="text-luxe-brown/70">Courier</span>
+
+                      <span class="font-semibold text-luxe-espresso text-right">
+                        {{ getShippingCourierLabel(order) }}
+                      </span>
+                    </div>
+
+                    <div
+                      v-if="getShippingDestinationLabel(order)"
+                      class="flex justify-between gap-4"
+                    >
+                      <span class="text-luxe-brown/70">Destination</span>
+
+                      <span
+                        class="font-semibold text-luxe-espresso text-right max-w-[320px]"
+                      >
+                        {{ getShippingDestinationLabel(order) }}
+                      </span>
+                    </div>
+
+                    <div
+                      v-if="getShippingEtdLabel(order)"
+                      class="flex justify-between gap-4"
+                    >
+                      <span class="text-luxe-brown/70">Estimated Delivery</span>
+
+                      <span class="font-semibold text-luxe-espresso text-right">
+                        {{ getShippingEtdLabel(order) }}
+                      </span>
+                    </div>
+
+                    <div class="flex justify-between gap-4">
+                      <span class="text-luxe-brown/70">Shipping Cost</span>
+
+                      <span class="font-semibold text-luxe-espresso text-right">
+                        {{
+                          Number(order.shippingCost || 0) === 0
+                            ? "Free"
+                            : formatCurrency(order.shippingCost)
+                        }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- ITEMS -->
                 <div>
                   <div class="mb-6 flex items-center justify-between gap-4">
@@ -368,13 +433,30 @@
 
                   <div class="flex justify-between gap-4">
                     <span class="text-luxe-brown/70">Shipping</span>
-                    <span class="font-semibold text-luxe-espresso">
-                      {{
-                        order.shippingCost === 0
-                          ? "Free"
-                          : formatCurrency(order.shippingCost)
-                      }}
-                    </span>
+
+                    <div class="text-right">
+                      <p class="font-semibold text-luxe-espresso">
+                        {{
+                          Number(order.shippingCost || 0) === 0
+                            ? "Free"
+                            : formatCurrency(order.shippingCost)
+                        }}
+                      </p>
+
+                      <p
+                        v-if="getShippingCourierLabel(order)"
+                        class="text-sm text-luxe-brown/70 mt-1"
+                      >
+                        {{ getShippingCourierLabel(order) }}
+                      </p>
+
+                      <p
+                        v-if="getShippingDestinationLabel(order)"
+                        class="text-xs text-luxe-brown/60 mt-1 max-w-[240px]"
+                      >
+                        {{ getShippingDestinationLabel(order) }}
+                      </p>
+                    </div>
                   </div>
 
                   <div class="flex justify-between gap-4">
@@ -658,12 +740,22 @@ const filteredOrders = computed(() => {
     const customerEmail = String(order.customer?.email || "").toLowerCase();
     const customerPhone = String(order.customer?.phone || "").toLowerCase();
 
+    const shippingInfo = [
+      getShippingCourierLabel(order),
+      getShippingDestinationLabel(order),
+      getShippingEtdLabel(order),
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
     const matchesKeyword =
       !keyword ||
       orderNumber.includes(keyword) ||
       customerName.includes(keyword) ||
       customerEmail.includes(keyword) ||
-      customerPhone.includes(keyword);
+      customerPhone.includes(keyword) ||
+      shippingInfo.includes(keyword);
 
     const orderStatus = String(order.status || "").toLowerCase();
 
@@ -827,6 +919,80 @@ const formatPaymentMethod = (method) => {
   if (method === "bca-001") return "Bank BCA";
 
   return method || "-";
+};
+
+const getRawOrder = (order) => {
+  return order?.raw || order?.backendOrder || order || {};
+};
+
+const formatCourierName = (value) => {
+  const text = String(value || "").trim();
+
+  if (!text) return "";
+
+  const lowerText = text.toLowerCase();
+
+  if (lowerText === "jnt") return "J&T";
+  if (lowerText === "jne") return "JNE";
+
+  return text.toUpperCase();
+};
+
+const getShippingCourierLabel = (order) => {
+  const rawOrder = getRawOrder(order);
+
+  const courier =
+    order.shippingCourier ||
+    order.shipping_courier ||
+    rawOrder.shipping_courier ||
+    "";
+
+  const courierName =
+    order.shippingRate?.name ||
+    rawOrder.shipping_rate?.name ||
+    formatCourierName(courier);
+
+  const service =
+    order.shippingService ||
+    order.shipping_service ||
+    rawOrder.shipping_service ||
+    order.shippingRate?.service ||
+    "";
+
+  return [courierName, service].filter(Boolean).join(" ");
+};
+
+const getShippingDestinationLabel = (order) => {
+  const rawOrder = getRawOrder(order);
+
+  return (
+    order.shippingDestinationLabel ||
+    order.shipping_destination_label ||
+    rawOrder.shipping_destination_label ||
+    order.shippingDestination?.label ||
+    ""
+  );
+};
+
+const getShippingEtdLabel = (order) => {
+  const rawOrder = getRawOrder(order);
+
+  const etd =
+    order.shippingEtd ||
+    order.shipping_etd ||
+    rawOrder.shipping_etd ||
+    order.shippingRate?.etd ||
+    "";
+
+  return etd ? `${etd} hari` : "";
+};
+
+const hasShippingDetail = (order) => {
+  return Boolean(
+    getShippingCourierLabel(order) ||
+    getShippingDestinationLabel(order) ||
+    getShippingEtdLabel(order),
+  );
 };
 
 const formatStatus = (status) => {

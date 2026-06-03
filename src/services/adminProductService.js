@@ -44,6 +44,7 @@ const normalizeProduct = (product) => {
     description: product.description || "",
     price: Number(product.price || 0),
     stock: Number(product.stock || 0),
+    weightGram: Number(product.weight_gram || 1000),
     isActive: Boolean(product.is_active),
     image: normalizeImageUrl(primaryImage),
     images,
