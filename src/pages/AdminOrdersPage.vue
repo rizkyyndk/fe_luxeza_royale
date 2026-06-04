@@ -540,6 +540,165 @@
                     </div>
                   </div>
 
+                  <!-- SHIPPING RECEIPT -->
+                  <div
+                    v-if="shippingReceiptForms[order.orderNumber]"
+                    class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 mt-5"
+                  >
+                    <div class="flex items-start justify-between gap-4 mb-4">
+                      <div>
+                        <p class="text-sm font-semibold text-luxe-espresso">
+                          Shipping Receipt
+                        </p>
+
+                        <p
+                          v-if="canManageShippingReceipt(order)"
+                          class="text-xs text-luxe-brown/70 mt-1 leading-5"
+                        >
+                          Input tracking number and upload receipt photo after
+                          the payment has been verified.
+                        </p>
+
+                        <p v-else class="text-xs text-red-600 mt-1 leading-5">
+                          Ubah status order menjadi Processing terlebih dahulu
+                          sebelum upload resi.
+                        </p>
+                      </div>
+
+                      <span
+                        v-if="order.trackingNumber"
+                        class="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-semibold"
+                      >
+                        Added
+                      </span>
+
+                      <span
+                        v-else
+                        class="bg-luxe-ivory text-luxe-espresso px-3 py-1 rounded-full text-xs font-semibold"
+                      >
+                        Manual
+                      </span>
+                    </div>
+
+                    <div class="space-y-4">
+                      <div>
+                        <label class="block text-xs text-luxe-brown/75 mb-2">
+                          Courier
+                        </label>
+
+                        <input
+                          :value="getShippingCourierLabel(order) || '-'"
+                          type="text"
+                          disabled
+                          class="w-full border border-luxe-sand/70 bg-luxe-ivory/60 text-luxe-brown rounded-full px-4 py-3 outline-none cursor-not-allowed"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-xs text-luxe-brown/75 mb-2">
+                          Tracking Number / Nomor Resi
+                        </label>
+
+                        <input
+                          v-model="
+                            shippingReceiptForms[order.orderNumber]
+                              .trackingNumber
+                          "
+                          type="text"
+                          placeholder="Example: JNE1234567890"
+                          :disabled="
+                            !canManageShippingReceipt(order) ||
+                            uploadingShippingReceiptOrderCode ===
+                              order.orderNumber
+                          "
+                          class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-full px-4 py-3 outline-none focus:border-luxe-royal transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-xs text-luxe-brown/75 mb-2">
+                          Upload Receipt Photo
+                        </label>
+
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/jpg,image/png,image/webp"
+                          :disabled="
+                            !canManageShippingReceipt(order) ||
+                            uploadingShippingReceiptOrderCode ===
+                              order.orderNumber
+                          "
+                          @change="
+                            handleShippingReceiptFileChange(order, $event)
+                          "
+                          class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-2xl px-4 py-3 outline-none focus:border-luxe-royal transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+
+                        <p
+                          v-if="
+                            shippingReceiptForms[order.orderNumber].fileName
+                          "
+                          class="text-xs text-luxe-brown/60 mt-2"
+                        >
+                          Selected:
+                          {{ shippingReceiptForms[order.orderNumber].fileName }}
+                        </p>
+                      </div>
+
+                      <div v-if="order.shippingReceiptUrl">
+                        <a
+                          :href="order.shippingReceiptUrl"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-block"
+                        >
+                          <img
+                            :src="order.shippingReceiptUrl"
+                            alt="Shipping receipt"
+                            class="w-full max-w-[220px] h-[220px] object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-ivory"
+                          />
+                        </a>
+
+                        <p
+                          v-if="order.shippingReceiptUploadedAt"
+                          class="text-xs text-luxe-brown/60 mt-3"
+                        >
+                          Uploaded at
+                          {{ formatDate(order.shippingReceiptUploadedAt) }}
+                        </p>
+
+                        <a
+                          :href="order.shippingReceiptUrl"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-block mt-4 text-sm font-semibold text-luxe-espresso hover:text-luxe-royal transition"
+                        >
+                          Open Full Receipt
+                        </a>
+                      </div>
+
+                      <button
+                        type="button"
+                        @click="submitShippingReceipt(order)"
+                        :disabled="
+                          !canManageShippingReceipt(order) ||
+                          uploadingShippingReceiptOrderCode ===
+                            order.orderNumber
+                        "
+                        class="w-full bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full text-sm font-semibold hover:bg-luxe-royal disabled:opacity-40 disabled:cursor-not-allowed transition"
+                      >
+                        {{
+                          uploadingShippingReceiptOrderCode ===
+                          order.orderNumber
+                            ? "Saving Receipt..."
+                            : order.shippingReceiptUrl
+                              ? "Update Shipping Receipt"
+                              : "Save Shipping Receipt"
+                        }}
+                      </button>
+                    </div>
+                  </div>
+
                   <div
                     class="border-t border-luxe-sand/60 pt-5 flex justify-between gap-4"
                   >
@@ -558,74 +717,20 @@
 
                   <div class="grid grid-cols-2 gap-3">
                     <button
+                      v-for="action in statusActions"
+                      :key="action.value"
                       type="button"
-                      @click="updateOrderStatus(order, 'paid')"
-                      :disabled="
-                        updatingOrderCode === order.orderNumber ||
-                        order.status === 'paid' ||
-                        order.status === 'cancelled'
-                      "
-                      class="px-4 py-3 rounded-full text-sm border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream disabled:opacity-40 disabled:cursor-not-allowed transition"
+                      @click="updateOrderStatus(order, action.value)"
+                      :disabled="isStatusActionDisabled(order, action.value)"
+                      :class="getStatusButtonClass(action)"
                     >
-                      {{
-                        order.status === "payment_submitted"
-                          ? "Verify & Mark Paid"
-                          : "Mark Paid"
-                      }}
-                    </button>
-
-                    <button
-                      type="button"
-                      @click="updateOrderStatus(order, 'payment_submitted')"
-                      :disabled="
-                        updatingOrderCode === order.orderNumber ||
-                        order.status === 'payment_submitted' ||
-                        order.status === 'paid' ||
-                        order.status === 'processing' ||
-                        order.status === 'completed' ||
-                        order.status === 'cancelled'
-                      "
-                      class="px-4 py-3 rounded-full text-sm border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream disabled:opacity-40 disabled:cursor-not-allowed transition"
-                    >
-                      Payment Submitted
-                    </button>
-
-                    <button
-                      type="button"
-                      @click="updateOrderStatus(order, 'processing')"
-                      :disabled="
-                        updatingOrderCode === order.orderNumber ||
-                        order.status === 'processing'
-                      "
-                      class="px-4 py-3 rounded-full text-sm border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream disabled:opacity-40 disabled:cursor-not-allowed transition"
-                    >
-                      Processing
-                    </button>
-
-                    <button
-                      type="button"
-                      @click="updateOrderStatus(order, 'completed')"
-                      :disabled="
-                        updatingOrderCode === order.orderNumber ||
-                        order.status === 'completed'
-                      "
-                      class="px-4 py-3 rounded-full text-sm bg-luxe-espresso text-luxe-ivory hover:bg-luxe-royal disabled:opacity-40 disabled:cursor-not-allowed transition"
-                    >
-                      Completed
-                    </button>
-
-                    <button
-                      type="button"
-                      @click="updateOrderStatus(order, 'cancelled')"
-                      :disabled="
-                        updatingOrderCode === order.orderNumber ||
-                        order.status === 'cancelled'
-                      "
-                      class="px-4 py-3 rounded-full text-sm border border-red-200 text-red-600 hover:bg-red-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
-                    >
-                      Cancel
+                      {{ getStatusButtonLabel(action, order) }}
                     </button>
                   </div>
+
+                  <p class="text-xs text-luxe-brown/70 mt-3 leading-5">
+                    {{ getStatusFlowHint(order) }}
+                  </p>
 
                   <p
                     v-if="updatingOrderCode === order.orderNumber"
@@ -665,6 +770,9 @@ const orders = ref([]);
 const isLoadingOrders = ref(false);
 const orderErrorMessage = ref("");
 const updatingOrderCode = ref("");
+
+const uploadingShippingReceiptOrderCode = ref("");
+const shippingReceiptForms = ref({});
 
 const searchKeyword = ref("");
 const statusFilter = ref("all");
@@ -716,9 +824,43 @@ const statusOptions = [
   },
   { label: "Paid", value: "paid" },
   { label: "Processing", value: "processing" },
+  { label: "Shipped", value: "shipped" },
   { label: "Completed", value: "completed" },
   { label: "Cancelled", value: "cancelled" },
 ];
+
+const statusActions = [
+  {
+    label: "Mark Paid",
+    value: "paid",
+    variant: "default",
+  },
+  {
+    label: "Processing",
+    value: "processing",
+    variant: "default",
+  },
+  {
+    label: "Completed",
+    value: "completed",
+    variant: "primary",
+  },
+  {
+    label: "Cancel",
+    value: "cancelled",
+    variant: "danger",
+  },
+];
+
+const statusFlow = {
+  pending: ["cancelled"],
+  payment_submitted: ["paid", "cancelled"],
+  paid: ["processing", "cancelled"],
+  processing: ["cancelled"],
+  shipped: ["completed"],
+  completed: [],
+  cancelled: [],
+};
 
 const hasActiveFilters = computed(() => {
   return (
@@ -782,7 +924,10 @@ const loadOrders = async () => {
   orderErrorMessage.value = "";
 
   try {
-    orders.value = await orderService.getAdminOrders();
+    const adminOrders = await orderService.getAdminOrders();
+
+    orders.value = adminOrders;
+    syncShippingReceiptForms(adminOrders);
   } catch (error) {
     console.error("Failed to load admin orders:", error);
 
@@ -799,6 +944,88 @@ const loadOrders = async () => {
   } finally {
     isLoadingOrders.value = false;
   }
+};
+
+const canUpdateToStatus = (order, nextStatus) => {
+  const currentStatus = String(order.status || "pending").toLowerCase();
+  const targetStatus = String(nextStatus || "").toLowerCase();
+
+  if (!targetStatus || currentStatus === targetStatus) {
+    return false;
+  }
+
+  const allowedNextStatuses = statusFlow[currentStatus] || [];
+
+  if (!allowedNextStatuses.includes(targetStatus)) {
+    return false;
+  }
+
+  if (targetStatus === "shipped" && !order.trackingNumber) {
+    return false;
+  }
+
+  return true;
+};
+
+const isStatusActionDisabled = (order, nextStatus) => {
+  return (
+    updatingOrderCode.value === order.orderNumber ||
+    !canUpdateToStatus(order, nextStatus)
+  );
+};
+
+const getStatusButtonLabel = (action, order) => {
+  if (action.value === "paid" && order.status === "payment_submitted") {
+    return "Verify & Mark Paid";
+  }
+
+  return action.label;
+};
+
+const getStatusButtonClass = (action) => {
+  if (action.variant === "primary") {
+    return "px-4 py-3 rounded-full text-sm bg-luxe-espresso text-luxe-ivory hover:bg-luxe-royal disabled:opacity-40 disabled:cursor-not-allowed transition";
+  }
+
+  if (action.variant === "danger") {
+    return "px-4 py-3 rounded-full text-sm border border-red-200 text-red-600 hover:bg-red-50 disabled:opacity-40 disabled:cursor-not-allowed transition";
+  }
+
+  return "px-4 py-3 rounded-full text-sm border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream disabled:opacity-40 disabled:cursor-not-allowed transition";
+};
+
+const getStatusFlowHint = (order) => {
+  const status = String(order.status || "pending").toLowerCase();
+
+  if (status === "pending") {
+    return "Menunggu user upload bukti pembayaran. Admin hanya bisa cancel order pada tahap ini.";
+  }
+
+  if (status === "payment_submitted") {
+    return "Bukti pembayaran sudah diupload. Admin perlu verifikasi, lalu klik Verify & Mark Paid.";
+  }
+
+  if (status === "paid") {
+    return "Pembayaran sudah valid. Klik Processing untuk mulai proses packing.";
+  }
+
+  if (status === "processing") {
+    return "Order sedang diproses. Upload nomor resi dan foto resi, lalu status akan otomatis menjadi Shipped.";
+  }
+
+  if (status === "shipped") {
+    return "Order sudah dikirim dan resi sudah tersedia. Klik Completed setelah pesanan selesai atau diterima customer.";
+  }
+
+  if (status === "completed") {
+    return "Order sudah selesai. Tidak ada aksi status berikutnya.";
+  }
+
+  if (status === "cancelled") {
+    return "Order sudah dibatalkan. Tidak ada aksi status berikutnya.";
+  }
+
+  return "";
 };
 
 const updateOrderStatus = async (order, status) => {
@@ -831,6 +1058,127 @@ const updateOrderStatus = async (order, status) => {
     });
   } finally {
     updatingOrderCode.value = "";
+  }
+};
+
+const createShippingReceiptForm = (order = {}) => {
+  return {
+    trackingNumber: order.trackingNumber || "",
+    shippingReceipt: null,
+    fileName: "",
+  };
+};
+
+const syncShippingReceiptForms = (orderList = []) => {
+  const nextForms = { ...shippingReceiptForms.value };
+
+  orderList.forEach((order) => {
+    const orderNumber = order.orderNumber;
+
+    if (!orderNumber) return;
+
+    if (!nextForms[orderNumber]) {
+      nextForms[orderNumber] = createShippingReceiptForm(order);
+      return;
+    }
+
+    nextForms[orderNumber] = {
+      ...nextForms[orderNumber],
+      trackingNumber:
+        nextForms[orderNumber].trackingNumber || order.trackingNumber || "",
+    };
+  });
+
+  shippingReceiptForms.value = nextForms;
+};
+
+const canManageShippingReceipt = (order) => {
+  const status = String(order.status || "").toLowerCase();
+
+  return ["processing", "shipped"].includes(status);
+};
+
+const handleShippingReceiptFileChange = (order, event) => {
+  const file = event.target.files?.[0] || null;
+  const orderNumber = order.orderNumber;
+
+  if (!shippingReceiptForms.value[orderNumber]) {
+    shippingReceiptForms.value[orderNumber] = createShippingReceiptForm(order);
+  }
+
+  shippingReceiptForms.value[orderNumber].shippingReceipt = file;
+  shippingReceiptForms.value[orderNumber].fileName = file?.name || "";
+};
+
+const submitShippingReceipt = async (order) => {
+  if (uploadingShippingReceiptOrderCode.value) return;
+
+  const orderNumber = order.orderNumber;
+  const form = shippingReceiptForms.value[orderNumber];
+
+  if (!form) return;
+
+  if (!canManageShippingReceipt(order)) {
+    toastStore.showToast({
+      title: "Cannot Upload Receipt",
+      message: "Mark this order as paid before uploading shipping receipt.",
+      type: "error",
+    });
+
+    return;
+  }
+
+  if (!form.trackingNumber.trim()) {
+    toastStore.showToast({
+      title: "Tracking Number Required",
+      message: "Please input the shipping tracking number first.",
+      type: "error",
+    });
+
+    return;
+  }
+
+  if (!order.shippingReceiptUrl && !form.shippingReceipt) {
+    toastStore.showToast({
+      title: "Receipt Photo Required",
+      message: "Please upload the shipping receipt photo first.",
+      type: "error",
+    });
+
+    return;
+  }
+
+  uploadingShippingReceiptOrderCode.value = orderNumber;
+
+  try {
+    const updatedOrder = await orderService.uploadShippingReceipt(orderNumber, {
+      trackingNumber: form.trackingNumber.trim(),
+      shippingReceipt: form.shippingReceipt,
+    });
+
+    orders.value = orders.value.map((item) =>
+      item.orderNumber === orderNumber ? updatedOrder : item,
+    );
+
+    shippingReceiptForms.value[orderNumber] = {
+      trackingNumber: updatedOrder.trackingNumber || form.trackingNumber,
+      shippingReceipt: null,
+      fileName: "",
+    };
+
+    toastStore.showToast({
+      title: "Shipping Receipt Saved",
+      message: `Shipping receipt for order ${orderNumber} has been saved.`,
+      type: "success",
+    });
+  } catch (error) {
+    toastStore.showToast({
+      title: "Upload Failed",
+      message: error?.message || "Failed to upload shipping receipt.",
+      type: "error",
+    });
+  } finally {
+    uploadingShippingReceiptOrderCode.value = "";
   }
 };
 
@@ -1023,6 +1371,10 @@ const getStatusClass = (status) => {
 
   if (status === "processing") {
     return "bg-blue-50 text-blue-700";
+  }
+
+  if (status === "shipped") {
+    return "bg-indigo-50 text-indigo-700";
   }
 
   if (status === "completed") {

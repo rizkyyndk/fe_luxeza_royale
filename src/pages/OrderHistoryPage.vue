@@ -11,16 +11,15 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-              Order History
+              Riwayat Pesanan
             </p>
 
             <h1 class="text-4xl md:text-5xl font-bold mb-4 text-luxe-espresso">
-              Your Orders
+              Pesanan Anda
             </h1>
 
             <p class="text-luxe-brown/75 max-w-xl leading-7">
-              View your completed checkout orders directly from the Luxeza
-              Royale backend database.
+              Lihat pesanan checkout Anda yang telah selesai.
             </p>
           </div>
 
@@ -283,7 +282,9 @@
             </div>
 
             <!-- ORDER BODY -->
-            <div class="p-6 md:p-8 grid lg:grid-cols-[1fr_360px] gap-10">
+            <div
+              class="p-6 md:p-8 grid lg:grid-cols-[minmax(0,1fr)_420px] gap-8 items-start"
+            >
               <!-- ITEMS -->
               <div>
                 <div class="mb-6 flex items-center justify-between gap-4">
@@ -331,7 +332,7 @@
 
               <!-- SUMMARY -->
               <div
-                class="bg-luxe-ivory border border-luxe-sand/60 rounded-3xl p-6 h-fit shadow-[0_16px_45px_rgba(92,56,36,0.10)]"
+                class="bg-luxe-ivory border border-luxe-sand/60 rounded-3xl p-6 h-fit shadow-[0_16px_45px_rgba(92,56,36,0.10)] lg:sticky lg:top-28 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto"
               >
                 <h3 class="text-2xl font-bold mb-6 text-luxe-espresso">
                   Order Summary
@@ -480,6 +481,153 @@
                   </div>
                 </div>
 
+                <!-- SHIPPING RECEIPT / TRACKING NUMBER -->
+                <div
+                  class="mt-6 bg-luxe-cream border border-luxe-sand/50 rounded-3xl p-5"
+                >
+                  <div
+                    class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4"
+                  >
+                    <div>
+                      <p class="text-sm font-semibold text-luxe-espresso mb-2">
+                        Shipping Receipt
+                      </p>
+
+                      <p
+                        v-if="order.trackingNumber"
+                        class="text-sm text-luxe-brown/75 leading-6"
+                      >
+                        Nomor resi sudah tersedia. Silakan copy nomor resi dan
+                        cek pengiriman melalui website resmi ekspedisi.
+                      </p>
+
+                      <p v-else class="text-sm text-luxe-brown/75 leading-6">
+                        Nomor resi belum tersedia. Admin akan menambahkan resi
+                        setelah pesanan diproses.
+                      </p>
+                    </div>
+
+                    <span
+                      v-if="order.trackingNumber"
+                      class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-xs font-semibold w-fit"
+                    >
+                      Available
+                    </span>
+
+                    <span
+                      v-else
+                      class="bg-luxe-ivory text-luxe-espresso px-4 py-2 rounded-full text-xs font-semibold w-fit"
+                    >
+                      Waiting
+                    </span>
+                  </div>
+
+                  <div
+                    v-if="order.trackingNumber"
+                    class="mt-5 bg-luxe-ivory border border-luxe-sand/60 rounded-2xl p-4"
+                  >
+                    <div class="space-y-3">
+                      <div
+                        v-if="getShippingCourierLabel(order)"
+                        class="flex justify-between gap-4"
+                      >
+                        <span class="text-luxe-brown/70">Courier</span>
+
+                        <span
+                          class="font-semibold text-luxe-espresso text-right"
+                        >
+                          {{ getShippingCourierLabel(order) }}
+                        </span>
+                      </div>
+
+                      <div class="flex justify-between gap-4">
+                        <span class="text-luxe-brown/70">Nomor Resi</span>
+
+                        <span
+                          class="font-bold text-luxe-espresso text-right break-all"
+                        >
+                          {{ order.trackingNumber }}
+                        </span>
+                      </div>
+
+                      <div
+                        v-if="order.shippedAt"
+                        class="flex justify-between gap-4"
+                      >
+                        <span class="text-luxe-brown/70">Shipped At</span>
+
+                        <span
+                          class="font-semibold text-luxe-espresso text-right"
+                        >
+                          {{ formatDate(order.shippedAt) }}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="mt-5 grid gap-3">
+                      <button
+                        type="button"
+                        @click="copyTrackingNumber(order)"
+                        class="w-full bg-luxe-espresso text-luxe-ivory py-3 rounded-full hover:bg-luxe-royal transition"
+                      >
+                        Copy Nomor Resi
+                      </button>
+
+                      <a
+                        v-if="getTrackingWebsiteUrl(order)"
+                        :href="getTrackingWebsiteUrl(order)"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="w-full text-center border border-luxe-espresso text-luxe-espresso py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+                      >
+                        {{ getTrackingWebsiteLabel(order) }}
+                      </a>
+                    </div>
+
+                    <p class="text-xs text-luxe-brown/60 leading-5 mt-4">
+                      Gunakan nomor resi di atas untuk melakukan tracking secara
+                      manual melalui website resmi JNE, J&T, atau ekspedisi yang
+                      dipilih.
+                    </p>
+
+                    <div v-if="order.shippingReceiptUrl" class="mt-5">
+                      <p class="text-sm font-semibold text-luxe-espresso mb-3">
+                        Foto Resi
+                      </p>
+
+                      <a
+                        :href="order.shippingReceiptUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-block"
+                      >
+                        <img
+                          :src="order.shippingReceiptUrl"
+                          alt="Shipping receipt"
+                          class="w-40 h-40 object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-cream"
+                        />
+                      </a>
+
+                      <p
+                        v-if="order.shippingReceiptUploadedAt"
+                        class="text-xs text-luxe-brown/60 mt-3"
+                      >
+                        Uploaded at
+                        {{ formatDate(order.shippingReceiptUploadedAt) }}
+                      </p>
+
+                      <a
+                        :href="order.shippingReceiptUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-block mt-3 text-sm font-semibold text-luxe-espresso hover:text-luxe-royal transition"
+                      >
+                        Open Full Receipt
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- PAYMENT PROOF -->
                 <div
                   class="mt-6 bg-luxe-cream border border-luxe-sand/50 rounded-3xl p-5"
@@ -493,18 +641,18 @@
                       </p>
 
                       <p
-                        v-if="order.paymentProofUrl"
+                        v-if="isPaymentVerified(order)"
+                        class="text-sm text-green-700 leading-6"
+                      >
+                        Payment has been verified.
+                      </p>
+
+                      <p
+                        v-else-if="order.paymentProofUrl"
                         class="text-sm text-luxe-brown/75 leading-6"
                       >
                         Payment proof has been submitted and is waiting for
                         admin review.
-                      </p>
-
-                      <p
-                        v-else-if="order.status === 'paid'"
-                        class="text-sm text-green-700 leading-6"
-                      >
-                        Payment has been verified.
                       </p>
 
                       <p v-else class="text-sm text-luxe-brown/75 leading-6">
@@ -514,17 +662,17 @@
                     </div>
 
                     <span
-                      v-if="order.paymentProofUrl"
-                      class="bg-amber-50 text-amber-700 px-4 py-2 rounded-full text-xs font-semibold w-fit"
-                    >
-                      Waiting Review
-                    </span>
-
-                    <span
-                      v-else-if="order.status === 'paid'"
+                      v-if="isPaymentVerified(order)"
                       class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-xs font-semibold w-fit"
                     >
                       Paid
+                    </span>
+
+                    <span
+                      v-else-if="order.paymentProofUrl"
+                      class="bg-amber-50 text-amber-700 px-4 py-2 rounded-full text-xs font-semibold w-fit"
+                    >
+                      Waiting Review
                     </span>
 
                     <span
@@ -752,6 +900,10 @@ const statusOptions = [
     value: "processing",
   },
   {
+    label: "Shipped",
+    value: "shipped",
+  },
+  {
     label: "Paid",
     value: "paid",
   },
@@ -802,6 +954,8 @@ const latestOrders = computed(() => {
       getShippingCourierLabel(order),
       getShippingDestinationLabel(order),
       getShippingEtdLabel(order),
+      order.trackingNumber,
+      order.shippingReceiptUrl,
     ]
       .filter(Boolean)
       .join(" ")
@@ -850,6 +1004,12 @@ const canUploadPaymentProof = (order) => {
     !order.paymentProofUrl &&
     status === "pending"
   );
+};
+
+const isPaymentVerified = (order) => {
+  const status = String(order.status || "").toLowerCase();
+
+  return ["paid", "processing", "shipped", "completed"].includes(status);
 };
 
 const isUploadingPaymentProof = (order) => {
@@ -999,6 +1159,96 @@ const uploadPaymentProof = async (order) => {
   }
 };
 
+const copyTrackingNumber = async (order) => {
+  const trackingNumber = String(order.trackingNumber || "").trim();
+
+  if (!trackingNumber) {
+    toastStore.showToast({
+      title: "Tracking Number Not Available",
+      message: "Nomor resi belum tersedia untuk pesanan ini.",
+      type: "error",
+    });
+
+    return;
+  }
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(trackingNumber);
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = trackingNumber;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+    }
+
+    toastStore.showToast({
+      title: "Tracking Number Copied",
+      message: `Nomor resi ${trackingNumber} berhasil disalin.`,
+      type: "success",
+    });
+  } catch (error) {
+    toastStore.showToast({
+      title: "Copy Failed",
+      message: "Gagal menyalin nomor resi. Silakan copy secara manual.",
+      type: "error",
+    });
+  }
+};
+
+const getCourierCode = (order) => {
+  const rawOrder = getRawOrder(order);
+
+  return String(
+    order.shippingCourier ||
+      order.shipping_courier ||
+      rawOrder.shipping_courier ||
+      "",
+  )
+    .toLowerCase()
+    .trim();
+};
+
+const getTrackingWebsiteUrl = (order) => {
+  const courierCode = getCourierCode(order);
+
+  if (courierCode.includes("jne")) {
+    return "https://jne.co.id/tracking-package";
+  }
+
+  if (
+    courierCode.includes("jnt") ||
+    courierCode.includes("j&t") ||
+    courierCode.includes("jet")
+  ) {
+    return "https://jet.co.id/track";
+  }
+
+  return "";
+};
+
+const getTrackingWebsiteLabel = (order) => {
+  const courierCode = getCourierCode(order);
+
+  if (courierCode.includes("jne")) {
+    return "Cek di Website JNE";
+  }
+
+  if (
+    courierCode.includes("jnt") ||
+    courierCode.includes("j&t") ||
+    courierCode.includes("jet")
+  ) {
+    return "Cek di Website J&T";
+  }
+
+  return "Cek di Website Ekspedisi";
+};
 const loadOrders = async () => {
   isLoadingOrders.value = true;
   orderErrorMessage.value = "";
@@ -1212,6 +1462,10 @@ const getStatusClass = (status) => {
 
   if (status === "processing") {
     return "bg-blue-50 text-blue-700";
+  }
+
+  if (status === "shipped") {
+    return "bg-indigo-50 text-indigo-700";
   }
 
   if (status === "completed") {

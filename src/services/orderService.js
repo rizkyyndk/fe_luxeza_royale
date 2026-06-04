@@ -161,6 +161,18 @@ const normalizeOrder = (order, summary = {}) => {
 
     hasPaymentProof: Boolean(order.payment_proof_url || order.paymentProofUrl),
 
+    trackingNumber: order.tracking_number || order.trackingNumber || "",
+
+    shippingReceiptUrl:
+      order.shipping_receipt_url || order.shippingReceiptUrl || "",
+
+    shippingReceiptUploadedAt:
+      order.shipping_receipt_uploaded_at ||
+      order.shippingReceiptUploadedAt ||
+      null,
+
+    shippedAt: order.shipped_at || order.shippedAt || null,
+
     status: order.status || "pending",
     createdAt: order.created_at,
     updatedAt: order.updated_at,
@@ -276,6 +288,43 @@ export const orderService = {
     const data = unwrapData(response, null);
 
     return normalizeOrder(data);
+  },
+
+  async uploadShippingReceipt(orderCode, payload) {
+    const formData = new FormData();
+
+    formData.append("tracking_number", payload.trackingNumber || "");
+
+    if (payload.shippingReceipt) {
+      formData.append("shipping_receipt", payload.shippingReceipt);
+    }
+
+    const token = sessionStorage.getItem("authToken");
+
+    const response = await fetch(
+      `${API_CONFIG.baseURL}/admin/orders/${orderCode}/shipping-receipt`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: formData,
+      },
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || result?.success === false) {
+      throw new Error(
+        result?.errors?.tracking_number?.[0] ||
+          result?.errors?.shipping_receipt?.[0] ||
+          result?.message ||
+          "Failed to upload shipping receipt.",
+      );
+    }
+
+    return normalizeOrder(result.data);
   },
 
   async getAdminOrders(params = {}) {
