@@ -39,6 +39,17 @@ const normalizeProduct = (product) => {
     id: product.id,
     categoryId: product.category_id || null,
     categoryName: product.category?.name || "Uncategorized",
+    categoryIsActive: product.category_id
+      ? Boolean(product.category?.is_active)
+      : true,
+    isVisibleToCustomer:
+      Boolean(product.is_active) &&
+      (!product.category_id || Boolean(product.category?.is_active)),
+    customerHiddenReason: !product.is_active
+      ? "Product Inactive"
+      : product.category_id && !product.category?.is_active
+        ? "Kategori Tidak Aktif"
+        : "",
     name: product.name,
     slug: product.slug,
     description: product.description || "",
@@ -87,10 +98,12 @@ const normalizeCategory = (category) => {
     name: category.name,
     slug: category.slug,
     isActive: Boolean(category.is_active),
+    productsCount: Number(category.products_count || 0),
+    createdAt: category.created_at,
+    updatedAt: category.updated_at,
     raw: category,
   };
 };
-
 const getApiBaseUrl = () => {
   return (import.meta.env.VITE_API_BASE_URL || "/api").replace(/\/$/, "");
 };
@@ -117,6 +130,40 @@ export const adminProductService = {
     return Array.isArray(data)
       ? data.map(normalizeCategory).filter(Boolean)
       : [];
+  },
+
+  async createCategory(payload) {
+    const response = await httpClient.post("/admin/categories", payload);
+    const data = unwrapData(response, null);
+
+    return normalizeCategory(data);
+  },
+
+  async updateCategory(categoryId, payload) {
+    const response = await httpClient.put(
+      `/admin/categories/${categoryId}`,
+      payload,
+    );
+    const data = unwrapData(response, null);
+
+    return normalizeCategory(data);
+  },
+
+  async updateCategoryStatus(categoryId, isActive) {
+    const response = await httpClient.patch(
+      `/admin/categories/${categoryId}/status`,
+      {
+        is_active: isActive,
+      },
+    );
+
+    const data = unwrapData(response, null);
+
+    return normalizeCategory(data);
+  },
+
+  async deleteCategory(categoryId) {
+    return httpClient.delete(`/admin/categories/${categoryId}`);
   },
 
   async uploadProductImage(file) {

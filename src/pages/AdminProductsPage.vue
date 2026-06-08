@@ -24,13 +24,23 @@
             </p>
           </div>
 
-          <button
-            @click="openAddModal"
-            type="button"
-            class="bg-luxe-espresso text-luxe-ivory px-7 py-4 rounded-full hover:bg-luxe-royal transition shadow-lg shadow-luxe-brown/20"
-          >
-            + Add Product
-          </button>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button
+              @click="openCategoryModal"
+              type="button"
+              class="border border-luxe-espresso text-luxe-espresso px-7 py-4 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+            >
+              Manage Categories
+            </button>
+
+            <button
+              @click="openAddModal"
+              type="button"
+              class="bg-luxe-espresso text-luxe-ivory px-7 py-4 rounded-full hover:bg-luxe-royal transition shadow-lg shadow-luxe-brown/20"
+            >
+              + Add Product
+            </button>
+          </div>
         </div>
 
         <!-- FILTERS -->
@@ -147,13 +157,38 @@
                     "
                     class="border px-4 py-2 rounded-full text-xs font-semibold"
                   >
-                    {{ product.isActive ? "Active" : "Inactive" }}
+                    {{
+                      product.isActive ? "Produk Aktif" : "Produk Tidak Aktif"
+                    }}
                   </span>
 
                   <span
-                    class="bg-luxe-cream border border-luxe-sand/70 text-luxe-brown px-4 py-2 rounded-full text-xs font-semibold"
+                    :class="
+                      product.categoryIsActive
+                        ? 'bg-luxe-cream border-luxe-sand/70 text-luxe-brown'
+                        : 'bg-red-50 border-red-100 text-red-600'
+                    "
+                    class="border px-4 py-2 rounded-full text-xs font-semibold"
                   >
                     {{ product.categoryName }}
+                    <template v-if="!product.categoryIsActive">
+                      · Kategori Tidak Aktif
+                    </template>
+                  </span>
+
+                  <span
+                    :class="
+                      product.isVisibleToCustomer
+                        ? 'bg-green-50 text-green-700 border-green-100'
+                        : 'bg-orange-50 text-orange-700 border-orange-100'
+                    "
+                    class="border px-4 py-2 rounded-full text-xs font-semibold"
+                  >
+                    {{
+                      product.isVisibleToCustomer
+                        ? "Terlihat di Toko"
+                        : `Tersembunyi di Toko: ${product.customerHiddenReason}`
+                    }}
                   </span>
                 </div>
 
@@ -163,10 +198,17 @@
                   {{ product.name }}
                 </h2>
 
-                <p class="text-sm text-luxe-brown/60 mb-4">
-                  /{{ product.slug }}
-                </p>
+                <div class="mb-4">
+                  <p class="text-sm text-luxe-brown/60">/{{ product.slug }}</p>
 
+                  <p
+                    v-if="!product.isVisibleToCustomer"
+                    class="text-sm text-orange-700 mt-2"
+                  >
+                    Produk ini tidak tampil di halaman customer karena:
+                    {{ product.customerHiddenReason }}.
+                  </p>
+                </div>
                 <div
                   class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-luxe-brown/80"
                 >
@@ -242,7 +284,7 @@
       @click.self="closeProductModal"
     >
       <div
-        class="w-full max-w-5xl max-h-[90vh] bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] shadow-[0_30px_90px_rgba(43,26,18,0.28)] overflow-hidden flex flex-col"
+        class="w-full max-w-5xl h-[calc(100dvh-1rem)] md:h-auto md:max-h-[90vh] bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] shadow-[0_30px_90px_rgba(43,26,18,0.28)] overflow-hidden flex flex-col"
       >
         <!-- MODAL HEADER -->
         <div
@@ -273,8 +315,10 @@
 
         <!-- MODAL CONTENT -->
         <form
-          class="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y p-6 md:p-8 space-y-8"
+          class="flex-1 min-h-0 overflow-y-auto overscroll-y-contain touch-pan-y [-webkit-overflow-scrolling:touch] p-6 md:p-8 space-y-8"
           @submit.prevent="saveProduct"
+          @wheel.stop
+          @touchmove.stop
         >
           <!-- BASIC INFO -->
           <div class="grid md:grid-cols-2 gap-5">
@@ -309,20 +353,11 @@
                 Category
               </label>
 
-              <select
+              <LuxeSelect
                 v-model="productForm.category_id"
-                class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-              >
-                <option value="">No Category</option>
-
-                <option
-                  v-for="category in categories"
-                  :key="category.id"
-                  :value="category.id"
-                >
-                  {{ category.name }}
-                </option>
-              </select>
+                :options="productCategoryOptions"
+                placeholder="No Category"
+              />
             </div>
 
             <div>
@@ -330,13 +365,11 @@
                 Product Status
               </label>
 
-              <select
+              <LuxeSelect
                 v-model="productForm.is_active"
-                class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-              >
-                <option :value="true">Active</option>
-                <option :value="false">Inactive</option>
-              </select>
+                :options="activeStatusOptions"
+                placeholder="Select Status"
+              />
             </div>
 
             <div>
@@ -519,48 +552,97 @@
 
             <div class="space-y-4">
               <div
+                class="hidden md:grid md:grid-cols-[1fr_150px_130px_130px_150px_auto] gap-4 px-4 text-xs uppercase tracking-[2px] text-luxe-brown/60"
+              >
+                <span>Size</span>
+                <span>Price</span>
+                <span>Stock</span>
+                <span>Order</span>
+                <span>Status</span>
+                <span>Action</span>
+              </div>
+
+              <div
                 v-for="(size, index) in productForm.sizes"
                 :key="index"
                 class="bg-luxe-ivory border border-luxe-sand/60 rounded-3xl p-4 grid md:grid-cols-[1fr_150px_130px_130px_150px_auto] gap-4 md:items-center"
               >
-                <input
-                  v-model="size.size"
-                  type="text"
-                  placeholder="S / M / L / XL"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                />
+                <div>
+                  <label
+                    class="md:hidden block text-xs text-luxe-brown/60 mb-2"
+                  >
+                    Size
+                  </label>
 
-                <input
-                  v-model.number="size.price"
-                  type="number"
-                  min="0"
-                  placeholder="Price"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                />
+                  <input
+                    v-model="size.size"
+                    type="text"
+                    placeholder="S / M / L / XL"
+                    class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
+                  />
+                </div>
 
-                <input
-                  v-model.number="size.stock"
-                  type="number"
-                  min="0"
-                  placeholder="Stock"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                />
+                <div>
+                  <label
+                    class="md:hidden block text-xs text-luxe-brown/60 mb-2"
+                  >
+                    Price
+                  </label>
 
-                <input
-                  v-model.number="size.sort_order"
-                  type="number"
-                  min="0"
-                  placeholder="Order"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                />
+                  <input
+                    v-model.number="size.price"
+                    type="number"
+                    min="0"
+                    placeholder="Price"
+                    class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
+                  />
+                </div>
 
-                <select
-                  v-model="size.is_active"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                >
-                  <option :value="true">Active</option>
-                  <option :value="false">Inactive</option>
-                </select>
+                <div>
+                  <label
+                    class="md:hidden block text-xs text-luxe-brown/60 mb-2"
+                  >
+                    Stock
+                  </label>
+
+                  <input
+                    v-model.number="size.stock"
+                    type="number"
+                    min="0"
+                    placeholder="Stock"
+                    class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    class="md:hidden block text-xs text-luxe-brown/60 mb-2"
+                  >
+                    Order
+                  </label>
+
+                  <input
+                    v-model.number="size.sort_order"
+                    type="number"
+                    min="0"
+                    placeholder="Order"
+                    class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    class="md:hidden block text-xs text-luxe-brown/60 mb-2"
+                  >
+                    Status
+                  </label>
+
+                  <LuxeSelect
+                    v-model="size.is_active"
+                    :options="activeStatusOptions"
+                    placeholder="Select Status"
+                  />
+                </div>
 
                 <button
                   @click="removeSizeRow(index)"
@@ -599,39 +681,79 @@
 
             <div class="space-y-4">
               <div
+                class="hidden md:grid md:grid-cols-[1fr_1fr_130px_150px_auto] gap-4 px-4 text-xs uppercase tracking-[2px] text-luxe-brown/60"
+              >
+                <span>Label</span>
+                <span>Value</span>
+                <span>Order</span>
+                <span>Status</span>
+                <span>Action</span>
+              </div>
+
+              <div
                 v-for="(attribute, index) in productForm.attributes"
                 :key="index"
                 class="bg-luxe-ivory border border-luxe-sand/60 rounded-3xl p-4 grid md:grid-cols-[1fr_1fr_130px_150px_auto] gap-4 md:items-center"
               >
-                <input
-                  v-model="attribute.label"
-                  type="text"
-                  placeholder="Material"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                />
+                <div>
+                  <label
+                    class="md:hidden block text-xs text-luxe-brown/60 mb-2"
+                  >
+                    Label
+                  </label>
 
-                <input
-                  v-model="attribute.value"
-                  type="text"
-                  placeholder="Premium Cotton"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                />
+                  <input
+                    v-model="attribute.label"
+                    type="text"
+                    placeholder="Material"
+                    class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
+                  />
+                </div>
 
-                <input
-                  v-model.number="attribute.sort_order"
-                  type="number"
-                  min="0"
-                  placeholder="Order"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                />
+                <div>
+                  <label
+                    class="md:hidden block text-xs text-luxe-brown/60 mb-2"
+                  >
+                    Value
+                  </label>
 
-                <select
-                  v-model="attribute.is_active"
-                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
-                >
-                  <option :value="true">Active</option>
-                  <option :value="false">Inactive</option>
-                </select>
+                  <input
+                    v-model="attribute.value"
+                    type="text"
+                    placeholder="Premium Cotton"
+                    class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    class="md:hidden block text-xs text-luxe-brown/60 mb-2"
+                  >
+                    Order
+                  </label>
+
+                  <input
+                    v-model.number="attribute.sort_order"
+                    type="number"
+                    min="0"
+                    placeholder="Order"
+                    class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    class="md:hidden block text-xs text-luxe-brown/60 mb-2"
+                  >
+                    Status
+                  </label>
+
+                  <LuxeSelect
+                    v-model="attribute.is_active"
+                    :options="activeStatusOptions"
+                    placeholder="Select Status"
+                  />
+                </div>
 
                 <button
                   @click="removeAttributeRow(index)"
@@ -673,12 +795,241 @@
         </div>
       </div>
     </div>
+
+    <!-- CATEGORY MANAGEMENT MODAL -->
+    <div
+      v-if="isCategoryModalOpen"
+      class="fixed inset-0 z-[999] bg-luxe-espresso/60 backdrop-blur-sm px-4 md:px-6 flex items-center justify-center"
+      @click.self="closeCategoryModal"
+    >
+      <div
+        class="w-full max-w-4xl h-[calc(100dvh-1rem)] md:h-auto md:max-h-[90vh] bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] shadow-[0_30px_90px_rgba(43,26,18,0.28)] overflow-hidden flex flex-col"
+      >
+        <div
+          class="shrink-0 p-6 md:p-8 border-b border-luxe-sand/60 flex items-start justify-between gap-6"
+        >
+          <div>
+            <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3">
+              Admin Categories
+            </p>
+
+            <h2 class="text-3xl md:text-4xl font-bold text-luxe-espresso">
+              Category Management
+            </h2>
+
+            <p class="text-luxe-brown/75 mt-3 leading-7">
+              Add, edit, activate, deactivate, or delete product categories.
+            </p>
+          </div>
+
+          <button
+            @click="closeCategoryModal"
+            type="button"
+            class="text-3xl leading-none text-luxe-espresso hover:text-luxe-royal transition"
+          >
+            ×
+          </button>
+        </div>
+
+        <div
+          class="flex-1 min-h-0 overflow-y-auto overscroll-y-contain touch-pan-y [-webkit-overflow-scrolling:touch] p-6 md:p-8 space-y-6"
+          @wheel.stop
+          @touchmove.stop
+        >
+          <div
+            class="bg-luxe-cream border border-luxe-sand/60 rounded-[2rem] p-5 md:p-6"
+          >
+            <h3 class="text-2xl font-bold text-luxe-espresso mb-5">
+              {{ isEditCategoryMode ? "Edit Category" : "Add Category" }}
+            </h3>
+
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm text-luxe-brown/75 mb-2">
+                  Category Name
+                </label>
+
+                <input
+                  v-model="categoryForm.name"
+                  type="text"
+                  placeholder="Example: Kaos"
+                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm text-luxe-brown/75 mb-2">
+                  Slug
+                </label>
+
+                <input
+                  v-model="categoryForm.slug"
+                  type="text"
+                  placeholder="Auto generated if empty"
+                  class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm text-luxe-brown/75 mb-2">
+                  Status
+                </label>
+
+                <LuxeSelect
+                  v-model="categoryForm.is_active"
+                  :options="activeStatusOptions"
+                  placeholder="Select Status"
+                />
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 mt-5">
+              <button
+                @click="saveCategory"
+                type="button"
+                :disabled="isSavingCategory"
+                class="bg-luxe-espresso text-luxe-ivory px-7 py-4 rounded-full hover:bg-luxe-royal disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                {{
+                  isSavingCategory
+                    ? "Saving..."
+                    : isEditCategoryMode
+                      ? "Update Category"
+                      : "Create Category"
+                }}
+              </button>
+
+              <button
+                v-if="isEditCategoryMode"
+                @click="resetCategoryForm"
+                type="button"
+                :disabled="isSavingCategory"
+                class="border border-luxe-sand text-luxe-espresso px-7 py-4 rounded-full hover:bg-luxe-ivory disabled:opacity-50 transition"
+              >
+                Cancel Edit
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] overflow-hidden"
+          >
+            <div
+              class="p-5 md:p-6 border-b border-luxe-sand/60 flex items-center justify-between gap-4"
+            >
+              <div>
+                <h3 class="text-2xl font-bold text-luxe-espresso">
+                  Category List
+                </h3>
+
+                <p class="text-sm text-luxe-brown/70 mt-1">
+                  Total: {{ categories.length }} categories
+                </p>
+              </div>
+            </div>
+
+            <div v-if="categories.length === 0" class="p-6 text-center">
+              <p class="text-luxe-brown/70">No categories found.</p>
+            </div>
+
+            <div v-else class="divide-y divide-luxe-sand/60">
+              <div
+                v-for="category in categories"
+                :key="category.id"
+                class="p-5 md:p-6 grid lg:grid-cols-[1fr_auto] gap-5 lg:items-center"
+              >
+                <div>
+                  <div class="flex flex-wrap items-center gap-3 mb-3">
+                    <span
+                      :class="
+                        category.isActive
+                          ? 'bg-green-50 text-green-700 border-green-100'
+                          : 'bg-red-50 text-red-700 border-red-100'
+                      "
+                      class="border px-4 py-2 rounded-full text-xs font-semibold"
+                    >
+                      {{ category.isActive ? "Active" : "Inactive" }}
+                    </span>
+
+                    <span
+                      class="bg-luxe-cream border border-luxe-sand/70 text-luxe-brown px-4 py-2 rounded-full text-xs font-semibold"
+                    >
+                      {{ category.productsCount }} products
+                    </span>
+                  </div>
+
+                  <h4 class="text-xl font-bold text-luxe-espresso">
+                    {{ category.name }}
+                  </h4>
+
+                  <p class="text-sm text-luxe-brown/60 mt-1">
+                    /{{ category.slug }}
+                  </p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row lg:justify-end gap-3">
+                  <button
+                    @click="openEditCategory(category)"
+                    type="button"
+                    class="border border-luxe-espresso text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    @click="toggleCategoryStatus(category)"
+                    type="button"
+                    :disabled="updatingCategoryId === category.id"
+                    :class="
+                      category.isActive
+                        ? 'border-red-100 text-red-600 hover:bg-red-50'
+                        : 'border-green-100 text-green-700 hover:bg-green-50'
+                    "
+                    class="border px-5 py-3 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {{
+                      updatingCategoryId === category.id
+                        ? "Updating..."
+                        : category.isActive
+                          ? "Deactivate"
+                          : "Activate"
+                    }}
+                  </button>
+
+                  <button
+                    @click="deleteCategory(category)"
+                    type="button"
+                    :disabled="
+                      deletingCategoryId === category.id ||
+                      Number(category.productsCount) > 0
+                    "
+                    class="border border-red-100 text-red-600 px-5 py-3 rounded-full hover:bg-red-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {{
+                      deletingCategoryId === category.id
+                        ? "Deleting..."
+                        : "Delete"
+                    }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-sm text-luxe-brown/65 leading-6">
+            Note: Categories that are still used by products cannot be deleted.
+            Deactivate the category if you only want to hide it from active
+            usage.
+          </p>
+        </div>
+      </div>
+    </div>
     <Footer />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
@@ -717,6 +1068,19 @@ const categoryFilterOptions = computed(() => {
   ];
 });
 
+const productCategoryOptions = computed(() => {
+  return [
+    {
+      label: "No Category",
+      value: "",
+    },
+    ...categories.value.map((category) => ({
+      label: category.name,
+      value: category.id,
+    })),
+  ];
+});
+
 const productStatusFilterOptions = [
   {
     label: "All Status",
@@ -732,11 +1096,85 @@ const productStatusFilterOptions = [
   },
 ];
 
+const activeStatusOptions = [
+  {
+    label: "Active",
+    value: true,
+  },
+  {
+    label: "Inactive",
+    value: false,
+  },
+];
+
 const isProductModalOpen = ref(false);
 const isSavingProduct = ref(false);
 const editingProductId = ref(null);
 
 const isEditMode = computed(() => Boolean(editingProductId.value));
+
+const isCategoryModalOpen = ref(false);
+const isSavingCategory = ref(false);
+const editingCategoryId = ref(null);
+const updatingCategoryId = ref(null);
+const deletingCategoryId = ref(null);
+
+const isEditCategoryMode = computed(() => Boolean(editingCategoryId.value));
+
+const isAnyModalOpen = computed(() => {
+  return isProductModalOpen.value || isCategoryModalOpen.value;
+});
+
+let lockedScrollY = 0;
+
+const lockBodyScroll = () => {
+  lockedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${lockedScrollY}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+  document.body.style.width = "100%";
+  document.body.style.overflow = "hidden";
+};
+
+const unlockBodyScroll = () => {
+  const scrollY =
+    Math.abs(parseInt(document.body.style.top || "0", 10)) || lockedScrollY;
+
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.left = "";
+  document.body.style.right = "";
+  document.body.style.width = "";
+  document.body.style.overflow = "";
+
+  window.scrollTo(0, scrollY);
+};
+
+watch(isAnyModalOpen, (isOpen) => {
+  if (isOpen) {
+    lockBodyScroll();
+  } else {
+    unlockBodyScroll();
+  }
+});
+
+onUnmounted(() => {
+  unlockBodyScroll();
+});
+const createEmptyCategoryForm = () => ({
+  name: "",
+  slug: "",
+  is_active: true,
+});
+
+const categoryForm = reactive(createEmptyCategoryForm());
+
+const resetCategoryForm = () => {
+  editingCategoryId.value = null;
+  Object.assign(categoryForm, createEmptyCategoryForm());
+};
 
 const createEmptyProductForm = () => ({
   category_id: "",
@@ -924,6 +1362,181 @@ const closeProductModal = () => {
   isProductModalOpen.value = false;
   editingProductId.value = null;
   resetProductForm();
+};
+
+const openCategoryModal = () => {
+  resetCategoryForm();
+  isCategoryModalOpen.value = true;
+};
+
+const closeCategoryModal = () => {
+  if (isSavingCategory.value) return;
+
+  isCategoryModalOpen.value = false;
+  resetCategoryForm();
+};
+
+const openEditCategory = (category) => {
+  editingCategoryId.value = category.id;
+  categoryForm.name = category.name || "";
+  categoryForm.slug = category.slug || "";
+  categoryForm.is_active = category.isActive;
+};
+
+const buildCategoryPayload = () => {
+  return {
+    name: categoryForm.name.trim(),
+    slug: categoryForm.slug.trim() || null,
+    is_active: Boolean(categoryForm.is_active),
+  };
+};
+
+const validateCategoryForm = () => {
+  if (!categoryForm.name.trim()) {
+    toastStore.showToast({
+      title: "Category Name Required",
+      message: "Please enter category name.",
+      type: "error",
+    });
+
+    return false;
+  }
+
+  return true;
+};
+
+const saveCategory = async () => {
+  if (isSavingCategory.value) return;
+
+  if (!validateCategoryForm()) return;
+
+  isSavingCategory.value = true;
+
+  try {
+    const payload = buildCategoryPayload();
+
+    const savedCategory = isEditCategoryMode.value
+      ? await adminProductService.updateCategory(
+          editingCategoryId.value,
+          payload,
+        )
+      : await adminProductService.createCategory(payload);
+
+    if (isEditCategoryMode.value) {
+      categories.value = categories.value.map((category) =>
+        category.id === savedCategory.id ? savedCategory : category,
+      );
+    } else {
+      categories.value = [...categories.value, savedCategory].sort((a, b) =>
+        a.name.localeCompare(b.name),
+      );
+    }
+
+    toastStore.showToast({
+      title: isEditCategoryMode.value ? "Category Updated" : "Category Created",
+      message: `${savedCategory.name} has been saved successfully.`,
+      type: "success",
+    });
+
+    resetCategoryForm();
+    await loadCategories();
+    await loadProducts();
+  } catch (error) {
+    const firstError = error?.errors
+      ? Object.values(error.errors).flat()[0]
+      : null;
+
+    toastStore.showToast({
+      title: "Failed to Save Category",
+      message: firstError || error?.message || "Unable to save category.",
+      type: "error",
+    });
+  } finally {
+    isSavingCategory.value = false;
+  }
+};
+
+const toggleCategoryStatus = async (category) => {
+  updatingCategoryId.value = category.id;
+
+  try {
+    const updatedCategory = await adminProductService.updateCategoryStatus(
+      category.id,
+      !category.isActive,
+    );
+
+    categories.value = categories.value.map((item) =>
+      item.id === category.id ? updatedCategory : item,
+    );
+
+    toastStore.showToast({
+      title: "Category Updated",
+      message: `${updatedCategory.name} is now ${
+        updatedCategory.isActive ? "active" : "inactive"
+      }.`,
+      type: "success",
+    });
+
+    await loadCategories();
+  } catch (error) {
+    toastStore.showToast({
+      title: "Failed to Update Category",
+      message: error?.message || "Unable to update category status.",
+      type: "error",
+    });
+  } finally {
+    updatingCategoryId.value = null;
+  }
+};
+
+const deleteCategory = async (category) => {
+  if (Number(category.productsCount) > 0) {
+    toastStore.showToast({
+      title: "Category Cannot Be Deleted",
+      message: "This category is still used by products.",
+      type: "error",
+    });
+
+    return;
+  }
+
+  const confirmed = window.confirm(
+    `Delete category "${category.name}"? This action cannot be undone.`,
+  );
+
+  if (!confirmed) return;
+
+  deletingCategoryId.value = category.id;
+
+  try {
+    await adminProductService.deleteCategory(category.id);
+
+    categories.value = categories.value.filter(
+      (item) => item.id !== category.id,
+    );
+
+    toastStore.showToast({
+      title: "Category Deleted",
+      message: `${category.name} has been deleted successfully.`,
+      type: "success",
+    });
+
+    if (filters.categoryId === category.id) {
+      filters.categoryId = "";
+    }
+
+    resetCategoryForm();
+    await loadCategories();
+    await loadProducts();
+  } catch (error) {
+    toastStore.showToast({
+      title: "Failed to Delete Category",
+      message: error?.message || "Unable to delete category.",
+      type: "error",
+    });
+  } finally {
+    deletingCategoryId.value = null;
+  }
 };
 
 const setImageUploading = (index, isUploading) => {
