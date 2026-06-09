@@ -5,6 +5,7 @@
     </Transition>
   </RouterView>
 
+  <FloatingContactButtons />
   <ToastNotification />
 </template>
 
@@ -12,6 +13,7 @@
 import { onMounted } from "vue";
 
 import ToastNotification from "./components/ui/ToastNotification.vue";
+import FloatingContactButtons from "./components/layout/FloatingContactButtons.vue";
 import { useSiteContentStore } from "./stores/siteContentStore";
 
 const siteContentStore = useSiteContentStore();

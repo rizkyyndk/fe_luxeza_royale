@@ -3,8 +3,8 @@
     <Navbar />
     <CartSidebar />
 
-    <section class="pt-36 pb-24 px-6">
-      <div class="max-w-7xl mx-auto">
+    <section class="pt-32 sm:pt-36 pb-20 sm:pb-24 px-4 sm:px-6">
+      <div class="max-w-7xl mx-auto overflow-x-hidden">
         <!-- HEADER -->
         <div
           class="mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6"
@@ -144,11 +144,135 @@
             </div>
           </div>
 
+          <!-- ADMIN ACTIONS -->
+          <div
+            class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-5 sm:p-6 md:p-8 mb-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)]"
+          >
+            <div
+              class="mb-6 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4"
+            >
+              <div>
+                <p
+                  class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3"
+                >
+                  Butuh Aksi Admin
+                </p>
+
+                <h2 class="text-3xl font-bold text-luxe-espresso">
+                  Prioritas Operasional
+                </h2>
+
+                <p class="text-luxe-brown/75 mt-3 max-w-2xl leading-7">
+                  Bagian ini membantu admin melihat pekerjaan penting yang perlu
+                  segera ditangani, mulai dari pembayaran, proses pesanan,
+                  pengiriman, sampai stok produk.
+                </p>
+              </div>
+
+              <div
+                class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl px-5 py-4 w-fit"
+              >
+                <p class="text-xs uppercase tracking-[2px] text-luxe-brown/60">
+                  Total Aksi
+                </p>
+
+                <p class="text-3xl font-bold text-luxe-espresso">
+                  {{ totalAdminActionCount }}
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5"
+            >
+              <div
+                v-for="card in adminActionCards"
+                :key="card.title"
+                class="bg-luxe-cream border border-luxe-sand/60 rounded-[2rem] p-4 sm:p-5 flex flex-col min-h-[240px] sm:min-h-[280px]"
+              >
+                <div
+                  class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4"
+                >
+                  <div class="min-w-0">
+                    <p class="text-luxe-brown/70 text-sm mb-2 break-words">
+                      {{ card.title }}
+                    </p>
+
+                    <h3 class="text-4xl font-bold text-luxe-espresso">
+                      {{ card.count }}
+                    </h3>
+                  </div>
+
+                  <span
+                    :class="card.badgeClass"
+                    class="self-start px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
+                  >
+                    {{ card.badge }}
+                  </span>
+                </div>
+
+                <p class="text-sm text-luxe-brown/70 leading-6 mb-5">
+                  {{ card.description }}
+                </p>
+
+                <div class="space-y-3 flex-1">
+                  <div
+                    v-if="card.items.length === 0"
+                    class="bg-luxe-ivory border border-luxe-sand/60 rounded-2xl p-4 text-sm text-luxe-brown/70 leading-6"
+                  >
+                    {{ card.emptyText }}
+                  </div>
+
+                  <div
+                    v-for="item in card.items"
+                    v-else
+                    :key="`${card.title}-${item.id || item.productId}-${item.size || 'default'}`"
+                    class="bg-luxe-ivory border border-luxe-sand/60 rounded-2xl p-4"
+                  >
+                    <div
+                      class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3"
+                    >
+                      <div class="min-w-0">
+                        <p
+                          class="font-bold text-luxe-espresso leading-snug break-words"
+                        >
+                          {{ getActionItemTitle(card, item) }}
+                        </p>
+
+                        <p class="text-xs text-luxe-brown/65 mt-1 break-words">
+                          {{ getActionItemSubtitle(card, item) }}
+                        </p>
+                      </div>
+
+                      <p
+                        :class="
+                          card.type === 'stock'
+                            ? 'text-red-600'
+                            : 'text-luxe-espresso'
+                        "
+                        class="font-bold text-sm sm:text-right whitespace-nowrap self-start sm:self-auto"
+                      >
+                        {{ getActionItemMeta(card, item) }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <RouterLink
+                  :to="card.to"
+                  class="mt-5 border border-luxe-espresso text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition text-sm font-semibold text-center"
+                >
+                  Tangani Sekarang
+                </RouterLink>
+              </div>
+            </div>
+          </div>
+
           <!-- STATUS + REVENUE -->
           <div class="grid xl:grid-cols-[1.1fr_0.9fr] gap-8 mb-8">
             <!-- ORDER STATUS -->
             <div
-              class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-6 md:p-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)]"
+              class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-5 sm:p-6 md:p-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)]"
             >
               <div class="mb-6">
                 <p
@@ -188,7 +312,7 @@
 
             <!-- REVENUE -->
             <div
-              class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-6 md:p-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)]"
+              class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-5 sm:p-6 md:p-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)]"
             >
               <div class="mb-6">
                 <p
@@ -240,29 +364,33 @@
           </div>
 
           <!-- RECENT ORDER + LOW STOCK -->
-          <div class="grid xl:grid-cols-2 gap-8 mb-8">
+          <div
+            class="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8 mb-8 overflow-hidden"
+          >
             <!-- RECENT ORDERS -->
             <div
-              class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-6 md:p-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)]"
+              class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-5 sm:p-6 md:p-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)] overflow-hidden min-w-0"
             >
               <div
-                class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 min-w-0"
               >
-                <div>
+                <div class="min-w-0">
                   <p
-                    class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3"
+                    class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3 break-words"
                   >
                     Pesanan Terbaru
                   </p>
 
-                  <h2 class="text-3xl font-bold text-luxe-espresso">
+                  <h2
+                    class="text-2xl sm:text-3xl font-bold text-luxe-espresso break-words leading-snug"
+                  >
                     Order Masuk
                   </h2>
                 </div>
 
                 <RouterLink
                   to="/admin/orders"
-                  class="border border-luxe-espresso text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition text-sm font-semibold w-fit"
+                  class="border border-luxe-espresso text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition text-sm font-semibold w-fit max-w-full text-center"
                 >
                   Lihat Semua
                 </RouterLink>
@@ -276,47 +404,53 @@
                 <p class="text-luxe-brown/75">Belum ada pesanan terbaru.</p>
               </div>
 
-              <div v-else class="space-y-4">
+              <div v-else class="space-y-4 min-w-0">
                 <div
                   v-for="order in summary.orders.recent"
                   :key="order.id"
-                  class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5"
+                  class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-4 sm:p-5 overflow-hidden min-w-0"
                 >
-                  <div class="flex items-start justify-between gap-4 mb-3">
-                    <div>
+                  <div
+                    class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4 min-w-0"
+                  >
+                    <div class="min-w-0 w-full">
                       <p class="text-sm text-luxe-brown/70">Nomor Pesanan</p>
 
-                      <h3 class="text-xl font-bold text-luxe-espresso">
+                      <h3
+                        class="text-lg sm:text-xl font-bold text-luxe-espresso break-all leading-snug"
+                      >
                         {{ order.orderCode }}
                       </h3>
                     </div>
 
                     <span
                       :class="getStatusClass(order.status)"
-                      class="px-3 py-1 rounded-full text-xs font-semibold"
+                      class="self-start max-w-full px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold leading-tight whitespace-normal break-words"
                     >
                       {{ formatStatus(order.status) }}
                     </span>
                   </div>
 
-                  <div class="grid sm:grid-cols-2 gap-4 text-sm">
-                    <div>
+                  <div
+                    class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm min-w-0"
+                  >
+                    <div class="min-w-0">
                       <p class="text-luxe-brown/60 mb-1">Customer</p>
-                      <p class="font-semibold text-luxe-espresso">
+                      <p class="font-semibold text-luxe-espresso break-words">
                         {{ order.customerName }}
                       </p>
                     </div>
 
-                    <div>
+                    <div class="min-w-0">
                       <p class="text-luxe-brown/60 mb-1">Total</p>
-                      <p class="font-semibold text-luxe-espresso">
+                      <p class="font-semibold text-luxe-espresso break-words">
                         {{ formatCurrency(order.totalAmount) }}
                       </p>
                     </div>
 
-                    <div>
+                    <div class="min-w-0">
                       <p class="text-luxe-brown/60 mb-1">Pembayaran</p>
-                      <p class="font-semibold text-luxe-espresso">
+                      <p class="font-semibold text-luxe-espresso break-words">
                         {{
                           order.paymentMethodName ||
                           formatPaymentMethod(order.paymentMethodCode)
@@ -324,9 +458,9 @@
                       </p>
                     </div>
 
-                    <div>
+                    <div class="min-w-0">
                       <p class="text-luxe-brown/60 mb-1">Tanggal</p>
-                      <p class="font-semibold text-luxe-espresso">
+                      <p class="font-semibold text-luxe-espresso break-words">
                         {{ formatDate(order.createdAt) }}
                       </p>
                     </div>
@@ -337,30 +471,32 @@
 
             <!-- LOW STOCK -->
             <div
-              class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-6 md:p-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)]"
+              class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-5 sm:p-6 md:p-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)] overflow-hidden min-w-0"
             >
               <div
-                class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 min-w-0"
               >
-                <div>
+                <div class="min-w-0">
                   <p
-                    class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3"
+                    class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3 break-words"
                   >
                     Stok Menipis
                   </p>
 
-                  <h2 class="text-3xl font-bold text-luxe-espresso">
+                  <h2
+                    class="text-2xl sm:text-3xl font-bold text-luxe-espresso break-words leading-snug"
+                  >
                     Perlu Restock
                   </h2>
 
-                  <p class="text-sm text-luxe-brown/70 mt-2">
+                  <p class="text-sm text-luxe-brown/70 mt-2 break-words">
                     Threshold stok: ≤ {{ summary.products.lowStockThreshold }}
                   </p>
                 </div>
 
                 <RouterLink
                   to="/admin/products"
-                  class="border border-luxe-espresso text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition text-sm font-semibold w-fit"
+                  class="border border-luxe-espresso text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition text-sm font-semibold w-fit max-w-full text-center"
                 >
                   Kelola Produk
                 </RouterLink>
@@ -376,38 +512,40 @@
                 </p>
               </div>
 
-              <div v-else class="space-y-4">
+              <div v-else class="space-y-4 min-w-0">
                 <div
                   v-for="item in summary.products.lowStock"
                   :key="`${item.productId}-${item.size || 'default'}`"
-                  class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-4 flex items-center gap-4"
+                  class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-4 grid grid-cols-[72px_minmax(0,1fr)] sm:grid-cols-[80px_minmax(0,1fr)_auto] gap-4 items-start sm:items-center overflow-hidden min-w-0"
                 >
                   <ProductImage
                     :src="item.imageUrl"
                     :alt="item.productName"
-                    class="w-20 h-20 object-cover rounded-2xl bg-luxe-ivory"
+                    class="w-[72px] h-[72px] sm:w-20 sm:h-20 object-cover rounded-2xl bg-luxe-ivory flex-shrink-0"
                   />
 
-                  <div class="flex-1 min-w-0">
+                  <div class="min-w-0 overflow-hidden">
                     <h3
-                      class="font-bold text-luxe-espresso leading-snug truncate"
+                      class="font-bold text-luxe-espresso leading-snug break-words"
                     >
                       {{ item.productName }}
                     </h3>
 
-                    <p class="text-sm text-luxe-brown/70 mt-1">
+                    <p class="text-sm text-luxe-brown/70 mt-1 break-words">
                       {{ item.categoryName }}
                       <template v-if="item.size">
                         · Ukuran {{ item.size }}
                       </template>
                     </p>
 
-                    <p class="text-sm text-luxe-brown/70">
+                    <p class="text-sm text-luxe-brown/70 break-words">
                       {{ formatCurrency(item.price) }}
                     </p>
                   </div>
 
-                  <div class="text-right">
+                  <div
+                    class="col-span-2 sm:col-span-1 text-left sm:text-right w-full sm:w-auto border-t sm:border-t-0 border-luxe-sand/50 pt-3 sm:pt-0"
+                  >
                     <p class="text-xs text-luxe-brown/60 mb-1">Stok</p>
 
                     <p class="text-2xl font-bold text-red-600">
@@ -419,9 +557,138 @@
             </div>
           </div>
 
+          <!-- TOP SELLING PRODUCTS -->
+          <div
+            class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-5 sm:p-6 md:p-8 mb-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)] overflow-hidden"
+          >
+            <div
+              class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+            >
+              <div class="min-w-0">
+                <p
+                  class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3"
+                >
+                  Produk Terlaris
+                </p>
+
+                <h2
+                  class="text-2xl sm:text-3xl font-bold text-luxe-espresso break-words leading-snug"
+                >
+                  Top Produk Penjualan
+                </h2>
+
+                <p class="text-luxe-brown/75 mt-3 max-w-2xl leading-7">
+                  Produk terlaris dihitung dari pesanan yang sudah dibayar,
+                  diproses, dikirim, atau selesai.
+                </p>
+              </div>
+
+              <RouterLink
+                to="/admin/products"
+                class="border border-luxe-espresso text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition text-sm font-semibold w-fit max-w-full text-center"
+              >
+                Kelola Produk
+              </RouterLink>
+            </div>
+
+            <div
+              v-if="summary.sales.topProducts.length === 0"
+              class="py-10 text-center bg-luxe-cream border border-luxe-sand/60 rounded-3xl"
+            >
+              <p class="text-5xl mb-4">📊</p>
+
+              <h3 class="text-2xl font-bold text-luxe-espresso mb-3">
+                Belum ada data penjualan
+              </h3>
+
+              <p class="text-luxe-brown/75">
+                Produk terlaris akan tampil setelah ada order yang berhasil
+                dibayar.
+              </p>
+            </div>
+
+            <div
+              v-else
+              class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5"
+            >
+              <div
+                v-for="(product, index) in summary.sales.topProducts"
+                :key="product.productId"
+                class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-4 overflow-hidden"
+              >
+                <div class="relative mb-4">
+                  <ProductImage
+                    :src="product.imageUrl"
+                    :alt="product.productName"
+                    class="w-full h-40 object-cover rounded-2xl bg-luxe-ivory"
+                  />
+
+                  <span
+                    class="absolute top-3 left-3 bg-luxe-espresso text-luxe-ivory w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shadow-lg"
+                  >
+                    {{ index + 1 }}
+                  </span>
+                </div>
+
+                <div class="min-w-0">
+                  <p class="text-xs text-luxe-brown/60 mb-2 break-words">
+                    {{ product.categoryName }}
+                  </p>
+
+                  <h3
+                    class="font-bold text-luxe-espresso leading-snug break-words"
+                  >
+                    {{ product.productName }}
+                  </h3>
+
+                  <div class="mt-4 space-y-3">
+                    <div
+                      class="bg-luxe-ivory border border-luxe-sand/60 rounded-2xl p-3"
+                    >
+                      <p class="text-xs text-luxe-brown/60 mb-1">
+                        Total Terjual
+                      </p>
+
+                      <p class="text-2xl font-bold text-luxe-espresso">
+                        {{ product.totalSold }}
+                        <span class="text-sm font-medium text-luxe-brown/70"
+                          >pcs</span
+                        >
+                      </p>
+                    </div>
+
+                    <div
+                      class="bg-luxe-ivory border border-luxe-sand/60 rounded-2xl p-3"
+                    >
+                      <p class="text-xs text-luxe-brown/60 mb-1">
+                        Omzet Produk
+                      </p>
+
+                      <p class="font-bold text-luxe-espresso break-words">
+                        {{ formatCurrency(product.totalRevenue) }}
+                      </p>
+                    </div>
+
+                    <div
+                      class="bg-luxe-ivory border border-luxe-sand/60 rounded-2xl p-3"
+                    >
+                      <p class="text-xs text-luxe-brown/60 mb-1">
+                        Jumlah Order
+                      </p>
+
+                      <p class="font-bold text-luxe-espresso">
+                        {{ product.totalOrders }} order
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- RECENT PRODUCTS -->
           <div
-            class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-6 md:p-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)]"
+            class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-5 sm:p-6 md:p-8 shadow-[0_18px_60px_rgba(92,56,36,0.10)]"
           >
             <div
               class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
@@ -556,6 +823,22 @@ const emptyDashboard = {
     total: 0,
     active: 0,
   },
+  actions: {
+    counts: {
+      paymentReview: 0,
+      needProcess: 0,
+      needReceipt: 0,
+      outOfStock: 0,
+      criticalStock: 0,
+    },
+    paymentReviewOrders: [],
+    needProcessOrders: [],
+    needReceiptOrders: [],
+    criticalStockProducts: [],
+  },
+  sales: {
+    topProducts: [],
+  },
 };
 
 const summary = computed(() => dashboard.value || emptyDashboard);
@@ -574,9 +857,9 @@ const mainStatCards = computed(() => [
     icon: "📦",
   },
   {
-    label: "Order Butuh Aksi",
-    value: summary.value.orders.needsAction,
-    description: "Order yang perlu diverifikasi, diproses, atau dikirim.",
+    label: "Butuh Aksi Admin",
+    value: totalAdminActionCount.value,
+    description: "Pembayaran, pesanan, resi, dan stok yang perlu dicek.",
     icon: "⚡",
   },
   {
@@ -683,6 +966,106 @@ const quickLinks = [
   },
 ];
 
+const totalAdminActionCount = computed(() => {
+  return (
+    summary.value.actions.counts.paymentReview +
+    summary.value.actions.counts.needProcess +
+    summary.value.actions.counts.needReceipt +
+    summary.value.actions.counts.outOfStock +
+    summary.value.actions.counts.criticalStock
+  );
+});
+
+const adminActionCards = computed(() => [
+  {
+    title: "Verifikasi Pembayaran",
+    count: summary.value.actions.counts.paymentReview,
+    description: "Bukti pembayaran customer perlu dicek admin.",
+    badge: "Cek Bukti",
+    badgeClass: "bg-amber-50 text-amber-700",
+    type: "order",
+    items: summary.value.actions.paymentReviewOrders,
+    emptyText: "Tidak ada pembayaran yang perlu diverifikasi.",
+    to: {
+      path: "/admin/orders",
+      query: {
+        status: "payment_submitted",
+      },
+    },
+  },
+  {
+    title: "Proses Pesanan",
+    count: summary.value.actions.counts.needProcess,
+    description: "Order sudah lunas dan perlu mulai diproses.",
+    badge: "Packing",
+    badgeClass: "bg-green-50 text-green-700",
+    type: "order",
+    items: summary.value.actions.needProcessOrders,
+    emptyText: "Tidak ada pesanan yang perlu diproses.",
+    to: {
+      path: "/admin/orders",
+      query: {
+        status: "paid",
+      },
+    },
+  },
+  {
+    title: "Input Resi",
+    count: summary.value.actions.counts.needReceipt,
+    description: "Order sedang diproses dan perlu nomor resi.",
+    badge: "Kirim",
+    badgeClass: "bg-blue-50 text-blue-700",
+    type: "order",
+    items: summary.value.actions.needReceiptOrders,
+    emptyText: "Tidak ada pesanan yang perlu input resi.",
+    to: {
+      path: "/admin/orders",
+      query: {
+        status: "processing",
+      },
+    },
+  },
+  {
+    title: "Restock Produk",
+    count:
+      summary.value.actions.counts.outOfStock +
+      summary.value.actions.counts.criticalStock,
+    description: "Produk habis atau stoknya sudah kritis.",
+    badge: "Restock",
+    badgeClass: "bg-red-50 text-red-700",
+    type: "stock",
+    items: summary.value.actions.criticalStockProducts,
+    emptyText: "Tidak ada produk dengan stok kritis.",
+    to: "/admin/products",
+  },
+]);
+
+const getActionItemTitle = (card, item) => {
+  if (card.type === "stock") {
+    return item.productName || "Produk";
+  }
+
+  return item.orderCode || "Order";
+};
+
+const getActionItemSubtitle = (card, item) => {
+  if (card.type === "stock") {
+    return item.size
+      ? `${item.categoryName} · Ukuran ${item.size}`
+      : item.categoryName;
+  }
+
+  return item.customerName || "-";
+};
+
+const getActionItemMeta = (card, item) => {
+  if (card.type === "stock") {
+    return `Stok: ${item.stock}`;
+  }
+
+  return formatCurrency(item.totalAmount);
+};
+
 const loadDashboard = async () => {
   isLoading.value = true;
   errorMessage.value = "";
@@ -769,3 +1152,17 @@ onMounted(() => {
   loadDashboard();
 });
 </script>
+
+<style scoped>
+:global(html),
+:global(body),
+:global(#app) {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+:global(*) {
+  box-sizing: border-box;
+}
+</style>

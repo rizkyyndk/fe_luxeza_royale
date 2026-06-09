@@ -753,8 +753,8 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
-
+import { computed, onMounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
 import Footer from "../components/layout/Footer.vue";
@@ -766,6 +766,7 @@ import { orderService } from "../services/orderService";
 import AddressSummaryCard from "../components/order/AddressSummaryCard.vue";
 import LuxeSelect from "../components/ui/LuxeSelect.vue";
 
+const route = useRoute();
 const toastStore = useToastStore();
 
 const orders = ref([]);
@@ -830,6 +831,61 @@ const statusOptions = [
   { label: "Selesai", value: "completed" },
   { label: "Dibatalkan", value: "cancelled" },
 ];
+
+const getQueryValue = (value) => {
+  if (Array.isArray(value)) {
+    return value[0] || "";
+  }
+
+  return value || "";
+};
+
+const isValidStatusFilter = (value) => {
+  return statusOptions.some((option) => option.value === value);
+};
+
+const isValidPeriodFilter = (value) => {
+  return periodOptions.some((option) => option.value === value);
+};
+
+const isValidSortOrder = (value) => {
+  return sortOptions.some((option) => option.value === value);
+};
+
+const applyRouteFilters = () => {
+  const statusQuery = getQueryValue(route.query.status);
+  const periodQuery = getQueryValue(route.query.period);
+  const sortQuery = getQueryValue(route.query.sort);
+  const searchQuery = getQueryValue(route.query.search);
+  const startDateQuery = getQueryValue(route.query.start_date);
+  const endDateQuery = getQueryValue(route.query.end_date);
+
+  if (statusQuery && isValidStatusFilter(statusQuery)) {
+    statusFilter.value = statusQuery;
+  }
+
+  if (periodQuery && isValidPeriodFilter(periodQuery)) {
+    periodFilter.value = periodQuery;
+  }
+
+  if (sortQuery && isValidSortOrder(sortQuery)) {
+    sortOrder.value = sortQuery;
+  }
+
+  if (searchQuery) {
+    searchKeyword.value = searchQuery;
+  }
+
+  if (startDateQuery) {
+    customStartDate.value = startDateQuery;
+    periodFilter.value = "custom";
+  }
+
+  if (endDateQuery) {
+    customEndDate.value = endDateQuery;
+    periodFilter.value = "custom";
+  }
+};
 
 const statusActions = [
   {
@@ -1388,7 +1444,18 @@ const getStatusClass = (status) => {
   return "bg-luxe-ivory text-luxe-espresso";
 };
 
+watch(
+  () => route.query,
+  () => {
+    applyRouteFilters();
+  },
+  {
+    deep: true,
+  },
+);
+
 onMounted(() => {
+  applyRouteFilters();
   loadOrders();
 });
 </script>
