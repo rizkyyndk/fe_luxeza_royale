@@ -17,15 +17,16 @@
           </div>
 
           <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-            Create Account
+            Buat Akun
           </p>
 
           <h1 class="text-4xl md:text-5xl font-bold text-luxe-espresso mb-4">
-            Join Luxeza Royale
+            Bergabung dengan Luxeza Royale
           </h1>
 
           <p class="text-luxe-brown/75 leading-7">
-            Create an account to checkout and track your luxury fashion orders.
+            Buat akun untuk menyelesaikan belanja dan memantau pesanan koleksi
+            pilihan Anda dengan lebih mudah.
           </p>
         </div>
 
@@ -34,7 +35,7 @@
             <input
               v-model="form.name"
               type="text"
-              placeholder="Full Name"
+              placeholder="Nama Lengkap"
               class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition"
             />
 
@@ -47,7 +48,7 @@
             <input
               v-model="form.email"
               type="email"
-              placeholder="Email Address"
+              placeholder="Alamat Email"
               class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition"
             />
 
@@ -62,7 +63,7 @@
                 <input
                   v-model="form.password"
                   :type="showPassword ? 'text' : 'password'"
-                  placeholder="Password"
+                  placeholder="Kata Sandi"
                   class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 pr-16 outline-none focus:border-luxe-royal transition"
                 />
 
@@ -87,7 +88,7 @@
                       : 'text-luxe-brown/60'
                   "
                 >
-                  ✓ Minimum 8 characters
+                  ✓ Minimal 8 karakter
                 </p>
 
                 <p
@@ -97,7 +98,7 @@
                       : 'text-luxe-brown/60'
                   "
                 >
-                  ✓ Uppercase letter
+                  ✓ Huruf besar
                 </p>
 
                 <p
@@ -107,7 +108,7 @@
                       : 'text-luxe-brown/60'
                   "
                 >
-                  ✓ Lowercase letter
+                  ✓ Huruf kecil
                 </p>
 
                 <p
@@ -117,7 +118,7 @@
                       : 'text-luxe-brown/60'
                   "
                 >
-                  ✓ Number
+                  ✓ Angka
                 </p>
 
                 <p
@@ -128,14 +129,10 @@
                   "
                   class="sm:col-span-2"
                 >
-                  ✓ Symbol @ $ ! % * # ? &
+                  ✓ Simbol @ $ ! % * # ? &
                 </p>
               </div>
             </div>
-
-            <p v-if="errors.password" class="text-red-500 text-sm mt-2">
-              {{ errors.password }}
-            </p>
           </div>
 
           <p v-if="errorMessage" class="text-red-500 text-sm">
@@ -147,17 +144,17 @@
             :disabled="authStore.isLoading"
             class="w-full bg-luxe-espresso text-luxe-ivory py-5 rounded-full text-lg hover:bg-luxe-royal disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg shadow-luxe-brown/20"
           >
-            {{ authStore.isLoading ? "Creating account..." : "Register" }}
+            {{ authStore.isLoading ? "Membuat akun..." : "Daftar" }}
           </button>
         </form>
 
         <p class="text-center text-luxe-brown/75 mt-8">
-          Already have an account?
+          Sudah memiliki akun?
           <RouterLink
             to="/login"
             class="font-semibold text-luxe-espresso hover:underline"
           >
-            Login
+            Masuk
           </RouterLink>
         </p>
       </div>
@@ -217,18 +214,18 @@ const validateForm = () => {
   const validationErrors = {};
 
   if (!form.name.trim()) {
-    validationErrors.name = "Full name is required.";
+    validationErrors.name = "Nama lengkap wajib diisi.";
   }
 
   if (!form.email.trim()) {
-    validationErrors.email = "Email is required.";
+    validationErrors.email = "Alamat email wajib diisi.";
   }
 
   if (!form.password.trim()) {
-    validationErrors.password = "Password is required.";
+    validationErrors.password = "Kata sandi wajib diisi.";
   } else if (!isPasswordStrong.value) {
     validationErrors.password =
-      "Password must be at least 8 characters and contain uppercase, lowercase, number, and symbol.";
+      "Kata sandi minimal 8 karakter dan harus memuat huruf besar, huruf kecil, angka, serta simbol.";
   }
 
   errors.value = validationErrors;
@@ -260,8 +257,8 @@ const submitRegister = async () => {
     }
 
     toastStore.showToast({
-      title: "Registration Successful",
-      message: "Please verify your account using the verification code.",
+      title: "Pendaftaran Berhasil",
+      message: "Silakan verifikasi akun Anda menggunakan kode verifikasi.",
       type: "success",
     });
 
@@ -275,14 +272,14 @@ const submitRegister = async () => {
       },
     });
   } catch (error) {
-    errorMessage.value = error?.message || "Register failed.";
+    errorMessage.value = error?.message || "Pendaftaran gagal.";
 
     const firstError = error?.errors
       ? Object.values(error.errors).flat()[0]
       : null;
 
     toastStore.showToast({
-      title: "Register Failed",
+      title: "Pendaftaran Gagal",
       message: firstError || errorMessage.value,
       type: "error",
     });

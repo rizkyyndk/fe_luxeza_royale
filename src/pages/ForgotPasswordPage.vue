@@ -15,12 +15,12 @@
           </p>
 
           <h1 class="text-4xl md:text-5xl font-bold text-luxe-espresso mb-4">
-            Lupa Password
+            Lupa Kata Sandi
           </h1>
 
           <p class="text-luxe-brown/70 leading-7">
-            Masukkan email yang terdaftar. Kami akan membuat kode reset untuk
-            membantu Anda mengganti password.
+            Masukkan email yang terdaftar. Kami akan mengirimkan kode reset
+            untuk membantu Anda membuat kata sandi baru.
           </p>
         </div>
 
@@ -33,7 +33,7 @@
             <input
               v-model="email"
               type="email"
-              placeholder="your@email.com"
+              placeholder="nama@email.com"
               class="w-full border border-luxe-sand rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
             />
 
@@ -47,7 +47,7 @@
             :disabled="isSubmitting"
             class="w-full bg-luxe-espresso text-luxe-ivory py-4 rounded-full hover:bg-luxe-royal disabled:opacity-50 transition shadow-lg shadow-luxe-brown/20"
           >
-            {{ isSubmitting ? "Mengirim Kode..." : "Kirim Kode Reset" }}
+            {{ isSubmitting ? "Mengirim kode..." : "Kirim Kode Reset" }}
           </button>
         </form>
 
@@ -56,7 +56,7 @@
           class="mt-6 bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-5 text-center"
         >
           <p class="text-sm text-luxe-brown/70 mb-2">
-            Kode reset password Anda:
+            Kode reset kata sandi Anda:
           </p>
 
           <p class="text-3xl font-bold tracking-[6px] text-luxe-espresso">
@@ -64,8 +64,8 @@
           </p>
 
           <p class="text-xs text-luxe-brown/60 mt-3 leading-5">
-            Kode ini berlaku selama 10 menit. Gunakan kode ini pada halaman
-            reset password.
+            Kode ini berlaku selama 10 menit. Gunakan kode tersebut untuk
+            membuat kata sandi baru.
           </p>
         </div>
 
@@ -74,14 +74,14 @@
             to="/login"
             class="flex-1 text-center border border-luxe-sand text-luxe-espresso py-4 rounded-full hover:bg-luxe-ivory transition"
           >
-            Kembali ke Login
+            Kembali ke Masuk
           </RouterLink>
 
           <RouterLink
             :to="resetPasswordLink"
             class="flex-1 text-center bg-luxe-ivory border border-luxe-sand text-luxe-espresso py-4 rounded-full hover:bg-white transition"
           >
-            Lanjut Reset Password
+            Lanjut Atur Kata Sandi
           </RouterLink>
         </div>
       </div>
@@ -151,16 +151,22 @@ const submitForgotPassword = async () => {
   try {
     const response = await authService.forgotPassword(cleanEmail);
 
-    resetCode.value = response?.reset_code || "";
+    const code =
+      response?.reset_code ||
+      response?.data?.reset_code ||
+      response?.data?.data?.reset_code ||
+      "";
+
+    resetCode.value = code;
 
     if (!resetCode.value) {
       errorMessage.value =
-        "Kode reset berhasil dibuat, tetapi tidak ditemukan pada response API.";
+        "Kode reset berhasil dibuat, namun belum dapat ditampilkan. Silakan cek email Anda atau coba kembali.";
 
       toastStore.showToast({
-        title: "Kode Tidak Ditemukan",
+        title: "Kode Belum Tersedia",
         message: errorMessage.value,
-        type: "error",
+        type: "info",
       });
 
       return;
@@ -168,7 +174,7 @@ const submitForgotPassword = async () => {
 
     toastStore.showToast({
       title: "Kode Reset Berhasil Dibuat",
-      message: "Gunakan kode yang tampil untuk membuat password baru.",
+      message: "Gunakan kode yang tampil untuk membuat kata sandi baru.",
       type: "success",
     });
   } catch (error) {
@@ -176,7 +182,7 @@ const submitForgotPassword = async () => {
       error?.message || "Gagal membuat kode reset. Silakan coba lagi.";
 
     toastStore.showToast({
-      title: "Gagal",
+      title: "Gagal Membuat Kode",
       message: errorMessage.value,
       type: "error",
     });

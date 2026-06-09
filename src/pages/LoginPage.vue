@@ -17,15 +17,16 @@
           </div>
 
           <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-            Account Login
+            Akses Akun
           </p>
 
           <h1 class="text-4xl md:text-5xl font-bold text-luxe-espresso mb-4">
-            Welcome Back
+            Selamat Datang Kembali
           </h1>
 
           <p class="text-luxe-brown/75 leading-7">
-            Login to continue shopping and track your Luxeza Royale orders.
+            Masuk untuk melanjutkan pengalaman belanja dan memantau pesanan
+            Luxeza Royale Anda.
           </p>
         </div>
 
@@ -34,7 +35,7 @@
             <input
               v-model="form.email"
               type="email"
-              placeholder="Email Address"
+              placeholder="Alamat Email"
               class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition"
             />
 
@@ -48,7 +49,7 @@
               <input
                 v-model="form.password"
                 :type="showPassword ? 'text' : 'password'"
-                placeholder="Password"
+                placeholder="Kata Sandi"
                 class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 pr-16 outline-none focus:border-luxe-royal transition"
               />
 
@@ -75,7 +76,7 @@
             :disabled="authStore.isLoading"
             class="w-full bg-luxe-espresso text-luxe-ivory py-5 rounded-full text-lg hover:bg-luxe-royal disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg shadow-luxe-brown/20"
           >
-            {{ authStore.isLoading ? "Logging in..." : "Login" }}
+            {{ authStore.isLoading ? "Sedang masuk..." : "Masuk" }}
           </button>
 
           <div class="text-right">
@@ -83,18 +84,18 @@
               to="/forgot-password"
               class="text-sm text-luxe-brown/70 hover:text-luxe-espresso underline underline-offset-4 transition"
             >
-              Forgot password?
+              Lupa kata sandi?
             </RouterLink>
           </div>
         </form>
 
         <p class="text-center text-luxe-brown/75 mt-8">
-          Don't have an account?
+          Belum memiliki akun?
           <RouterLink
             to="/register"
             class="font-semibold text-luxe-espresso hover:underline"
           >
-            Register
+            Daftar
           </RouterLink>
         </p>
       </div>
@@ -141,11 +142,11 @@ const validateForm = () => {
   const validationErrors = {};
 
   if (!form.email.trim()) {
-    validationErrors.email = "Email is required.";
+    validationErrors.email = "Alamat email wajib diisi.";
   }
 
   if (!form.password.trim()) {
-    validationErrors.password = "Password is required.";
+    validationErrors.password = "Kata sandi wajib diisi.";
   }
 
   errors.value = validationErrors;
@@ -168,8 +169,8 @@ const submitLogin = async () => {
     wishlistStore.switchToUserWishlist(authStore.user?.id);
 
     toastStore.showToast({
-      title: "Login Successful",
-      message: `Welcome back, ${authStore.userName}.`,
+      title: "Berhasil Masuk",
+      message: `Selamat datang kembali, ${authStore.userName}.`,
       type: "success",
     });
 
@@ -195,8 +196,8 @@ const submitLogin = async () => {
       }
 
       toastStore.showToast({
-        title: "Account Not Verified",
-        message: "Please verify your account before login.",
+        title: "Akun Belum Terverifikasi",
+        message: "Silakan verifikasi akun Anda sebelum masuk.",
         type: "info",
       });
 
@@ -211,10 +212,10 @@ const submitLogin = async () => {
       return;
     }
 
-    errorMessage.value = error?.message || "Login failed.";
+    errorMessage.value = error?.message || "Gagal masuk.";
 
     toastStore.showToast({
-      title: "Login Failed",
+      title: "Gagal Masuk",
       message: errorMessage.value,
       type: "error",
     });

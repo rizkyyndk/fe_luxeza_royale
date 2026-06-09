@@ -17,16 +17,16 @@
           </div>
 
           <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-            Verify Account
+            Verifikasi Akun
           </p>
 
           <h1 class="text-4xl md:text-5xl font-bold text-luxe-espresso mb-4">
-            Enter Verification Code
+            Masukkan Kode Verifikasi
           </h1>
 
           <p class="text-luxe-brown/75 leading-7">
-            We sent a verification code to your email. Enter the code to
-            activate your Luxeza Royale account.
+            Kami telah mengirimkan kode verifikasi ke email Anda. Masukkan kode
+            tersebut untuk mengaktifkan akun Luxeza Royale.
           </p>
         </div>
 
@@ -35,7 +35,7 @@
           class="mb-6 bg-luxe-cream border border-luxe-sand/70 rounded-3xl p-5 text-center"
         >
           <p class="text-sm text-luxe-brown/70 mb-2">
-            Development verification code
+            Kode verifikasi pengembangan
           </p>
 
           <p class="text-3xl font-bold tracking-[6px] text-luxe-espresso">
@@ -48,7 +48,7 @@
             <input
               v-model="form.email"
               type="email"
-              placeholder="Email Address"
+              placeholder="Alamat Email"
               class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition"
             />
 
@@ -63,7 +63,7 @@
               type="text"
               inputmode="numeric"
               maxlength="6"
-              placeholder="6-digit code"
+              placeholder="Kode 6 digit"
               class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition text-center text-2xl tracking-[8px]"
               @input="form.code = form.code.replace(/\D/g, '')"
             />
@@ -82,7 +82,7 @@
             :disabled="authStore.isLoading"
             class="w-full bg-luxe-espresso text-luxe-ivory py-5 rounded-full text-lg hover:bg-luxe-royal disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg shadow-luxe-brown/20"
           >
-            {{ authStore.isLoading ? "Verifying..." : "Verify Account" }}
+            {{ authStore.isLoading ? "Memverifikasi..." : "Verifikasi Akun" }}
           </button>
         </form>
 
@@ -92,16 +92,16 @@
           :disabled="authStore.isLoading || !form.email.trim()"
           class="w-full mt-5 border border-luxe-sand text-luxe-espresso py-4 rounded-full hover:bg-luxe-cream disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
-          Resend Code
+          Kirim Ulang Kode
         </button>
 
         <p class="text-center text-luxe-brown/75 mt-8">
-          Already verified?
+          Akun sudah terverifikasi?
           <RouterLink
             to="/login"
             class="font-semibold text-luxe-espresso hover:underline"
           >
-            Login
+            Masuk
           </RouterLink>
         </p>
       </div>
@@ -148,13 +148,13 @@ const validateForm = () => {
   const validationErrors = {};
 
   if (!form.email.trim()) {
-    validationErrors.email = "Email is required.";
+    validationErrors.email = "Alamat email wajib diisi.";
   }
 
   if (!form.code.trim()) {
-    validationErrors.code = "Verification code is required.";
+    validationErrors.code = "Kode verifikasi wajib diisi.";
   } else if (form.code.length < 6) {
-    validationErrors.code = "Verification code must be 6 digits.";
+    validationErrors.code = "Kode verifikasi harus terdiri dari 6 digit.";
   }
 
   errors.value = validationErrors;
@@ -180,18 +180,18 @@ const submitVerify = async () => {
     sessionStorage.removeItem("pendingVerificationCode");
 
     toastStore.showToast({
-      title: "Account Verified",
-      message: `Welcome, ${authStore.userName}.`,
+      title: "Akun Terverifikasi",
+      message: `Selamat datang, ${authStore.userName}.`,
       type: "success",
     });
 
     const redirectPath = route.query.redirect || "/";
     router.push(String(redirectPath));
   } catch (error) {
-    errorMessage.value = error?.message || "Verification failed.";
+    errorMessage.value = error?.message || "Verifikasi gagal.";
 
     toastStore.showToast({
-      title: "Verification Failed",
+      title: "Verifikasi Gagal",
       message: errorMessage.value,
       type: "error",
     });
@@ -203,7 +203,7 @@ const resendCode = async () => {
 
   if (!form.email.trim()) {
     errors.value = {
-      email: "Email is required.",
+      email: "Alamat email wajib diisi.",
     };
 
     return;
@@ -222,15 +222,15 @@ const resendCode = async () => {
     sessionStorage.setItem("pendingVerificationEmail", form.email);
 
     toastStore.showToast({
-      title: "Code Resent",
-      message: "A new verification code has been sent.",
+      title: "Kode Dikirim Ulang",
+      message: "Kode verifikasi baru telah dikirim.",
       type: "success",
     });
   } catch (error) {
-    errorMessage.value = error?.message || "Failed to resend code.";
+    errorMessage.value = error?.message || "Gagal mengirim ulang kode.";
 
     toastStore.showToast({
-      title: "Failed to Resend Code",
+      title: "Gagal Mengirim Ulang Kode",
       message: errorMessage.value,
       type: "error",
     });

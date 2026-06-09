@@ -11,28 +11,29 @@
       >
         <div class="text-center mb-8">
           <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3">
-            Reset Password
+            Atur Ulang Kata Sandi
           </p>
 
           <h1 class="text-4xl md:text-5xl font-bold text-luxe-espresso mb-4">
-            Create New Password
+            Buat Kata Sandi Baru
           </h1>
 
           <p class="text-luxe-brown/70 leading-7">
-            Enter your email, reset code, and new password.
+            Masukkan email, kode reset, dan kata sandi baru untuk memulihkan
+            akses akun Anda.
           </p>
         </div>
 
         <form class="space-y-5" @submit.prevent="submitResetPassword">
           <div>
             <label class="block text-sm font-medium text-luxe-brown/75 mb-2">
-              Email Address
+              Alamat Email
             </label>
 
             <input
               v-model="form.email"
               type="email"
-              placeholder="your@email.com"
+              placeholder="nama@email.com"
               class="input-field"
             />
 
@@ -43,13 +44,13 @@
 
           <div>
             <label class="block text-sm font-medium text-luxe-brown/75 mb-2">
-              Reset Code
+              Kode Reset
             </label>
 
             <input
               v-model="form.code"
               type="text"
-              placeholder="6-digit code"
+              placeholder="Kode 6 digit"
               class="input-field tracking-[4px] text-center text-xl font-bold"
             />
 
@@ -60,7 +61,7 @@
 
           <div>
             <label class="block text-sm font-medium text-luxe-brown/75 mb-2">
-              New Password
+              Kata Sandi Baru
             </label>
 
             <div class="relative">
@@ -85,21 +86,21 @@
             </p>
 
             <p class="text-xs text-luxe-brown/60 mt-2 leading-5">
-              Password wajib minimal 8 karakter, mengandung huruf besar, huruf
+              Kata sandi wajib minimal 8 karakter, mengandung huruf besar, huruf
               kecil, angka, dan simbol.
             </p>
           </div>
 
           <div>
             <label class="block text-sm font-medium text-luxe-brown/75 mb-2">
-              Confirm Password
+              Konfirmasi Kata Sandi
             </label>
 
             <div class="relative">
               <input
                 v-model="form.passwordConfirmation"
                 :type="showConfirmPassword ? 'text' : 'password'"
-                placeholder="Repeat new password"
+                placeholder="Ulangi kata sandi baru"
                 class="input-field pr-14"
               />
 
@@ -122,7 +123,7 @@
             :disabled="isSubmitting"
             class="w-full bg-luxe-espresso text-luxe-ivory py-4 rounded-full hover:bg-luxe-royal disabled:opacity-50 transition shadow-lg shadow-luxe-brown/20"
           >
-            {{ isSubmitting ? "Resetting..." : "Reset Password" }}
+            {{ isSubmitting ? "Menyimpan..." : "Simpan Kata Sandi Baru" }}
           </button>
         </form>
 
@@ -131,14 +132,14 @@
             to="/forgot-password"
             class="flex-1 text-center border border-luxe-sand text-luxe-espresso py-4 rounded-full hover:bg-luxe-ivory transition"
           >
-            Request New Code
+            Minta Kode Baru
           </RouterLink>
 
           <RouterLink
             to="/login"
             class="flex-1 text-center bg-luxe-ivory border border-luxe-sand text-luxe-espresso py-4 rounded-full hover:bg-white transition"
           >
-            Back to Login
+            Kembali ke Masuk
           </RouterLink>
         </div>
       </div>
@@ -176,19 +177,19 @@ const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
 const validatePassword = (password) => {
-  if (!password) return "New password is required.";
-  if (password.length < 8) return "Password must be at least 8 characters.";
+  if (!password) return "Kata sandi baru wajib diisi.";
+  if (password.length < 8) return "Kata sandi minimal 8 karakter.";
   if (!/[@$!%*#?&]/.test(password)) {
-    return "Password must contain a symbol, example: @ # ! $";
+    return "Kata sandi harus memuat simbol, contoh: @ # ! $";
   }
   if (!/[a-z]/.test(password)) {
-    return "Password must contain a lowercase letter.";
+    return "Kata sandi harus memuat huruf kecil.";
   }
   if (!/[A-Z]/.test(password)) {
-    return "Password must contain an uppercase letter.";
+    return "Kata sandi harus memuat huruf besar.";
   }
   if (!/[0-9]/.test(password)) {
-    return "Password must contain a number.";
+    return "Kata sandi harus memuat angka.";
   }
 
   return "";
@@ -198,11 +199,11 @@ const validateForm = () => {
   const validationErrors = {};
 
   if (!form.email.trim()) {
-    validationErrors.email = "Email address is required.";
+    validationErrors.email = "Alamat email wajib diisi.";
   }
 
   if (!form.code.trim()) {
-    validationErrors.code = "Reset code is required.";
+    validationErrors.code = "Kode reset wajib diisi.";
   }
 
   const passwordError = validatePassword(form.password);
@@ -212,10 +213,11 @@ const validateForm = () => {
   }
 
   if (!form.passwordConfirmation) {
-    validationErrors.passwordConfirmation = "Please confirm your password.";
+    validationErrors.passwordConfirmation =
+      "Konfirmasi kata sandi wajib diisi.";
   } else if (form.password !== form.passwordConfirmation) {
     validationErrors.passwordConfirmation =
-      "Password confirmation does not match.";
+      "Konfirmasi kata sandi tidak sesuai.";
   }
 
   errors.value = validationErrors;
@@ -236,16 +238,16 @@ const submitResetPassword = async () => {
     });
 
     toastStore.showToast({
-      title: "Password Reset Successful",
-      message: "Please login with your new password.",
+      title: "Kata Sandi Berhasil Diubah",
+      message: "Silakan masuk kembali menggunakan kata sandi baru Anda.",
       type: "success",
     });
 
     router.push("/login");
   } catch (error) {
     toastStore.showToast({
-      title: "Reset Failed",
-      message: error?.message || "Failed to reset password.",
+      title: "Gagal Mengubah Kata Sandi",
+      message: error?.message || "Kata sandi gagal diubah. Silakan coba lagi.",
       type: "error",
     });
   } finally {

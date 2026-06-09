@@ -2,24 +2,28 @@
   <header
     class="fixed top-0 left-0 w-full z-50 bg-luxe-ivory/85 backdrop-blur-xl border-b border-luxe-sand/60 shadow-sm"
   >
-    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+    <div
+      class="max-w-7xl mx-auto px-4 py-4 sm:px-6 sm:py-5 flex items-center justify-between gap-3"
+    >
       <!-- LOGO -->
-      <RouterLink to="/" class="flex items-center gap-3 group">
+      <RouterLink to="/" class="flex items-center gap-2 sm:gap-3 group min-w-0">
         <img
           v-if="cmsImage('navbar.logo.image')"
           :src="cmsImage('navbar.logo.image')"
           :alt="content('navbar.brand.main', 'LUXEZA')"
-          class="w-11 h-11 object-contain rounded-2xl bg-luxe-cream border border-luxe-sand/60 p-1"
+          class="w-10 h-10 sm:w-11 sm:h-11 object-contain rounded-2xl bg-luxe-cream border border-luxe-sand/60 p-1 flex-shrink-0"
         />
 
-        <div class="flex flex-col leading-none">
+        <div class="flex flex-col leading-none min-w-0">
           <span
-            class="text-2xl font-bold tracking-wide text-luxe-espresso group-hover:text-luxe-royal transition"
+            class="text-lg xs:text-xl sm:text-2xl font-bold tracking-wide text-luxe-espresso group-hover:text-luxe-royal transition truncate"
           >
             {{ content("navbar.brand.main", "LUXEZA") }}
           </span>
 
-          <span class="text-[10px] tracking-[4px] text-luxe-gold uppercase">
+          <span
+            class="text-[9px] sm:text-[10px] tracking-[3px] sm:tracking-[4px] text-luxe-gold uppercase truncate"
+          >
             {{ content("navbar.brand.sub", "Royale") }}
           </span>
         </div>
@@ -63,11 +67,11 @@
       </nav>
 
       <!-- RIGHT -->
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
         <!-- WISHLIST -->
         <RouterLink
           to="/wishlist"
-          class="relative w-11 h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          class="hidden sm:flex relative w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
         >
           <span class="text-xl">♡</span>
 
@@ -82,7 +86,7 @@
         <!-- CART -->
         <button
           @click="uiStore.toggleCart()"
-          class="relative w-11 h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          class="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
         >
           <span class="text-lg">🛒</span>
 
@@ -221,7 +225,7 @@
         <!-- MOBILE MENU BUTTON -->
         <button
           @click="isMobileMenuOpen = true"
-          class="md:hidden w-11 h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center text-2xl hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          class="md:hidden w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center text-2xl hover:bg-luxe-espresso hover:text-luxe-ivory transition"
         >
           ☰
         </button>
