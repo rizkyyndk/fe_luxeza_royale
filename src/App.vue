@@ -10,6 +10,8 @@
 
 <script setup>
 import { onMounted } from "vue";
+
+import ToastNotification from "./components/ui/ToastNotification.vue";
 import { useSiteContentStore } from "./stores/siteContentStore";
 
 const siteContentStore = useSiteContentStore();
@@ -17,7 +19,6 @@ const siteContentStore = useSiteContentStore();
 onMounted(() => {
   siteContentStore.loadPublicContents();
 });
-import ToastNotification from "./components/ui/ToastNotification.vue";
 </script>
 
 <style>

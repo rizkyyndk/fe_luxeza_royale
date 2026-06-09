@@ -3,12 +3,12 @@
     class="fixed top-0 left-0 w-full max-w-full z-50 bg-luxe-ivory/85 backdrop-blur-xl border-b border-luxe-sand/60 shadow-sm overflow-x-clip"
   >
     <div
-      class="w-full max-w-7xl mx-auto px-2.5 py-3 sm:px-6 sm:py-5 flex items-center justify-between gap-1.5 sm:gap-3 overflow-x-clip"
+      class="w-full max-w-7xl mx-auto px-3 py-3 sm:px-6 sm:py-5 flex md:grid md:grid-cols-[1fr_auto_1fr] items-center justify-between md:justify-normal gap-2 sm:gap-3 overflow-x-clip"
     >
       <!-- LOGO -->
       <RouterLink
         to="/"
-        class="flex items-center gap-1.5 sm:gap-3 group min-w-0 flex-1 overflow-hidden"
+        class="flex items-center gap-2 sm:gap-3 group min-w-0 flex-1 md:flex-none overflow-hidden justify-self-start"
       >
         <img
           v-if="cmsImage('navbar.logo.image')"
@@ -33,7 +33,9 @@
       </RouterLink>
 
       <!-- DESKTOP MENU -->
-      <nav class="hidden md:flex items-center gap-8 font-medium text-sm">
+      <nav
+        class="hidden md:flex items-center justify-center gap-8 font-medium text-sm justify-self-center"
+      >
         <RouterLink
           to="/"
           :class="route.path === '/' ? 'text-luxe-espresso' : 'text-luxe-brown'"
@@ -72,20 +74,24 @@
       </nav>
 
       <!-- RIGHT -->
-      <div class="flex items-center gap-1 sm:gap-3 md:gap-4 flex-shrink-0">
+      <div
+        class="flex items-center justify-end gap-1.5 sm:gap-3 md:gap-4 flex-shrink-0 justify-self-end"
+      >
         <!-- WISHLIST -->
         <RouterLink
           to="/wishlist"
-          class="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          class="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-luxe-espresso bg-transparent border-0 rounded-none hover:text-luxe-royal transition"
           aria-label="Wishlist"
         >
-          <span class="text-2xl sm:text-2xl leading-none translate-y-[-1px]"
-            >♡</span
+          <span
+            class="text-[34px] sm:text-[34px] leading-none translate-y-[-3px]"
           >
+            ♡
+          </span>
 
           <span
             v-if="wishlistStore.totalWishlistItems"
-            class="absolute -top-1 right-0 sm:-top-2 sm:-right-2 bg-luxe-royal text-luxe-ivory text-[9px] sm:text-xs min-w-4 h-4 sm:min-w-5 sm:h-5 px-1 rounded-full flex items-center justify-center font-semibold leading-none"
+            class="absolute -top-1 right-0 bg-luxe-royal text-luxe-ivory text-[9px] sm:text-xs min-w-4 h-4 sm:min-w-5 sm:h-5 px-1 rounded-full flex items-center justify-center font-semibold leading-none"
           >
             {{ wishlistStore.totalWishlistItems }}
           </span>
@@ -95,14 +101,18 @@
         <button
           @click="uiStore.toggleCart()"
           type="button"
-          class="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          class="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-luxe-espresso bg-transparent border-0 rounded-none hover:text-luxe-royal transition"
           aria-label="Keranjang"
         >
-          <span class="text-xl sm:text-xl leading-none">🛒</span>
+          <span
+            class="text-[27px] sm:text-[27px] leading-none translate-y-[-1px]"
+          >
+            🛒
+          </span>
 
           <span
             v-if="cartStore.totalItems"
-            class="absolute -top-1 right-0 sm:-top-2 sm:-right-2 bg-luxe-royal text-luxe-ivory text-[9px] sm:text-xs min-w-4 h-4 sm:min-w-5 sm:h-5 px-1 rounded-full flex items-center justify-center font-semibold leading-none"
+            class="absolute -top-1 right-0 bg-luxe-royal text-luxe-ivory text-[9px] sm:text-xs min-w-4 h-4 sm:min-w-5 sm:h-5 px-1 rounded-full flex items-center justify-center font-semibold leading-none"
           >
             {{ cartStore.totalItems }}
           </span>
@@ -236,10 +246,10 @@
         <button
           @click="isMobileMenuOpen = true"
           type="button"
-          class="md:hidden w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center text-2xl sm:text-2xl hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          class="md:hidden w-8 h-8 flex items-center justify-center text-luxe-espresso bg-transparent border-0 rounded-none text-[34px] leading-none hover:text-luxe-royal transition"
           aria-label="Buka menu"
         >
-          ☰
+          <span class="leading-none translate-y-[-2px]">☰</span>
         </button>
       </div>
     </div>

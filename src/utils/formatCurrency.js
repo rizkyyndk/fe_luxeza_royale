@@ -3,5 +3,5 @@ export const formatCurrency = (value) => {
     style: "currency",
     currency: "IDR",
     maximumFractionDigits: 0,
-  }).format(value);
+  }).format(Number(value || 0));
 };

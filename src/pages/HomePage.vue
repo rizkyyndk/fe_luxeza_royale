@@ -7,7 +7,9 @@
     <CartSidebar />
 
     <!-- HERO -->
-    <section class="min-h-screen px-6 pt-28 pb-20 flex items-center">
+    <section
+      class="min-h-screen px-5 sm:px-6 pt-28 pb-20 flex items-center overflow-hidden"
+    >
       <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
         <!-- HERO CONTENT -->
         <div>
@@ -15,7 +17,9 @@
             {{ content("home.hero.eyebrow", "Fashion Mewah") }}
           </p>
 
-          <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-8">
+          <h1
+            class="max-w-full text-[38px] sm:text-5xl md:text-7xl font-bold leading-[1.15] sm:leading-tight mb-8 break-words overflow-hidden"
+          >
             {{
               content(
                 "home.hero.title",
@@ -24,7 +28,7 @@
             }}
           </h1>
 
-          <p class="max-w-xl text-gray-600 leading-8 mb-10">
+          <p class="max-w-xl text-gray-600 leading-8 mb-10 break-words">
             {{
               content(
                 "home.hero.subtitle",
