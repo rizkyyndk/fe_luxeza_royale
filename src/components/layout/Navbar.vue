@@ -1,28 +1,31 @@
 <template>
   <header
-    class="fixed top-0 left-0 w-full z-50 bg-luxe-ivory/85 backdrop-blur-xl border-b border-luxe-sand/60 shadow-sm"
+    class="fixed top-0 left-0 w-full max-w-full z-50 bg-luxe-ivory/85 backdrop-blur-xl border-b border-luxe-sand/60 shadow-sm overflow-x-clip"
   >
     <div
-      class="max-w-7xl mx-auto px-4 py-4 sm:px-6 sm:py-5 flex items-center justify-between gap-3"
+      class="w-full max-w-7xl mx-auto px-2.5 py-3 sm:px-6 sm:py-5 flex items-center justify-between gap-1.5 sm:gap-3 overflow-x-clip"
     >
       <!-- LOGO -->
-      <RouterLink to="/" class="flex items-center gap-2 sm:gap-3 group min-w-0">
+      <RouterLink
+        to="/"
+        class="flex items-center gap-1.5 sm:gap-3 group min-w-0 flex-1 overflow-hidden"
+      >
         <img
           v-if="cmsImage('navbar.logo.image')"
           :src="cmsImage('navbar.logo.image')"
           :alt="content('navbar.brand.main', 'LUXEZA')"
-          class="w-10 h-10 sm:w-11 sm:h-11 object-contain rounded-2xl bg-luxe-cream border border-luxe-sand/60 p-1 flex-shrink-0"
+          class="w-8 h-8 sm:w-11 sm:h-11 object-contain rounded-xl sm:rounded-2xl bg-luxe-cream border border-luxe-sand/60 p-1 flex-shrink-0"
         />
 
-        <div class="flex flex-col leading-none min-w-0">
+        <div class="flex flex-col leading-none min-w-0 overflow-hidden">
           <span
-            class="text-lg xs:text-xl sm:text-2xl font-bold tracking-wide text-luxe-espresso group-hover:text-luxe-royal transition truncate"
+            class="text-[15px] sm:text-2xl font-bold tracking-wide text-luxe-espresso group-hover:text-luxe-royal transition truncate max-w-[96px] sm:max-w-none"
           >
             {{ content("navbar.brand.main", "LUXEZA") }}
           </span>
 
           <span
-            class="text-[9px] sm:text-[10px] tracking-[3px] sm:tracking-[4px] text-luxe-gold uppercase truncate"
+            class="text-[8px] sm:text-[10px] tracking-[1.8px] sm:tracking-[4px] text-luxe-gold uppercase truncate max-w-[96px] sm:max-w-none"
           >
             {{ content("navbar.brand.sub", "Royale") }}
           </span>
@@ -41,6 +44,7 @@
 
         <button
           @click="goToProducts"
+          type="button"
           class="text-luxe-brown hover:text-luxe-espresso transition"
         >
           {{ content("navbar.shop", "Belanja") }}
@@ -48,6 +52,7 @@
 
         <button
           @click="goToProducts"
+          type="button"
           class="text-luxe-brown hover:text-luxe-espresso transition"
         >
           {{ content("navbar.collections", "Koleksi") }}
@@ -67,17 +72,18 @@
       </nav>
 
       <!-- RIGHT -->
-      <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+      <div class="flex items-center gap-1 sm:gap-3 md:gap-4 flex-shrink-0">
         <!-- WISHLIST -->
         <RouterLink
           to="/wishlist"
-          class="hidden sm:flex relative w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          class="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          aria-label="Wishlist"
         >
-          <span class="text-xl">♡</span>
+          <span class="text-lg sm:text-xl leading-none">♡</span>
 
           <span
             v-if="wishlistStore.totalWishlistItems"
-            class="absolute -top-2 -right-2 bg-luxe-royal text-luxe-ivory text-xs w-5 h-5 rounded-full flex items-center justify-center"
+            class="absolute -top-1 right-0 sm:-top-2 sm:-right-2 bg-luxe-royal text-luxe-ivory text-[9px] sm:text-xs min-w-4 h-4 sm:min-w-5 sm:h-5 px-1 rounded-full flex items-center justify-center font-semibold leading-none"
           >
             {{ wishlistStore.totalWishlistItems }}
           </span>
@@ -86,13 +92,15 @@
         <!-- CART -->
         <button
           @click="uiStore.toggleCart()"
-          class="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          type="button"
+          class="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          aria-label="Keranjang"
         >
-          <span class="text-lg">🛒</span>
+          <span class="text-base sm:text-lg leading-none">🛒</span>
 
           <span
             v-if="cartStore.totalItems"
-            class="absolute -top-2 -right-2 bg-luxe-royal text-luxe-ivory text-xs w-5 h-5 rounded-full flex items-center justify-center"
+            class="absolute -top-1 right-0 sm:-top-2 sm:-right-2 bg-luxe-royal text-luxe-ivory text-[9px] sm:text-xs min-w-4 h-4 sm:min-w-5 sm:h-5 px-1 rounded-full flex items-center justify-center font-semibold leading-none"
           >
             {{ cartStore.totalItems }}
           </span>
@@ -103,7 +111,7 @@
           <RouterLink
             v-if="!authStore.isAuthenticated"
             to="/login"
-            class="hidden sm:flex items-center gap-2 border border-luxe-sand text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-cream transition"
+            class="hidden sm:flex items-center gap-2 border border-luxe-sand text-luxe-espresso px-4 md:px-5 py-3 rounded-full hover:bg-luxe-cream transition"
           >
             <span>👤</span>
             <span class="text-sm font-medium">Masuk</span>
@@ -113,10 +121,10 @@
             v-else
             @click="isAccountMenuOpen = !isAccountMenuOpen"
             type="button"
-            class="hidden sm:flex items-center gap-2 border border-luxe-sand text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-cream transition"
+            class="hidden sm:flex items-center gap-2 border border-luxe-sand text-luxe-espresso px-4 md:px-5 py-3 rounded-full hover:bg-luxe-cream transition max-w-[170px] md:max-w-none"
           >
             <span>👤</span>
-            <span class="text-sm font-medium">
+            <span class="text-sm font-medium truncate">
               {{ authStore.userName }}
             </span>
           </button>
@@ -130,7 +138,7 @@
                 {{ authStore.userName }}
               </p>
 
-              <p class="text-xs text-luxe-brown/70 mt-1">
+              <p class="text-xs text-luxe-brown/70 mt-1 break-all">
                 {{ authStore.user?.email }}
               </p>
 
@@ -225,7 +233,9 @@
         <!-- MOBILE MENU BUTTON -->
         <button
           @click="isMobileMenuOpen = true"
-          class="md:hidden w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center text-2xl hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          type="button"
+          class="md:hidden w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center text-xl sm:text-2xl hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          aria-label="Buka menu"
         >
           ☰
         </button>
@@ -243,28 +253,67 @@
 
     <!-- SIDEBAR -->
     <aside
-      class="absolute right-0 top-0 w-full max-w-[340px] h-[100dvh] bg-luxe-ivory shadow-2xl flex flex-col overflow-hidden overscroll-contain"
+      class="absolute right-0 top-0 w-[min(340px,100vw)] max-w-full h-[100dvh] bg-luxe-ivory shadow-2xl flex flex-col overflow-hidden overscroll-contain"
     >
       <!-- SIDEBAR HEADER -->
       <div
-        class="flex items-center justify-between px-8 pt-8 pb-6 flex-shrink-0"
+        class="flex items-center justify-between px-6 sm:px-8 pt-7 sm:pt-8 pb-5 sm:pb-6 flex-shrink-0"
       >
-        <div>
+        <div class="min-w-0">
           <h2 class="text-2xl font-bold text-luxe-espresso">Menu</h2>
           <p class="text-sm text-luxe-brown mt-1">Luxeza Royale</p>
         </div>
 
         <button
           @click="isMobileMenuOpen = false"
-          class="text-3xl text-luxe-espresso hover:text-luxe-royal transition"
+          type="button"
+          class="w-10 h-10 rounded-full border border-luxe-sand text-3xl text-luxe-espresso hover:text-luxe-royal hover:bg-luxe-cream transition flex items-center justify-center flex-shrink-0"
+          aria-label="Tutup menu"
         >
           ×
         </button>
       </div>
 
+      <!-- MOBILE QUICK ACTION -->
+      <div
+        class="px-6 sm:px-8 pb-4 grid grid-cols-2 gap-3 flex-shrink-0 overflow-hidden"
+      >
+        <RouterLink
+          to="/wishlist"
+          @click="isMobileMenuOpen = false"
+          class="relative min-w-0 flex items-center justify-center gap-2 rounded-2xl border border-luxe-sand bg-luxe-cream px-3 py-3 text-luxe-espresso font-medium hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+        >
+          <span>♡</span>
+          <span class="truncate">Wishlist</span>
+
+          <span
+            v-if="wishlistStore.totalWishlistItems"
+            class="absolute top-1 right-1 bg-luxe-royal text-luxe-ivory text-[10px] min-w-5 h-5 px-1 rounded-full flex items-center justify-center"
+          >
+            {{ wishlistStore.totalWishlistItems }}
+          </span>
+        </RouterLink>
+
+        <button
+          @click="openCartFromMobile"
+          type="button"
+          class="relative min-w-0 flex items-center justify-center gap-2 rounded-2xl border border-luxe-sand bg-luxe-cream px-3 py-3 text-luxe-espresso font-medium hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+        >
+          <span>🛒</span>
+          <span class="truncate">Keranjang</span>
+
+          <span
+            v-if="cartStore.totalItems"
+            class="absolute top-1 right-1 bg-luxe-royal text-luxe-ivory text-[10px] min-w-5 h-5 px-1 rounded-full flex items-center justify-center"
+          >
+            {{ cartStore.totalItems }}
+          </span>
+        </button>
+      </div>
+
       <!-- SCROLLABLE MENU CONTENT -->
       <nav
-        class="flex-1 overflow-y-auto overscroll-contain px-8 pb-8 flex flex-col gap-3 text-lg font-medium text-luxe-espresso"
+        class="flex-1 overflow-y-auto overscroll-contain px-6 sm:px-8 pb-8 flex flex-col gap-2 text-base sm:text-lg font-medium text-luxe-espresso"
       >
         <RouterLink
           to="/"
@@ -276,6 +325,7 @@
 
         <button
           @click="goToProductsFromMobile"
+          type="button"
           class="text-left px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
           {{ content("navbar.shop", "Belanja") }}
@@ -283,6 +333,7 @@
 
         <button
           @click="goToProductsFromMobile"
+          type="button"
           class="text-left px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
           {{ content("navbar.collections", "Koleksi") }}
@@ -320,7 +371,7 @@
                 {{ authStore.userName }}
               </p>
 
-              <p class="text-sm text-luxe-brown/70 mt-1">
+              <p class="text-sm text-luxe-brown/70 mt-1 break-all">
                 {{ authStore.user?.email }}
               </p>
             </div>
@@ -483,6 +534,11 @@ const goToProductsFromMobile = async () => {
   await goToProducts();
 };
 
+const openCartFromMobile = () => {
+  isMobileMenuOpen.value = false;
+  uiStore.toggleCart();
+};
+
 const logout = async () => {
   await authStore.logout();
 
@@ -495,3 +551,13 @@ const logout = async () => {
   await router.push("/");
 };
 </script>
+
+<style scoped>
+:global(html),
+:global(body),
+:global(#app) {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+</style>

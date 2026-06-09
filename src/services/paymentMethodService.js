@@ -102,7 +102,7 @@ export const paymentMethodService = {
 
     if (!response.ok || result?.success === false) {
       const error = new Error(
-        result?.message || "Failed to upload payment image.",
+        result?.message || "Gambar pembayaran belum dapat diunggah.",
       );
 
       error.status = response.status;
@@ -127,6 +127,7 @@ export const paymentMethodService = {
       `/admin/payment-methods/${id}`,
       payload,
     );
+
     const data = unwrapData(response, null);
 
     return normalizePaymentMethod(data);
