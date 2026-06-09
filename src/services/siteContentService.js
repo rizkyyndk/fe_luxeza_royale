@@ -52,6 +52,7 @@ export const siteContentService = {
       `/admin/site-contents/${id}`,
       payload,
     );
+
     const data = unwrapData(response, null);
 
     return normalizeContent(data);
@@ -86,7 +87,7 @@ export const siteContentService = {
       throw new Error(
         result?.message ||
           result?.errors?.image?.[0] ||
-          "Failed to upload image.",
+          "Gambar belum dapat diunggah.",
       );
     }
 
@@ -97,6 +98,7 @@ export const siteContentService = {
     const response = await httpClient.post(
       "/admin/site-contents/seed-defaults",
     );
+
     const data = unwrapData(response, []);
 
     return normalizeContents(data);

@@ -70,7 +70,7 @@ const setCachedRegions = (key, data) => {
       }),
     );
   } catch (error) {
-    // Abaikan kalau localStorage penuh/tidak tersedia.
+    // Abaikan jika localStorage penuh atau tidak tersedia.
   }
 };
 
@@ -89,6 +89,7 @@ const fetchRegions = async (key, requestCallback) => {
     .then((response) => {
       const normalized = normalizeRegions(unwrapData(response, []));
       setCachedRegions(key, normalized);
+
       return normalized;
     })
     .finally(() => {

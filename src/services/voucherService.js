@@ -16,13 +16,13 @@ export const voucherService = {
     if (!voucherData) {
       throw {
         status: 400,
-        message: "Invalid voucher response.",
+        message: "Response voucher tidak valid.",
       };
     }
 
     return {
       code: voucherData.code,
-      label: `${voucherData.code} Voucher`,
+      label: `Voucher ${voucherData.code}`,
 
       // Mapping dari format backend ke format frontend lama
       discountType:

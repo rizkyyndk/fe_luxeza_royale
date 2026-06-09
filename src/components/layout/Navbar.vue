@@ -79,7 +79,9 @@
           class="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
           aria-label="Wishlist"
         >
-          <span class="text-lg sm:text-xl leading-none">♡</span>
+          <span class="text-2xl sm:text-2xl leading-none translate-y-[-1px]"
+            >♡</span
+          >
 
           <span
             v-if="wishlistStore.totalWishlistItems"
@@ -96,7 +98,7 @@
           class="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center hover:bg-luxe-espresso hover:text-luxe-ivory transition"
           aria-label="Keranjang"
         >
-          <span class="text-base sm:text-lg leading-none">🛒</span>
+          <span class="text-xl sm:text-xl leading-none">🛒</span>
 
           <span
             v-if="cartStore.totalItems"
@@ -234,7 +236,7 @@
         <button
           @click="isMobileMenuOpen = true"
           type="button"
-          class="md:hidden w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center text-xl sm:text-2xl hover:bg-luxe-espresso hover:text-luxe-ivory transition"
+          class="md:hidden w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso flex items-center justify-center text-2xl sm:text-2xl hover:bg-luxe-espresso hover:text-luxe-ivory transition"
           aria-label="Buka menu"
         >
           ☰
