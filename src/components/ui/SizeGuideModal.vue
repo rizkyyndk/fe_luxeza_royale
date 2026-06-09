@@ -12,7 +12,7 @@
       >
         <div>
           <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3">
-            Size Guide
+            Panduan Ukuran
           </p>
 
           <h2 class="text-3xl md:text-4xl font-bold text-luxe-espresso">
@@ -20,7 +20,7 @@
           </h2>
 
           <p class="text-luxe-brown/75 mt-3 leading-7">
-            Use this guide as a general reference before selecting your size.
+            Gunakan panduan ini sebagai referensi umum sebelum memilih ukuran.
           </p>
         </div>
 
@@ -36,7 +36,7 @@
       <div class="p-6 md:p-8 overflow-y-auto max-h-[60vh]">
         <!-- AVAILABLE SIZE -->
         <div class="mb-8">
-          <p class="font-semibold mb-4 text-luxe-espresso">Available Sizes</p>
+          <p class="font-semibold mb-4 text-luxe-espresso">Ukuran Tersedia</p>
 
           <div class="flex flex-wrap gap-3">
             <span
@@ -88,9 +88,7 @@
         <div
           class="mt-8 bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-6"
         >
-          <h3 class="font-semibold mb-2 text-luxe-espresso">
-            Fit Recommendation
-          </h3>
+          <h3 class="font-semibold mb-2 text-luxe-espresso">Rekomendasi Fit</h3>
 
           <p class="text-luxe-brown/75 leading-7 text-sm">
             {{ guideNote }}
@@ -126,67 +124,79 @@ const normalizedCategory = computed(() => {
 });
 
 const guideType = computed(() => {
-  if (normalizedCategory.value === "shoes") return "shoes";
-  if (normalizedCategory.value === "pants") return "pants";
+  if (
+    normalizedCategory.value === "shoes" ||
+    normalizedCategory.value === "sepatu"
+  ) {
+    return "shoes";
+  }
+
+  if (
+    normalizedCategory.value === "pants" ||
+    normalizedCategory.value === "celana"
+  ) {
+    return "pants";
+  }
+
   return "clothing";
 });
 
 const guideTitle = computed(() => {
-  if (guideType.value === "shoes") return "Shoes Size Guide";
-  if (guideType.value === "pants") return "Pants Size Guide";
-  return "Clothing Size Guide";
+  if (guideType.value === "shoes") return "Panduan Ukuran Sepatu";
+  if (guideType.value === "pants") return "Panduan Ukuran Celana";
+  return "Panduan Ukuran Pakaian";
 });
 
 const tableHeadings = computed(() => {
   if (guideType.value === "shoes") {
-    return ["Size", "EU", "US", "Foot Length"];
+    return ["Ukuran", "EU", "US", "Panjang Kaki"];
   }
 
   if (guideType.value === "pants") {
-    return ["Size", "Waist", "Hip", "Length"];
+    return ["Ukuran", "Pinggang", "Pinggul", "Panjang"];
   }
 
-  return ["Size", "Chest", "Shoulder", "Length"];
+  return ["Ukuran", "Dada", "Bahu", "Panjang"];
 });
 
 const sizeRows = computed(() => {
   if (guideType.value === "shoes") {
     return [
       {
-        Size: "39",
+        Ukuran: "39",
         EU: "39",
         US: "6.5",
-        "Foot Length": "24.5 cm",
+        "Panjang Kaki": "24.5 cm",
       },
       {
-        Size: "40",
+        Ukuran: "40",
         EU: "40",
         US: "7",
-        "Foot Length": "25 cm",
+        "Panjang Kaki": "25 cm",
       },
       {
-        Size: "41",
+        Ukuran: "41",
         EU: "41",
         US: "8",
-        "Foot Length": "26 cm",
+        "Panjang Kaki": "26 cm",
       },
       {
-        Size: "42",
+        Ukuran: "42",
         EU: "42",
         US: "8.5",
-        "Foot Length": "26.5 cm",
+        "Panjang Kaki": "26.5 cm",
       },
       {
-        Size: "43",
+        Ukuran: "43",
         EU: "43",
         US: "9.5",
-        "Foot Length": "27.5 cm",
+        "Panjang Kaki": "27.5 cm",
       },
       {
-        Size: "44",
+        Ukuran: "44",
         EU: "44",
         US: "10",
-        "Foot Length": "28 cm",
+        "Panjang Kaki": "28 cm",
       },
     ];
   }
@@ -194,75 +204,75 @@ const sizeRows = computed(() => {
   if (guideType.value === "pants") {
     return [
       {
-        Size: "28",
-        Waist: "72 cm",
-        Hip: "90 cm",
-        Length: "96 cm",
+        Ukuran: "28",
+        Pinggang: "72 cm",
+        Pinggul: "90 cm",
+        Panjang: "96 cm",
       },
       {
-        Size: "30",
-        Waist: "76 cm",
-        Hip: "94 cm",
-        Length: "98 cm",
+        Ukuran: "30",
+        Pinggang: "76 cm",
+        Pinggul: "94 cm",
+        Panjang: "98 cm",
       },
       {
-        Size: "32",
-        Waist: "82 cm",
-        Hip: "100 cm",
-        Length: "100 cm",
+        Ukuran: "32",
+        Pinggang: "82 cm",
+        Pinggul: "100 cm",
+        Panjang: "100 cm",
       },
       {
-        Size: "34",
-        Waist: "86 cm",
-        Hip: "104 cm",
-        Length: "102 cm",
+        Ukuran: "34",
+        Pinggang: "86 cm",
+        Pinggul: "104 cm",
+        Panjang: "102 cm",
       },
       {
-        Size: "36",
-        Waist: "92 cm",
-        Hip: "110 cm",
-        Length: "104 cm",
+        Ukuran: "36",
+        Pinggang: "92 cm",
+        Pinggul: "110 cm",
+        Panjang: "104 cm",
       },
     ];
   }
 
   return [
     {
-      Size: "S",
-      Chest: "88-94 cm",
-      Shoulder: "42 cm",
-      Length: "66 cm",
+      Ukuran: "S",
+      Dada: "88-94 cm",
+      Bahu: "42 cm",
+      Panjang: "66 cm",
     },
     {
-      Size: "M",
-      Chest: "95-100 cm",
-      Shoulder: "44 cm",
-      Length: "68 cm",
+      Ukuran: "M",
+      Dada: "95-100 cm",
+      Bahu: "44 cm",
+      Panjang: "68 cm",
     },
     {
-      Size: "L",
-      Chest: "101-106 cm",
-      Shoulder: "46 cm",
-      Length: "70 cm",
+      Ukuran: "L",
+      Dada: "101-106 cm",
+      Bahu: "46 cm",
+      Panjang: "70 cm",
     },
     {
-      Size: "XL",
-      Chest: "107-114 cm",
-      Shoulder: "48 cm",
-      Length: "72 cm",
+      Ukuran: "XL",
+      Dada: "107-114 cm",
+      Bahu: "48 cm",
+      Panjang: "72 cm",
     },
   ];
 });
 
 const guideNote = computed(() => {
   if (guideType.value === "shoes") {
-    return "For shoes, measure your foot from heel to toe and choose the closest foot length. If you are between two sizes, choose the larger size for better comfort.";
+    return "Untuk sepatu, ukur panjang kaki dari tumit hingga ujung jari, lalu pilih ukuran yang paling mendekati. Jika berada di antara dua ukuran, pilih ukuran yang lebih besar agar lebih nyaman.";
   }
 
   if (guideType.value === "pants") {
-    return "For pants, use your waist measurement as the main reference. Choose a larger size if you prefer a relaxed fit.";
+    return "Untuk celana, gunakan ukuran pinggang sebagai acuan utama. Pilih ukuran lebih besar jika Anda menginginkan fit yang lebih santai.";
   }
 
-  return "For clothing, use chest measurement as the main reference. Choose one size larger if you prefer an oversized luxury silhouette.";
+  return "Untuk pakaian, gunakan ukuran dada sebagai acuan utama. Pilih satu ukuran lebih besar jika Anda menginginkan siluet yang lebih oversized dan nyaman.";
 });
 </script>

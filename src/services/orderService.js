@@ -48,7 +48,7 @@ const normalizeOrderItem = (item) => {
     id: item.id,
     product_id: item.product_id,
     slug: product.slug || null,
-    title: product.title || product.name || "Product",
+    title: product.title || product.name || "Produk",
     image,
     size: item.size || "-",
     quantity: Number(item.quantity || 0),
@@ -130,6 +130,7 @@ const normalizeOrder = (order, summary = {}) => {
       addressDetail:
         order.customer_address_detail || order.customer?.addressDetail || "",
     },
+
     items,
 
     subtotal,
@@ -144,6 +145,7 @@ const normalizeOrder = (order, summary = {}) => {
       : null,
 
     shippingMethod: order.shipping_method || "standard",
+
     paymentMethod:
       order.payment_method_code ||
       order.paymentMethod ||
@@ -235,12 +237,13 @@ export const orderService = {
       throw new Error(
         result?.errors?.payment_proof?.[0] ||
           result?.message ||
-          "Failed to upload payment proof.",
+          "Bukti pembayaran belum dapat diunggah.",
       );
     }
 
     return normalizeOrder(result.data);
   },
+
   async createOrder(orderPayload) {
     const payload = normalizeOrderPayload(orderPayload);
     const response = await httpClient.post("/orders", payload);
@@ -320,7 +323,7 @@ export const orderService = {
         result?.errors?.tracking_number?.[0] ||
           result?.errors?.shipping_receipt?.[0] ||
           result?.message ||
-          "Failed to upload shipping receipt.",
+          "Resi pengiriman belum dapat diunggah.",
       );
     }
 

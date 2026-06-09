@@ -99,6 +99,20 @@ const normalizeImages = (product, fallbackImage = "") => {
   return fallbackImage ? [fallbackImage] : [];
 };
 
+const toBoolean = (value, fallback = true) => {
+  if (value === null || value === undefined || value === "") return fallback;
+
+  if (typeof value === "boolean") return value;
+
+  if (typeof value === "number") return value === 1;
+
+  if (typeof value === "string") {
+    return value === "1" || value.toLowerCase() === "true";
+  }
+
+  return Boolean(value);
+};
+
 const normalizeSizes = (product) => {
   const rawSizes = parseArrayValue(product.sizes || product.size_options, []);
 
@@ -125,14 +139,27 @@ const normalizeSizes = (product) => {
           item.stock === null || item.stock === undefined
             ? null
             : Number(item.stock),
-        isActive: item.is_active ?? true,
+        isActive: toBoolean(item.is_active, true),
       };
     })
     .filter((item) => item.size && item.isActive);
 
+  const hasSizes = sizeOptions.length > 0;
+
+  const hasSizeStock = sizeOptions.some((item) => {
+    return item.stock !== null && item.stock !== undefined;
+  });
+
+  const totalSizeStock = sizeOptions.reduce((total, item) => {
+    return total + Number(item.stock ?? 0);
+  }, 0);
+
   return {
     sizeOptions,
     sizes: sizeOptions.map((item) => item.size),
+    hasSizes,
+    hasSizeStock,
+    totalSizeStock,
   };
 };
 
@@ -155,14 +182,14 @@ const normalizeCategory = (product) => {
   if (product.category_name) return product.category_name;
 
   if (product.category && typeof product.category === "object") {
-    return product.category.name || "Collection";
+    return product.category.name || "Koleksi";
   }
 
   if (typeof product.category === "string") {
     return product.category;
   }
 
-  return "Collection";
+  return "Koleksi";
 };
 
 const normalizeProduct = (product) => {
@@ -181,8 +208,16 @@ const normalizeProduct = (product) => {
     ) || "";
 
   const images = normalizeImages(product, image);
-  const { sizes, sizeOptions } = normalizeSizes(product);
+  const { sizes, sizeOptions, hasSizes, hasSizeStock, totalSizeStock } =
+    normalizeSizes(product);
   const attributes = normalizeAttributes(product);
+
+  const productStock =
+    product.stock === null || product.stock === undefined
+      ? null
+      : Number(product.stock);
+
+  const displayStock = hasSizes && hasSizeStock ? totalSizeStock : productStock;
 
   return {
     ...product,
@@ -190,8 +225,8 @@ const normalizeProduct = (product) => {
     id: Number(product.id),
     slug: product.slug || String(product.id),
 
-    title: product.title || product.name || "Untitled Product",
-    name: product.name || product.title || "Untitled Product",
+    title: product.title || product.name || "Produk Tanpa Nama",
+    name: product.name || product.title || "Produk Tanpa Nama",
 
     category: normalizeCategory(product),
     categoryData:
@@ -209,10 +244,11 @@ const normalizeProduct = (product) => {
     sizeOptions,
     attributes,
 
-    stock:
-      product.stock === null || product.stock === undefined
-        ? null
-        : Number(product.stock),
+    stock: displayStock,
+    rawStock: productStock,
+    totalSizeStock,
+    hasSizes,
+    hasSizeStock,
 
     raw: product,
   };

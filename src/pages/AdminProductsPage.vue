@@ -11,16 +11,16 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-              Admin Products
+              Admin Produk
             </p>
 
             <h1 class="text-4xl md:text-5xl font-bold text-luxe-espresso mb-4">
-              Product Management
+              Manajemen Produk
             </h1>
 
             <p class="text-luxe-brown/75 max-w-2xl leading-7">
-              Manage Luxeza Royale products, stock, prices, categories, images,
-              sizes, and product attributes.
+              Kelola produk Luxeza Royale, mulai dari stok, harga, kategori,
+              gambar, ukuran, hingga atribut produk.
             </p>
           </div>
 
@@ -30,7 +30,7 @@
               type="button"
               class="border border-luxe-espresso text-luxe-espresso px-7 py-4 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition"
             >
-              Manage Categories
+              Kelola Kategori
             </button>
 
             <button
@@ -38,7 +38,7 @@
               type="button"
               class="bg-luxe-espresso text-luxe-ivory px-7 py-4 rounded-full hover:bg-luxe-royal transition shadow-lg shadow-luxe-brown/20"
             >
-              + Add Product
+              + Tambah Produk
             </button>
           </div>
         </div>
@@ -51,7 +51,7 @@
             <input
               v-model="filters.search"
               type="text"
-              placeholder="Search product name, slug, or description"
+              placeholder="Cari nama produk, slug, atau deskripsi"
               class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
               @keyup.enter="loadProducts"
             />
@@ -59,13 +59,13 @@
             <LuxeSelect
               v-model="filters.categoryId"
               :options="categoryFilterOptions"
-              placeholder="All Categories"
+              placeholder="Semua Kategori"
             />
 
             <LuxeSelect
               v-model="filters.status"
               :options="productStatusFilterOptions"
-              placeholder="All Status"
+              placeholder="Semua Status"
             />
 
             <button
@@ -73,7 +73,7 @@
               type="button"
               class="bg-luxe-espresso text-luxe-ivory px-6 py-4 rounded-2xl hover:bg-luxe-royal transition"
             >
-              Apply
+              Terapkan
             </button>
           </div>
         </div>
@@ -88,7 +88,7 @@
               class="w-12 h-12 mx-auto mb-5 border-4 border-luxe-sand border-t-luxe-espresso rounded-full animate-spin"
             ></div>
 
-            <p class="text-luxe-brown/75">Loading admin products...</p>
+            <p class="text-luxe-brown/75">Memuat data produk admin...</p>
           </div>
         </div>
 
@@ -99,7 +99,7 @@
         >
           <div>
             <h2 class="text-3xl font-bold text-luxe-espresso mb-4">
-              Failed to load products
+              Produk belum dapat dimuat
             </h2>
 
             <p class="text-red-500 mb-6">{{ errorMessage }}</p>
@@ -108,7 +108,7 @@
               @click="loadProducts"
               class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full hover:bg-luxe-royal transition"
             >
-              Try Again
+              Coba Lagi
             </button>
           </div>
         </div>
@@ -122,11 +122,11 @@
             <p class="text-5xl mb-5">📦</p>
 
             <h2 class="text-3xl font-bold text-luxe-espresso mb-4">
-              No products found
+              Produk tidak ditemukan
             </h2>
 
             <p class="text-luxe-brown/75">
-              Try changing your filter or add a new product.
+              Coba ubah filter atau tambahkan produk baru.
             </p>
           </div>
         </div>
@@ -186,7 +186,7 @@
                   >
                     {{
                       product.isVisibleToCustomer
-                        ? "Terlihat di Toko"
+                        ? "Tampil di Toko"
                         : `Tersembunyi di Toko: ${product.customerHiddenReason}`
                     }}
                   </span>
@@ -209,32 +209,33 @@
                     {{ product.customerHiddenReason }}.
                   </p>
                 </div>
+
                 <div
                   class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-luxe-brown/80"
                 >
                   <div>
-                    <p class="text-luxe-brown/55 mb-1">Price</p>
+                    <p class="text-luxe-brown/55 mb-1">Harga</p>
                     <p class="font-bold text-luxe-espresso">
                       {{ formatCurrency(product.price) }}
                     </p>
                   </div>
 
                   <div>
-                    <p class="text-luxe-brown/55 mb-1">Stock</p>
+                    <p class="text-luxe-brown/55 mb-1">Stok</p>
                     <p class="font-bold text-luxe-espresso">
                       {{ product.stock }}
                     </p>
                   </div>
 
                   <div>
-                    <p class="text-luxe-brown/55 mb-1">Sizes</p>
+                    <p class="text-luxe-brown/55 mb-1">Ukuran</p>
                     <p class="font-bold text-luxe-espresso">
                       {{ product.sizes.length }}
                     </p>
                   </div>
 
                   <div>
-                    <p class="text-luxe-brown/55 mb-1">Images</p>
+                    <p class="text-luxe-brown/55 mb-1">Gambar</p>
                     <p class="font-bold text-luxe-espresso">
                       {{ product.images.length }}
                     </p>
@@ -248,7 +249,7 @@
                   type="button"
                   class="border border-luxe-espresso text-luxe-espresso px-6 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition"
                 >
-                  Edit
+                  Ubah
                 </button>
 
                 <button
@@ -264,10 +265,10 @@
                 >
                   {{
                     updatingProductId === product.id
-                      ? "Updating..."
+                      ? "Memperbarui..."
                       : product.isActive
-                        ? "Deactivate"
-                        : "Activate"
+                        ? "Nonaktifkan"
+                        : "Aktifkan"
                   }}
                 </button>
               </div>
@@ -292,15 +293,15 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3">
-              {{ isEditMode ? "Edit Product" : "Add Product" }}
+              {{ isEditMode ? "Ubah Produk" : "Tambah Produk" }}
             </p>
 
             <h2 class="text-3xl md:text-4xl font-bold text-luxe-espresso">
-              {{ isEditMode ? "Update Product" : "Create New Product" }}
+              {{ isEditMode ? "Perbarui Produk" : "Buat Produk Baru" }}
             </h2>
 
             <p class="text-luxe-brown/75 mt-3 leading-7">
-              Manage product information, stock, images, sizes, and attributes.
+              Kelola informasi produk, stok, gambar, ukuran, dan atribut produk.
             </p>
           </div>
 
@@ -324,13 +325,13 @@
           <div class="grid md:grid-cols-2 gap-5">
             <div>
               <label class="block text-sm text-luxe-brown/75 mb-2">
-                Product Name
+                Nama Produk
               </label>
 
               <input
                 v-model="productForm.name"
                 type="text"
-                placeholder="Example: Kaos Navy Luxeza"
+                placeholder="Contoh: Kaos Navy Luxeza"
                 class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
               />
             </div>
@@ -343,38 +344,38 @@
               <input
                 v-model="productForm.slug"
                 type="text"
-                placeholder="Auto generated if empty"
+                placeholder="Otomatis dibuat jika dikosongkan"
                 class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
               />
             </div>
 
             <div>
               <label class="block text-sm text-luxe-brown/75 mb-2">
-                Category
+                Kategori
               </label>
 
               <LuxeSelect
                 v-model="productForm.category_id"
                 :options="productCategoryOptions"
-                placeholder="No Category"
+                placeholder="Tanpa Kategori"
               />
             </div>
 
             <div>
               <label class="block text-sm text-luxe-brown/75 mb-2">
-                Product Status
+                Status Produk
               </label>
 
               <LuxeSelect
                 v-model="productForm.is_active"
                 :options="activeStatusOptions"
-                placeholder="Select Status"
+                placeholder="Pilih Status"
               />
             </div>
 
             <div>
               <label class="block text-sm text-luxe-brown/75 mb-2">
-                Price
+                Harga
               </label>
 
               <input
@@ -407,13 +408,13 @@
 
           <div>
             <label class="block text-sm text-luxe-brown/75 mb-2">
-              Description
+              Deskripsi
             </label>
 
             <textarea
               v-model="productForm.description"
               rows="4"
-              placeholder="Product description"
+              placeholder="Deskripsi produk"
               class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition resize-none"
             ></textarea>
           </div>
@@ -425,11 +426,11 @@
             <div class="flex items-center justify-between gap-4 mb-5">
               <div>
                 <h3 class="text-2xl font-bold text-luxe-espresso">
-                  Product Images
+                  Gambar Produk
                 </h3>
 
                 <p class="text-sm text-luxe-brown/70 mt-1">
-                  Paste image URL or upload product image from your device.
+                  Tempel URL gambar atau unggah gambar produk dari perangkat.
                 </p>
               </div>
 
@@ -438,7 +439,7 @@
                 type="button"
                 class="bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full hover:bg-luxe-royal transition"
               >
-                + Image
+                + Gambar
               </button>
             </div>
 
@@ -453,7 +454,7 @@
                   <ProductImage
                     v-if="image.image_url"
                     :src="image.image_url"
-                    alt="Product image preview"
+                    alt="Pratinjau gambar produk"
                     class="w-full h-32 md:h-[100px] object-cover rounded-2xl bg-luxe-cream border border-luxe-sand/60"
                   />
 
@@ -461,7 +462,7 @@
                     v-else
                     class="w-full h-32 md:h-[100px] rounded-2xl bg-luxe-cream border border-dashed border-luxe-sand flex items-center justify-center text-luxe-brown/50 text-sm text-center px-3"
                   >
-                    No Image
+                    Belum Ada Gambar
                   </div>
                 </div>
 
@@ -470,7 +471,7 @@
                   <input
                     v-model="image.image_url"
                     type="text"
-                    placeholder="https://images.unsplash.com/... or uploaded image URL"
+                    placeholder="https://images.unsplash.com/... atau URL gambar upload"
                     class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                   />
 
@@ -493,8 +494,8 @@
                   >
                     {{
                       imageUploadStates[index]
-                        ? "Uploading..."
-                        : "Upload from Device"
+                        ? "Mengunggah..."
+                        : "Unggah dari Perangkat"
                     }}
                   </label>
                 </div>
@@ -512,7 +513,7 @@
                   />
 
                   <span class="text-sm font-medium text-luxe-espresso">
-                    Primary
+                    Utama
                   </span>
                 </label>
 
@@ -522,7 +523,7 @@
                   type="button"
                   class="min-h-[48px] px-4 py-3 rounded-2xl text-red-500 hover:bg-red-50 transition"
                 >
-                  Remove
+                  Hapus
                 </button>
               </div>
             </div>
@@ -534,10 +535,10 @@
           >
             <div class="flex items-center justify-between gap-4 mb-5">
               <div>
-                <h3 class="text-2xl font-bold text-luxe-espresso">Sizes</h3>
+                <h3 class="text-2xl font-bold text-luxe-espresso">Ukuran</h3>
 
                 <p class="text-sm text-luxe-brown/70 mt-1">
-                  Add available sizes and size-level stock.
+                  Tambahkan ukuran yang tersedia beserta stok per ukuran.
                 </p>
               </div>
 
@@ -546,7 +547,7 @@
                 type="button"
                 class="bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full hover:bg-luxe-royal transition"
               >
-                + Size
+                + Ukuran
               </button>
             </div>
 
@@ -554,12 +555,12 @@
               <div
                 class="hidden md:grid md:grid-cols-[1fr_150px_130px_130px_150px_auto] gap-4 px-4 text-xs uppercase tracking-[2px] text-luxe-brown/60"
               >
-                <span>Size</span>
-                <span>Price</span>
-                <span>Stock</span>
-                <span>Order</span>
+                <span>Ukuran</span>
+                <span>Harga</span>
+                <span>Stok</span>
+                <span>Urutan</span>
                 <span>Status</span>
-                <span>Action</span>
+                <span>Aksi</span>
               </div>
 
               <div
@@ -571,7 +572,7 @@
                   <label
                     class="md:hidden block text-xs text-luxe-brown/60 mb-2"
                   >
-                    Size
+                    Ukuran
                   </label>
 
                   <input
@@ -586,14 +587,14 @@
                   <label
                     class="md:hidden block text-xs text-luxe-brown/60 mb-2"
                   >
-                    Price
+                    Harga
                   </label>
 
                   <input
                     v-model.number="size.price"
                     type="number"
                     min="0"
-                    placeholder="Price"
+                    placeholder="Harga"
                     class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                   />
                 </div>
@@ -602,14 +603,14 @@
                   <label
                     class="md:hidden block text-xs text-luxe-brown/60 mb-2"
                   >
-                    Stock
+                    Stok
                   </label>
 
                   <input
                     v-model.number="size.stock"
                     type="number"
                     min="0"
-                    placeholder="Stock"
+                    placeholder="Stok"
                     class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                   />
                 </div>
@@ -618,14 +619,14 @@
                   <label
                     class="md:hidden block text-xs text-luxe-brown/60 mb-2"
                   >
-                    Order
+                    Urutan
                   </label>
 
                   <input
                     v-model.number="size.sort_order"
                     type="number"
                     min="0"
-                    placeholder="Order"
+                    placeholder="Urutan"
                     class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                   />
                 </div>
@@ -640,7 +641,7 @@
                   <LuxeSelect
                     v-model="size.is_active"
                     :options="activeStatusOptions"
-                    placeholder="Select Status"
+                    placeholder="Pilih Status"
                   />
                 </div>
 
@@ -649,7 +650,7 @@
                   type="button"
                   class="min-h-[48px] px-4 py-3 rounded-2xl text-red-500 hover:bg-red-50 transition"
                 >
-                  Remove
+                  Hapus
                 </button>
               </div>
             </div>
@@ -661,12 +662,10 @@
           >
             <div class="flex items-center justify-between gap-4 mb-5">
               <div>
-                <h3 class="text-2xl font-bold text-luxe-espresso">
-                  Attributes
-                </h3>
+                <h3 class="text-2xl font-bold text-luxe-espresso">Atribut</h3>
 
                 <p class="text-sm text-luxe-brown/70 mt-1">
-                  Example: Material, Fit, Style.
+                  Contoh: Material, Fit, Style.
                 </p>
               </div>
 
@@ -675,7 +674,7 @@
                 type="button"
                 class="bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full hover:bg-luxe-royal transition"
               >
-                + Attribute
+                + Atribut
               </button>
             </div>
 
@@ -684,10 +683,10 @@
                 class="hidden md:grid md:grid-cols-[1fr_1fr_130px_150px_auto] gap-4 px-4 text-xs uppercase tracking-[2px] text-luxe-brown/60"
               >
                 <span>Label</span>
-                <span>Value</span>
-                <span>Order</span>
+                <span>Nilai</span>
+                <span>Urutan</span>
                 <span>Status</span>
-                <span>Action</span>
+                <span>Aksi</span>
               </div>
 
               <div
@@ -714,7 +713,7 @@
                   <label
                     class="md:hidden block text-xs text-luxe-brown/60 mb-2"
                   >
-                    Value
+                    Nilai
                   </label>
 
                   <input
@@ -729,14 +728,14 @@
                   <label
                     class="md:hidden block text-xs text-luxe-brown/60 mb-2"
                   >
-                    Order
+                    Urutan
                   </label>
 
                   <input
                     v-model.number="attribute.sort_order"
                     type="number"
                     min="0"
-                    placeholder="Order"
+                    placeholder="Urutan"
                     class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                   />
                 </div>
@@ -751,7 +750,7 @@
                   <LuxeSelect
                     v-model="attribute.is_active"
                     :options="activeStatusOptions"
-                    placeholder="Select Status"
+                    placeholder="Pilih Status"
                   />
                 </div>
 
@@ -760,12 +759,13 @@
                   type="button"
                   class="min-h-[48px] px-4 py-3 rounded-2xl text-red-500 hover:bg-red-50 transition"
                 >
-                  Remove
+                  Hapus
                 </button>
               </div>
             </div>
           </div>
         </form>
+
         <!-- MODAL FOOTER -->
         <div
           class="shrink-0 p-6 border-t border-luxe-sand/60 bg-luxe-ivory flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3"
@@ -775,7 +775,7 @@
             type="button"
             class="px-7 py-4 rounded-full border border-luxe-sand text-luxe-espresso hover:bg-luxe-cream transition"
           >
-            Cancel
+            Batal
           </button>
 
           <button
@@ -786,10 +786,10 @@
           >
             {{
               isSavingProduct
-                ? "Saving..."
+                ? "Menyimpan..."
                 : isEditMode
-                  ? "Update Product"
-                  : "Create Product"
+                  ? "Perbarui Produk"
+                  : "Buat Produk"
             }}
           </button>
         </div>
@@ -810,15 +810,15 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3">
-              Admin Categories
+              Admin Kategori
             </p>
 
             <h2 class="text-3xl md:text-4xl font-bold text-luxe-espresso">
-              Category Management
+              Manajemen Kategori
             </h2>
 
             <p class="text-luxe-brown/75 mt-3 leading-7">
-              Add, edit, activate, deactivate, or delete product categories.
+              Tambah, ubah, aktifkan, nonaktifkan, atau hapus kategori produk.
             </p>
           </div>
 
@@ -840,19 +840,19 @@
             class="bg-luxe-cream border border-luxe-sand/60 rounded-[2rem] p-5 md:p-6"
           >
             <h3 class="text-2xl font-bold text-luxe-espresso mb-5">
-              {{ isEditCategoryMode ? "Edit Category" : "Add Category" }}
+              {{ isEditCategoryMode ? "Ubah Kategori" : "Tambah Kategori" }}
             </h3>
 
             <div class="grid md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm text-luxe-brown/75 mb-2">
-                  Category Name
+                  Nama Kategori
                 </label>
 
                 <input
                   v-model="categoryForm.name"
                   type="text"
-                  placeholder="Example: Kaos"
+                  placeholder="Contoh: Kaos"
                   class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                 />
               </div>
@@ -865,7 +865,7 @@
                 <input
                   v-model="categoryForm.slug"
                   type="text"
-                  placeholder="Auto generated if empty"
+                  placeholder="Otomatis dibuat jika dikosongkan"
                   class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                 />
               </div>
@@ -878,7 +878,7 @@
                 <LuxeSelect
                   v-model="categoryForm.is_active"
                   :options="activeStatusOptions"
-                  placeholder="Select Status"
+                  placeholder="Pilih Status"
                 />
               </div>
             </div>
@@ -892,10 +892,10 @@
               >
                 {{
                   isSavingCategory
-                    ? "Saving..."
+                    ? "Menyimpan..."
                     : isEditCategoryMode
-                      ? "Update Category"
-                      : "Create Category"
+                      ? "Perbarui Kategori"
+                      : "Buat Kategori"
                 }}
               </button>
 
@@ -906,7 +906,7 @@
                 :disabled="isSavingCategory"
                 class="border border-luxe-sand text-luxe-espresso px-7 py-4 rounded-full hover:bg-luxe-ivory disabled:opacity-50 transition"
               >
-                Cancel Edit
+                Batal Ubah
               </button>
             </div>
           </div>
@@ -919,17 +919,17 @@
             >
               <div>
                 <h3 class="text-2xl font-bold text-luxe-espresso">
-                  Category List
+                  Daftar Kategori
                 </h3>
 
                 <p class="text-sm text-luxe-brown/70 mt-1">
-                  Total: {{ categories.length }} categories
+                  Total: {{ categories.length }} kategori
                 </p>
               </div>
             </div>
 
             <div v-if="categories.length === 0" class="p-6 text-center">
-              <p class="text-luxe-brown/70">No categories found.</p>
+              <p class="text-luxe-brown/70">Kategori tidak ditemukan.</p>
             </div>
 
             <div v-else class="divide-y divide-luxe-sand/60">
@@ -948,13 +948,13 @@
                       "
                       class="border px-4 py-2 rounded-full text-xs font-semibold"
                     >
-                      {{ category.isActive ? "Active" : "Inactive" }}
+                      {{ category.isActive ? "Aktif" : "Tidak Aktif" }}
                     </span>
 
                     <span
                       class="bg-luxe-cream border border-luxe-sand/70 text-luxe-brown px-4 py-2 rounded-full text-xs font-semibold"
                     >
-                      {{ category.productsCount }} products
+                      {{ category.productsCount }} produk
                     </span>
                   </div>
 
@@ -973,7 +973,7 @@
                     type="button"
                     class="border border-luxe-espresso text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition"
                   >
-                    Edit
+                    Ubah
                   </button>
 
                   <button
@@ -989,10 +989,10 @@
                   >
                     {{
                       updatingCategoryId === category.id
-                        ? "Updating..."
+                        ? "Memperbarui..."
                         : category.isActive
-                          ? "Deactivate"
-                          : "Activate"
+                          ? "Nonaktifkan"
+                          : "Aktifkan"
                     }}
                   </button>
 
@@ -1007,8 +1007,8 @@
                   >
                     {{
                       deletingCategoryId === category.id
-                        ? "Deleting..."
-                        : "Delete"
+                        ? "Menghapus..."
+                        : "Hapus"
                     }}
                   </button>
                 </div>
@@ -1017,13 +1017,14 @@
           </div>
 
           <p class="text-sm text-luxe-brown/65 leading-6">
-            Note: Categories that are still used by products cannot be deleted.
-            Deactivate the category if you only want to hide it from active
-            usage.
+            Catatan: Kategori yang masih digunakan oleh produk tidak dapat
+            dihapus. Nonaktifkan kategori jika hanya ingin menyembunyikannya
+            dari penggunaan aktif.
           </p>
         </div>
       </div>
     </div>
+
     <Footer />
   </div>
 </template>
@@ -1049,6 +1050,7 @@ const isLoading = ref(false);
 const errorMessage = ref("");
 const updatingProductId = ref(null);
 const imageUploadStates = ref({});
+
 const filters = reactive({
   search: "",
   categoryId: "",
@@ -1058,7 +1060,7 @@ const filters = reactive({
 const categoryFilterOptions = computed(() => {
   return [
     {
-      label: "All Categories",
+      label: "Semua Kategori",
       value: "",
     },
     ...categories.value.map((category) => ({
@@ -1071,7 +1073,7 @@ const categoryFilterOptions = computed(() => {
 const productCategoryOptions = computed(() => {
   return [
     {
-      label: "No Category",
+      label: "Tanpa Kategori",
       value: "",
     },
     ...categories.value.map((category) => ({
@@ -1083,26 +1085,26 @@ const productCategoryOptions = computed(() => {
 
 const productStatusFilterOptions = [
   {
-    label: "All Status",
+    label: "Semua Status",
     value: "",
   },
   {
-    label: "Active",
+    label: "Aktif",
     value: "active",
   },
   {
-    label: "Inactive",
+    label: "Tidak Aktif",
     value: "inactive",
   },
 ];
 
 const activeStatusOptions = [
   {
-    label: "Active",
+    label: "Aktif",
     value: true,
   },
   {
-    label: "Inactive",
+    label: "Tidak Aktif",
     value: false,
   },
 ];
@@ -1163,6 +1165,7 @@ watch(isAnyModalOpen, (isOpen) => {
 onUnmounted(() => {
   unlockBodyScroll();
 });
+
 const createEmptyCategoryForm = () => ({
   name: "",
   slug: "",
@@ -1278,8 +1281,8 @@ const loadCategories = async () => {
     categories.value = await adminProductService.getCategories();
   } catch (error) {
     toastStore.showToast({
-      title: "Failed to Load Categories",
-      message: error?.message || "Unable to load categories.",
+      title: "Gagal Memuat Kategori",
+      message: error?.message || "Kategori belum dapat dimuat.",
       type: "error",
     });
   }
@@ -1306,7 +1309,7 @@ const loadProducts = async () => {
 
     products.value = await adminProductService.getProducts(params);
   } catch (error) {
-    errorMessage.value = error?.message || "Unable to load products.";
+    errorMessage.value = error?.message || "Produk belum dapat dimuat.";
   } finally {
     isLoading.value = false;
   }
@@ -1326,16 +1329,16 @@ const toggleProductStatus = async (product) => {
     );
 
     toastStore.showToast({
-      title: "Product Updated",
-      message: `${updatedProduct.name} is now ${
-        updatedProduct.isActive ? "active" : "inactive"
+      title: "Produk Berhasil Diperbarui",
+      message: `${updatedProduct.name} sekarang ${
+        updatedProduct.isActive ? "aktif" : "tidak aktif"
       }.`,
       type: "success",
     });
   } catch (error) {
     toastStore.showToast({
-      title: "Failed to Update Product",
-      message: error?.message || "Unable to update product status.",
+      title: "Gagal Memperbarui Produk",
+      message: error?.message || "Status produk belum dapat diperbarui.",
       type: "error",
     });
   } finally {
@@ -1394,8 +1397,8 @@ const buildCategoryPayload = () => {
 const validateCategoryForm = () => {
   if (!categoryForm.name.trim()) {
     toastStore.showToast({
-      title: "Category Name Required",
-      message: "Please enter category name.",
+      title: "Nama Kategori Wajib Diisi",
+      message: "Silakan masukkan nama kategori.",
       type: "error",
     });
 
@@ -1433,8 +1436,10 @@ const saveCategory = async () => {
     }
 
     toastStore.showToast({
-      title: isEditCategoryMode.value ? "Category Updated" : "Category Created",
-      message: `${savedCategory.name} has been saved successfully.`,
+      title: isEditCategoryMode.value
+        ? "Kategori Berhasil Diperbarui"
+        : "Kategori Berhasil Dibuat",
+      message: `${savedCategory.name} berhasil disimpan.`,
       type: "success",
     });
 
@@ -1447,8 +1452,8 @@ const saveCategory = async () => {
       : null;
 
     toastStore.showToast({
-      title: "Failed to Save Category",
-      message: firstError || error?.message || "Unable to save category.",
+      title: "Gagal Menyimpan Kategori",
+      message: firstError || error?.message || "Kategori belum dapat disimpan.",
       type: "error",
     });
   } finally {
@@ -1470,9 +1475,9 @@ const toggleCategoryStatus = async (category) => {
     );
 
     toastStore.showToast({
-      title: "Category Updated",
-      message: `${updatedCategory.name} is now ${
-        updatedCategory.isActive ? "active" : "inactive"
+      title: "Kategori Berhasil Diperbarui",
+      message: `${updatedCategory.name} sekarang ${
+        updatedCategory.isActive ? "aktif" : "tidak aktif"
       }.`,
       type: "success",
     });
@@ -1480,8 +1485,8 @@ const toggleCategoryStatus = async (category) => {
     await loadCategories();
   } catch (error) {
     toastStore.showToast({
-      title: "Failed to Update Category",
-      message: error?.message || "Unable to update category status.",
+      title: "Gagal Memperbarui Kategori",
+      message: error?.message || "Status kategori belum dapat diperbarui.",
       type: "error",
     });
   } finally {
@@ -1492,8 +1497,8 @@ const toggleCategoryStatus = async (category) => {
 const deleteCategory = async (category) => {
   if (Number(category.productsCount) > 0) {
     toastStore.showToast({
-      title: "Category Cannot Be Deleted",
-      message: "This category is still used by products.",
+      title: "Kategori Tidak Dapat Dihapus",
+      message: "Kategori ini masih digunakan oleh produk.",
       type: "error",
     });
 
@@ -1501,7 +1506,7 @@ const deleteCategory = async (category) => {
   }
 
   const confirmed = window.confirm(
-    `Delete category "${category.name}"? This action cannot be undone.`,
+    `Hapus kategori "${category.name}"? Tindakan ini tidak dapat dibatalkan.`,
   );
 
   if (!confirmed) return;
@@ -1516,8 +1521,8 @@ const deleteCategory = async (category) => {
     );
 
     toastStore.showToast({
-      title: "Category Deleted",
-      message: `${category.name} has been deleted successfully.`,
+      title: "Kategori Berhasil Dihapus",
+      message: `${category.name} berhasil dihapus.`,
       type: "success",
     });
 
@@ -1530,8 +1535,8 @@ const deleteCategory = async (category) => {
     await loadProducts();
   } catch (error) {
     toastStore.showToast({
-      title: "Failed to Delete Category",
-      message: error?.message || "Unable to delete category.",
+      title: "Gagal Menghapus Kategori",
+      message: error?.message || "Kategori belum dapat dihapus.",
       type: "error",
     });
   } finally {
@@ -1555,8 +1560,8 @@ const handleImageUpload = async (event, index) => {
 
   if (!allowedTypes.includes(file.type)) {
     toastStore.showToast({
-      title: "Invalid Image",
-      message: "Please upload jpg, jpeg, png, or webp image.",
+      title: "Gambar Tidak Valid",
+      message: "Silakan unggah gambar jpg, jpeg, png, atau webp.",
       type: "error",
     });
 
@@ -1568,8 +1573,8 @@ const handleImageUpload = async (event, index) => {
 
   if (file.size > maxSize) {
     toastStore.showToast({
-      title: "Image Too Large",
-      message: "Maximum image size is 5MB.",
+      title: "Gambar Terlalu Besar",
+      message: "Ukuran gambar maksimal 5 MB.",
       type: "error",
     });
 
@@ -1590,14 +1595,14 @@ const handleImageUpload = async (event, index) => {
     }
 
     toastStore.showToast({
-      title: "Image Uploaded",
-      message: "Product image has been uploaded successfully.",
+      title: "Gambar Berhasil Diunggah",
+      message: "Gambar produk berhasil diunggah.",
       type: "success",
     });
   } catch (error) {
     toastStore.showToast({
-      title: "Upload Failed",
-      message: error?.message || "Failed to upload image.",
+      title: "Unggah Gambar Gagal",
+      message: error?.message || "Gambar belum dapat diunggah.",
       type: "error",
     });
   } finally {
@@ -1706,8 +1711,8 @@ const buildProductPayload = () => {
 const validateProductForm = () => {
   if (!productForm.name.trim()) {
     toastStore.showToast({
-      title: "Product Name Required",
-      message: "Please enter product name.",
+      title: "Nama Produk Wajib Diisi",
+      message: "Silakan masukkan nama produk.",
       type: "error",
     });
 
@@ -1716,8 +1721,8 @@ const validateProductForm = () => {
 
   if (Number(productForm.price) < 0) {
     toastStore.showToast({
-      title: "Invalid Price",
-      message: "Product price cannot be negative.",
+      title: "Harga Tidak Valid",
+      message: "Harga produk tidak boleh bernilai negatif.",
       type: "error",
     });
 
@@ -1730,8 +1735,8 @@ const validateProductForm = () => {
 
   if (invalidSizePrice) {
     toastStore.showToast({
-      title: "Invalid Size Price",
-      message: "Size price cannot be negative.",
+      title: "Harga Ukuran Tidak Valid",
+      message: "Harga pada ukuran tidak boleh bernilai negatif.",
       type: "error",
     });
 
@@ -1740,8 +1745,8 @@ const validateProductForm = () => {
 
   if (Number(productForm.stock) < 0) {
     toastStore.showToast({
-      title: "Invalid Stock",
-      message: "Product stock cannot be negative.",
+      title: "Stok Tidak Valid",
+      message: "Stok produk tidak boleh bernilai negatif.",
       type: "error",
     });
 
@@ -1750,8 +1755,8 @@ const validateProductForm = () => {
 
   if (Number(productForm.weight_gram) <= 0) {
     toastStore.showToast({
-      title: "Invalid Product Weight",
-      message: "Product weight must be greater than 0 gram.",
+      title: "Berat Produk Tidak Valid",
+      message: "Berat produk harus lebih dari 0 gram.",
       type: "error",
     });
 
@@ -1784,8 +1789,10 @@ const saveProduct = async () => {
     }
 
     toastStore.showToast({
-      title: isEditMode.value ? "Product Updated" : "Product Created",
-      message: `${savedProduct.name} has been saved successfully.`,
+      title: isEditMode.value
+        ? "Produk Berhasil Diperbarui"
+        : "Produk Berhasil Dibuat",
+      message: `${savedProduct.name} berhasil disimpan.`,
       type: "success",
     });
 
@@ -1796,8 +1803,8 @@ const saveProduct = async () => {
       : null;
 
     toastStore.showToast({
-      title: "Failed to Save Product",
-      message: firstError || error?.message || "Unable to save product.",
+      title: "Gagal Menyimpan Produk",
+      message: firstError || error?.message || "Produk belum dapat disimpan.",
       type: "error",
     });
   } finally {

@@ -7,7 +7,7 @@ const loadOrdersFromStorage = () => {
     const savedOrders = sessionStorage.getItem(ORDER_HISTORY_KEY);
     return savedOrders ? JSON.parse(savedOrders) : [];
   } catch (error) {
-    console.error("Failed to load order history:", error);
+    console.error("Gagal memuat riwayat pesanan:", error);
     return [];
   }
 };
@@ -39,7 +39,7 @@ export const useOrderStore = defineStore("order", {
 
       this.orders.unshift({
         ...safeOrder,
-        status: safeOrder.status || "Processing",
+        status: safeOrder.status || "pending",
       });
 
       this.saveOrders();

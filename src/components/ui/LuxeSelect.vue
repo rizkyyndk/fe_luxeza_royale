@@ -61,7 +61,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: "Select option",
+    default: "Pilih opsi",
   },
   disabled: {
     type: Boolean,

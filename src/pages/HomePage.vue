@@ -12,12 +12,15 @@
         <!-- HERO CONTENT -->
         <div>
           <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-5">
-            {{ content("home.hero.eyebrow", "Luxury Fashion") }}
+            {{ content("home.hero.eyebrow", "Fashion Mewah") }}
           </p>
 
           <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-8">
             {{
-              content("home.hero.title", "Modern Luxury for Everyday Elegance.")
+              content(
+                "home.hero.title",
+                "Kemewahan Modern untuk Elegansi Setiap Hari.",
+              )
             }}
           </h1>
 
@@ -25,7 +28,7 @@
             {{
               content(
                 "home.hero.subtitle",
-                "Discover minimalist fashion pieces crafted for premium aesthetics, refined comfort, and modern lifestyle.",
+                "Temukan koleksi fashion minimalis dengan sentuhan premium, kenyamanan elegan, dan gaya modern yang mudah dikenakan setiap hari.",
               )
             }}
           </p>
@@ -35,31 +38,31 @@
               @click="goToProducts"
               class="bg-luxe-espresso text-luxe-ivory px-10 py-5 rounded-full hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
             >
-              {{ content("home.hero.primary_button", "Shop Collection") }}
+              {{ content("home.hero.primary_button", "Belanja Koleksi") }}
             </button>
 
             <button
               @click="goToCategories"
               class="border border-luxe-espresso text-luxe-espresso px-10 py-5 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition"
             >
-              {{ content("home.hero.secondary_button", "Explore Categories") }}
+              {{ content("home.hero.secondary_button", "Lihat Kategori") }}
             </button>
           </div>
 
           <div class="grid grid-cols-3 gap-6 mt-14 max-w-lg">
             <div>
               <p class="text-3xl font-bold">10+</p>
-              <p class="text-sm text-luxe-brown/70 mt-1">Curated Items</p>
+              <p class="text-sm text-luxe-brown/70 mt-1">Koleksi Pilihan</p>
             </div>
 
             <div>
               <p class="text-3xl font-bold">5</p>
-              <p class="text-sm text-luxe-brown/70 mt-1">Categories</p>
+              <p class="text-sm text-luxe-brown/70 mt-1">Kategori</p>
             </div>
 
             <div>
               <p class="text-3xl font-bold">100%</p>
-              <p class="text-sm text-luxe-brown/70 mt-1">Frontend Ready</p>
+              <p class="text-sm text-luxe-brown/70 mt-1">Siap Dipesan</p>
             </div>
           </div>
         </div>
@@ -90,7 +93,7 @@
                 class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
               >
                 <div class="min-w-0">
-                  <p class="text-sm text-luxe-brown/70 mb-1">Featured Piece</p>
+                  <p class="text-sm text-luxe-brown/70 mb-1">Pilihan Utama</p>
 
                   <h3 class="font-bold text-lg text-luxe-espresso truncate">
                     {{ heroProduct.title }}
@@ -126,7 +129,7 @@
                     :to="`/product/${heroProduct.id}`"
                     class="shrink-0 bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full text-sm hover:bg-luxe-royal hover:scale-105 transition"
                   >
-                    View
+                    Lihat
                   </RouterLink>
                 </div>
               </div>
@@ -157,9 +160,9 @@
     <!-- PROMO STRIP -->
     <section class="bg-luxe-espresso text-luxe-ivory px-6 py-5">
       <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-6 text-center">
-        <p class="text-sm tracking-[3px] uppercase">Premium Selection</p>
+        <p class="text-sm tracking-[3px] uppercase">Koleksi Premium</p>
 
-        <p class="text-sm tracking-[3px] uppercase">Minimalist Luxury Design</p>
+        <p class="text-sm tracking-[3px] uppercase">Desain Mewah Minimalis</p>
 
         <p class="text-sm tracking-[3px] uppercase">Nyaman untuk Setiap Hari</p>
       </div>
@@ -173,10 +176,12 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown/75 mb-3">
-              Shop By Category
+              Belanja Berdasarkan Kategori
             </p>
 
-            <h2 class="text-4xl md:text-5xl font-bold">Luxury Essentials</h2>
+            <h2 class="text-4xl md:text-5xl font-bold">
+              Esensial Mewah Pilihan
+            </h2>
           </div>
 
           <p class="text-luxe-brown/75 max-w-md leading-7">
@@ -205,7 +210,7 @@
             <div
               class="relative h-full p-6 flex flex-col justify-end text-white"
             >
-              <p class="text-sm uppercase tracking-[3px] mb-2">Category</p>
+              <p class="text-sm uppercase tracking-[3px] mb-2">Kategori</p>
 
               <h3 class="text-2xl font-bold">
                 {{ category.name }}
@@ -225,33 +230,33 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown/75 mb-3">
-              {{ content("home.products.eyebrow", "Luxury Collection") }}
+              {{ content("home.products.eyebrow", "Koleksi Mewah") }}
             </p>
 
             <h2 class="text-4xl md:text-5xl font-bold mb-6">
-              {{ content("home.products.title", "Featured Products") }}
+              {{ content("home.products.title", "Produk Pilihan") }}
             </h2>
 
             <p class="text-luxe-brown/75 max-w-xl leading-7">
               {{
                 content(
                   "home.products.subtitle",
-                  "Discover curated premium fashion pieces designed for modern lifestyle.",
+                  "Temukan pilihan fashion premium yang dirancang untuk gaya hidup modern, elegan, dan mudah dipadukan.",
                 )
               }}
             </p>
           </div>
 
           <p class="text-sm text-luxe-brown/75">
-            Showing
+            Menampilkan
             <span class="font-semibold text-luxe-espresso">
               {{ sortedProducts.length }}
             </span>
-            result from
+            hasil dari
             <span class="font-semibold text-luxe-espresso">
               {{ products.length }}
             </span>
-            products
+            produk
           </p>
         </div>
 
@@ -260,7 +265,7 @@
           <!-- SEARCH -->
           <div class="relative">
             <label class="block text-sm text-luxe-brown/75 mb-2">
-              Find your luxury items
+              Temukan koleksi pilihan Anda
             </label>
 
             <input
@@ -269,7 +274,7 @@
               @blur="handleSearchBlur"
               @keyup.enter="handleSearchEnter"
               type="text"
-              placeholder="Search by product, category, or description..."
+              placeholder="Cari berdasarkan produk, kategori, atau deskripsi..."
               class="border border-luxe-sand bg-luxe-ivory px-6 py-4 rounded-full outline-none w-full lg:max-w-[520px] focus:border-luxe-royal transition text-luxe-espresso placeholder:text-luxe-brown/50 shadow-sm"
             />
 
@@ -283,7 +288,7 @@
                 <p
                   class="text-xs uppercase tracking-[3px] text-luxe-brown/60 mb-3"
                 >
-                  Suggestions
+                  Rekomendasi
                 </p>
 
                 <div class="space-y-2">
@@ -327,7 +332,7 @@
                   <p
                     class="text-xs uppercase tracking-[3px] text-luxe-brown/60"
                   >
-                    Recent Search
+                    Pencarian Terakhir
                   </p>
 
                   <button
@@ -335,7 +340,7 @@
                     type="button"
                     class="text-xs text-luxe-brown/60 hover:text-luxe-espresso transition"
                   >
-                    Clear
+                    Hapus
                   </button>
                 </div>
 
@@ -357,7 +362,7 @@
           <!-- SORT -->
           <div class="relative">
             <label class="block text-sm text-luxe-brown/75 mb-2">
-              Sort products
+              Urutkan Produk
             </label>
 
             <button
@@ -404,7 +409,7 @@
           class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
         >
           <p class="text-sm text-luxe-brown/75">
-            {{ activeFilterCount }} active filter
+            {{ activeFilterCount }} filter aktif
           </p>
 
           <button
@@ -417,13 +422,13 @@
             "
             class="text-sm border px-5 py-2 rounded-full transition w-fit"
           >
-            Clear All Filters
+            Hapus Semua Filter
           </button>
         </div>
 
         <!-- CATEGORIES -->
         <div class="mb-10">
-          <p class="text-sm text-luxe-brown/75 mb-3">Category</p>
+          <p class="text-sm text-luxe-brown/75 mb-3">Kategori</p>
 
           <div class="flex flex-wrap gap-4">
             <button
@@ -446,7 +451,7 @@
         <div class="grid md:grid-cols-2 gap-8 mb-12">
           <!-- PRICE FILTER -->
           <div>
-            <p class="text-sm text-luxe-brown/75 mb-3">Price Range</p>
+            <p class="text-sm text-luxe-brown/75 mb-3">Rentang Harga</p>
 
             <div class="flex flex-wrap gap-3">
               <button
@@ -467,7 +472,7 @@
 
           <!-- STOCK FILTER -->
           <div>
-            <p class="text-sm text-luxe-brown/75 mb-3">Availability</p>
+            <p class="text-sm text-luxe-brown/75 mb-3">Ketersediaan</p>
 
             <div class="flex flex-wrap gap-3">
               <button
@@ -504,7 +509,7 @@
           >
             <p class="text-5xl mb-5">⚠️</p>
 
-            <h3 class="text-2xl font-bold mb-3">Failed to load products</h3>
+            <h3 class="text-2xl font-bold mb-3">Produk belum dapat dimuat</h3>
 
             <p class="text-red-500 mb-8">
               {{ productErrorMessage }}
@@ -514,7 +519,7 @@
               @click="loadProducts"
               class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full inline-block hover:bg-luxe-royal hover:scale-105 transition"
             >
-              Try Again
+              Coba Lagi
             </button>
           </div>
 
@@ -546,17 +551,17 @@
           >
             <p class="text-5xl mb-5">🔎</p>
 
-            <h3 class="text-2xl font-bold mb-3">No products found</h3>
+            <h3 class="text-2xl font-bold mb-3">Produk tidak ditemukan</h3>
 
             <p class="text-luxe-brown/75 mb-8">
-              Try another keyword or select a different category.
+              Coba gunakan kata kunci lain atau pilih kategori yang berbeda.
             </p>
 
             <button
               @click="resetFilters"
               class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full hover:bg-luxe-royal hover:scale-105 transition"
             >
-              Reset Filters
+              Atur Ulang Filter
             </button>
           </div>
         </div>
@@ -570,14 +575,14 @@
       >
         <div class="p-10 md:p-16 flex flex-col justify-center">
           <p class="uppercase tracking-[4px] text-sm text-luxe-brown/75 mb-4">
-            {{ content("home.editorial.eyebrow", "Editorial Collection") }}
+            {{ content("home.editorial.eyebrow", "Koleksi Editorial") }}
           </p>
 
           <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
             {{
               content(
                 "home.editorial.title",
-                "Refined essentials for effortless everyday style.",
+                "Sentuhan elegan untuk gaya harian yang effortless.",
               )
             }}
           </h2>
@@ -586,7 +591,7 @@
             {{
               content(
                 "home.editorial.subtitle",
-                "Discover curated Luxeza Royale pieces designed with clean silhouettes, premium comfort, and timeless modern details.",
+                "Temukan koleksi Luxeza Royale dengan siluet bersih, kenyamanan premium, dan detail modern yang tak lekang oleh waktu.",
               )
             }}
           </p>
@@ -595,7 +600,7 @@
             @click="goToProducts"
             class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full w-fit hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
           >
-            Browse Products
+            Jelajahi Produk
           </button>
         </div>
 
@@ -652,6 +657,7 @@ import { formatCurrency } from "../utils/formatCurrency";
 
 import { productService } from "../services/productService";
 import { useSiteContentStore } from "../stores/siteContentStore";
+
 const siteContentStore = useSiteContentStore();
 
 const content = (key, fallback = "") => {
@@ -660,7 +666,7 @@ const content = (key, fallback = "") => {
 
 const products = ref([]);
 const search = ref("");
-const activeCategory = ref("All");
+const activeCategory = ref("Semua");
 const sortOption = ref("featured");
 const priceFilter = ref("all");
 const stockFilter = ref("all");
@@ -677,7 +683,7 @@ const loadRecentSearches = () => {
     const savedSearches = sessionStorage.getItem(RECENT_SEARCH_KEY);
     return savedSearches ? JSON.parse(savedSearches) : [];
   } catch (error) {
-    console.error("Failed to load recent searches:", error);
+    console.error("Gagal memuat pencarian terakhir:", error);
     return [];
   }
 };
@@ -686,30 +692,30 @@ const recentSearches = ref(loadRecentSearches());
 
 const sortOptions = [
   {
-    label: "Featured",
+    label: "Pilihan Utama",
     value: "featured",
   },
   {
-    label: "Price: Low to High",
+    label: "Harga: Terendah ke Tertinggi",
     value: "price-low",
   },
   {
-    label: "Price: High to Low",
+    label: "Harga: Tertinggi ke Terendah",
     value: "price-high",
   },
   {
-    label: "Name: A to Z",
+    label: "Nama: A ke Z",
     value: "name-az",
   },
 ];
 
 const priceOptions = [
   {
-    label: "All Price",
+    label: "Semua Harga",
     value: "all",
   },
   {
-    label: "Under Rp 500.000",
+    label: "Di bawah Rp 500.000",
     value: "under-500",
   },
   {
@@ -721,35 +727,35 @@ const priceOptions = [
     value: "1000-1500",
   },
   {
-    label: "Above Rp 1.500.000",
+    label: "Di atas Rp 1.500.000",
     value: "above-1500",
   },
 ];
 
 const stockOptions = [
   {
-    label: "All Stock",
+    label: "Semua Stok",
     value: "all",
   },
   {
-    label: "In Stock",
+    label: "Tersedia",
     value: "in-stock",
   },
   {
-    label: "Low Stock",
+    label: "Stok Terbatas",
     value: "low-stock",
   },
   {
-    label: "Out of Stock",
+    label: "Habis",
     value: "out-of-stock",
   },
 ];
 
 const sortLabels = {
-  featured: "Featured",
-  "price-low": "Price: Low to High",
-  "price-high": "Price: High to Low",
-  "name-az": "Name: A to Z",
+  featured: "Pilihan Utama",
+  "price-low": "Harga: Terendah ke Tertinggi",
+  "price-high": "Harga: Tertinggi ke Terendah",
+  "name-az": "Nama: A ke Z",
 };
 
 const loadProducts = async () => {
@@ -759,12 +765,12 @@ const loadProducts = async () => {
   try {
     products.value = await productService.getProducts();
   } catch (error) {
-    console.error("Failed to load products:", error);
+    console.error("Gagal memuat produk:", error);
 
     productErrorMessage.value =
       error?.response?.data?.message ||
       error?.message ||
-      "Failed to load products from database.";
+      "Produk belum dapat dimuat dari database.";
 
     products.value = [];
   } finally {
@@ -857,7 +863,7 @@ const editorialImage = computed(() => {
 
 const categories = computed(() => {
   const productCategories = products.value.map((product) => product.category);
-  return ["All", ...new Set(productCategories)];
+  return ["Semua", ...new Set(productCategories)];
 });
 
 const categoryCards = computed(() => {
@@ -879,7 +885,7 @@ const activeFilterCount = computed(() => {
   let count = 0;
 
   if (search.value.trim()) count++;
-  if (activeCategory.value !== "All") count++;
+  if (activeCategory.value !== "Semua") count++;
   if (priceFilter.value !== "all") count++;
   if (stockFilter.value !== "all") count++;
   if (sortOption.value !== "featured") count++;
@@ -920,7 +926,7 @@ const filteredProducts = computed(() => {
       product.description.toLowerCase().includes(keyword);
 
     const matchCategory =
-      activeCategory.value === "All"
+      activeCategory.value === "Semua"
         ? true
         : product.category === activeCategory.value;
 
@@ -990,14 +996,14 @@ const saveRecentSearch = (keyword) => {
 
 const applySearchKeyword = (keyword) => {
   search.value = keyword;
-  activeCategory.value = "All";
+  activeCategory.value = "Semua";
   saveRecentSearch(keyword);
   isSearchFocused.value = false;
 };
 
 const applyProductSuggestion = (product) => {
   search.value = product.title;
-  activeCategory.value = "All";
+  activeCategory.value = "Semua";
   saveRecentSearch(product.title);
   isSearchFocused.value = false;
 };
@@ -1020,7 +1026,7 @@ const handleSearchBlur = () => {
 
 const resetFilters = () => {
   search.value = "";
-  activeCategory.value = "All";
+  activeCategory.value = "Semua";
   priceFilter.value = "all";
   stockFilter.value = "all";
   sortOption.value = "featured";

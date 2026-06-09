@@ -10,15 +10,16 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-              Admin Panel
+              Panel Admin
             </p>
 
             <h1 class="text-4xl md:text-5xl font-bold mb-4 text-luxe-espresso">
-              Payment Methods
+              Metode Pembayaran
             </h1>
 
             <p class="text-luxe-brown/75 max-w-xl leading-7">
-              Manage QRIS and bank transfer methods for Luxeza Royale checkout.
+              Kelola metode pembayaran QRIS dan transfer bank yang digunakan
+              pada proses checkout Luxeza Royale.
             </p>
           </div>
 
@@ -26,7 +27,7 @@
             @click="resetForm"
             class="bg-luxe-espresso text-luxe-ivory px-6 py-3 rounded-full hover:bg-luxe-royal transition w-fit"
           >
-            Add Payment Method
+            Tambah Metode Pembayaran
           </button>
         </div>
 
@@ -37,14 +38,14 @@
               v-if="isLoading"
               class="bg-luxe-cream border border-luxe-sand/60 rounded-[2rem] p-8 text-luxe-brown/75"
             >
-              Loading payment methods...
+              Memuat metode pembayaran...
             </div>
 
             <div
               v-else-if="paymentMethods.length === 0"
               class="bg-luxe-cream border border-luxe-sand/60 rounded-[2rem] p-8 text-luxe-brown/75"
             >
-              No payment method found.
+              Metode pembayaran belum tersedia.
             </div>
 
             <div
@@ -74,18 +75,19 @@
                       "
                       class="px-3 py-1 rounded-full text-xs font-semibold"
                     >
-                      {{ method.isActive ? "Active" : "Inactive" }}
+                      {{ method.isActive ? "Aktif" : "Tidak Aktif" }}
                     </span>
                   </div>
 
                   <p class="text-sm text-luxe-brown/75 mb-2">
-                    Code: <span class="font-semibold">{{ method.code }}</span>
+                    Kode:
+                    <span class="font-semibold">{{ method.code }}</span>
                   </p>
 
                   <p class="text-sm text-luxe-brown/75 mb-2">
-                    Type:
+                    Tipe:
                     <span class="font-semibold">
-                      {{ method.type === "qris" ? "QRIS" : "Bank Transfer" }}
+                      {{ method.type === "qris" ? "QRIS" : "Transfer Bank" }}
                     </span>
                   </p>
 
@@ -97,17 +99,19 @@
                       Bank:
                       <span class="font-semibold">{{ method.bankName }}</span>
                     </p>
+
                     <p>
-                      Account:
-                      <span class="font-semibold">{{
-                        method.accountName
-                      }}</span>
+                      Nama Rekening:
+                      <span class="font-semibold">
+                        {{ method.accountName }}
+                      </span>
                     </p>
+
                     <p>
-                      Number:
-                      <span class="font-semibold">{{
-                        method.accountNumber
-                      }}</span>
+                      Nomor Rekening:
+                      <span class="font-semibold">
+                        {{ method.accountNumber }}
+                      </span>
                     </p>
                   </div>
 
@@ -128,14 +132,14 @@
                     @click="editMethod(method)"
                     class="border border-luxe-sand text-luxe-espresso px-4 py-2 rounded-full hover:bg-luxe-cream transition"
                   >
-                    Edit
+                    Ubah
                   </button>
 
                   <button
                     @click="deleteMethod(method)"
                     class="border border-red-200 text-red-600 px-4 py-2 rounded-full hover:bg-red-50 transition"
                   >
-                    Delete
+                    Hapus
                   </button>
                 </div>
               </div>
@@ -147,25 +151,29 @@
             class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-6 h-fit shadow-[0_18px_60px_rgba(92,56,36,0.10)] sticky top-28"
           >
             <h2 class="text-2xl font-bold text-luxe-espresso mb-6">
-              {{ form.id ? "Edit Payment Method" : "Add Payment Method" }}
+              {{
+                form.id ? "Ubah Metode Pembayaran" : "Tambah Metode Pembayaran"
+              }}
             </h2>
 
             <form class="space-y-5" @submit.prevent="submitForm">
               <div>
-                <label class="block text-sm text-luxe-brown/75 mb-2"
-                  >Type</label
-                >
+                <label class="block text-sm text-luxe-brown/75 mb-2">
+                  Tipe Pembayaran
+                </label>
+
                 <LuxeSelect
                   v-model="form.type"
                   :options="paymentTypeOptions"
-                  placeholder="Select payment type"
+                  placeholder="Pilih tipe pembayaran"
                 />
               </div>
 
               <div>
-                <label class="block text-sm text-luxe-brown/75 mb-2"
-                  >Code</label
-                >
+                <label class="block text-sm text-luxe-brown/75 mb-2">
+                  Kode
+                </label>
+
                 <input
                   v-model="form.code"
                   type="text"
@@ -175,9 +183,10 @@
               </div>
 
               <div>
-                <label class="block text-sm text-luxe-brown/75 mb-2"
-                  >Name</label
-                >
+                <label class="block text-sm text-luxe-brown/75 mb-2">
+                  Nama Metode
+                </label>
+
                 <input
                   v-model="form.name"
                   type="text"
@@ -188,9 +197,10 @@
 
               <div v-if="form.type === 'bank_transfer'" class="space-y-5">
                 <div>
-                  <label class="block text-sm text-luxe-brown/75 mb-2"
-                    >Bank Name</label
-                  >
+                  <label class="block text-sm text-luxe-brown/75 mb-2">
+                    Nama Bank
+                  </label>
+
                   <input
                     v-model="form.bank_name"
                     type="text"
@@ -200,9 +210,10 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm text-luxe-brown/75 mb-2"
-                    >Account Name</label
-                  >
+                  <label class="block text-sm text-luxe-brown/75 mb-2">
+                    Nama Rekening
+                  </label>
+
                   <input
                     v-model="form.account_name"
                     type="text"
@@ -212,9 +223,10 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm text-luxe-brown/75 mb-2"
-                    >Account Number</label
-                  >
+                  <label class="block text-sm text-luxe-brown/75 mb-2">
+                    Nomor Rekening
+                  </label>
+
                   <input
                     v-model="form.account_number"
                     type="text"
@@ -226,7 +238,7 @@
 
               <div v-if="form.type === 'qris'">
                 <label class="block text-sm text-luxe-brown/75 mb-2">
-                  QR Image / Payment Image
+                  Gambar QR / Gambar Pembayaran
                 </label>
 
                 <div
@@ -235,13 +247,13 @@
                   <div v-if="form.qr_image_url" class="flex items-start gap-4">
                     <img
                       :src="form.qr_image_url"
-                      alt="QR Preview"
+                      alt="Pratinjau QR"
                       class="w-32 h-32 object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-ivory"
                     />
 
                     <div class="min-w-0 flex-1">
                       <p class="text-sm font-semibold text-luxe-espresso mb-1">
-                        Image Preview
+                        Pratinjau Gambar
                       </p>
 
                       <p class="text-xs text-luxe-brown/60 break-all leading-5">
@@ -254,13 +266,13 @@
                     v-else
                     class="h-32 rounded-2xl border border-dashed border-luxe-sand bg-luxe-ivory flex items-center justify-center text-luxe-brown/50 text-sm"
                   >
-                    No QR image selected
+                    Belum ada gambar QR yang dipilih
                   </div>
 
                   <input
                     v-model="form.qr_image_url"
                     type="text"
-                    placeholder="/uploads/payments/payment-image.png or external image URL"
+                    placeholder="/uploads/payments/payment-image.png atau URL gambar eksternal"
                     class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                   />
 
@@ -283,46 +295,49 @@
                   >
                     {{
                       isUploadingPaymentImage
-                        ? "Uploading..."
-                        : "Upload from Device"
+                        ? "Mengunggah..."
+                        : "Unggah dari Perangkat"
                     }}
                   </label>
 
                   <p class="text-xs text-luxe-brown/60 leading-5">
-                    Upload QRIS image from your device, or paste an external QR
-                    image URL.
+                    Unggah gambar QRIS dari perangkat, atau tempel URL gambar QR
+                    eksternal.
                   </p>
                 </div>
               </div>
 
               <div>
-                <label class="block text-sm text-luxe-brown/75 mb-2"
-                  >Instructions</label
-                >
+                <label class="block text-sm text-luxe-brown/75 mb-2">
+                  Instruksi Pembayaran
+                </label>
+
                 <textarea
                   v-model="form.instructions"
                   rows="4"
-                  placeholder="Payment instructions..."
+                  placeholder="Instruksi pembayaran..."
                   class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition resize-none"
                 ></textarea>
               </div>
 
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm text-luxe-brown/75 mb-2"
-                    >Status</label
-                  >
+                  <label class="block text-sm text-luxe-brown/75 mb-2">
+                    Status
+                  </label>
+
                   <LuxeSelect
                     v-model="form.is_active"
                     :options="paymentStatusOptions"
-                    placeholder="Select status"
+                    placeholder="Pilih status"
                   />
                 </div>
 
                 <div>
-                  <label class="block text-sm text-luxe-brown/75 mb-2"
-                    >Sort Order</label
-                  >
+                  <label class="block text-sm text-luxe-brown/75 mb-2">
+                    Urutan Tampil
+                  </label>
+
                   <input
                     v-model.number="form.sort_order"
                     type="number"
@@ -338,10 +353,10 @@
               >
                 {{
                   isSubmitting
-                    ? "Saving..."
+                    ? "Menyimpan..."
                     : form.id
-                      ? "Update Payment Method"
-                      : "Create Payment Method"
+                      ? "Perbarui Metode Pembayaran"
+                      : "Buat Metode Pembayaran"
                 }}
               </button>
 
@@ -351,7 +366,7 @@
                 @click="resetForm"
                 class="w-full border border-luxe-sand text-luxe-espresso py-4 rounded-full hover:bg-luxe-cream transition"
               >
-                Cancel Edit
+                Batal Ubah
               </button>
             </form>
           </div>
@@ -364,7 +379,8 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
+
 import Navbar from "../components/layout/Navbar.vue";
 import CartSidebar from "../components/layout/CartSidebar.vue";
 import Footer from "../components/layout/Footer.vue";
@@ -386,18 +402,18 @@ const paymentTypeOptions = [
     value: "qris",
   },
   {
-    label: "Bank Transfer",
+    label: "Transfer Bank",
     value: "bank_transfer",
   },
 ];
 
 const paymentStatusOptions = [
   {
-    label: "Active",
+    label: "Aktif",
     value: true,
   },
   {
-    label: "Inactive",
+    label: "Tidak Aktif",
     value: false,
   },
 ];
@@ -425,8 +441,8 @@ const loadPaymentMethods = async () => {
     paymentMethods.value = await paymentMethodService.getAdminPaymentMethods();
   } catch (error) {
     toastStore.showToast({
-      title: "Failed to Load Payments",
-      message: error?.message || "Unable to load payment methods.",
+      title: "Gagal Memuat Pembayaran",
+      message: error?.message || "Metode pembayaran belum dapat dimuat.",
       type: "error",
     });
   } finally {
@@ -460,6 +476,7 @@ const editMethod = (method) => {
     behavior: "smooth",
   });
 };
+
 const buildPayload = () => {
   return {
     type: form.type,
@@ -479,8 +496,8 @@ const buildPayload = () => {
 const submitForm = async () => {
   if (!form.code.trim() || !form.name.trim()) {
     toastStore.showToast({
-      title: "Validation Error",
-      message: "Code and name are required.",
+      title: "Data Belum Lengkap",
+      message: "Kode dan nama metode pembayaran wajib diisi.",
       type: "error",
     });
 
@@ -496,16 +513,16 @@ const submitForm = async () => {
       await paymentMethodService.updatePaymentMethod(form.id, payload);
 
       toastStore.showToast({
-        title: "Payment Updated",
-        message: "Payment method has been updated successfully.",
+        title: "Metode Pembayaran Diperbarui",
+        message: "Metode pembayaran berhasil diperbarui.",
         type: "success",
       });
     } else {
       await paymentMethodService.createPaymentMethod(payload);
 
       toastStore.showToast({
-        title: "Payment Created",
-        message: "Payment method has been created successfully.",
+        title: "Metode Pembayaran Dibuat",
+        message: "Metode pembayaran baru berhasil dibuat.",
         type: "success",
       });
     }
@@ -514,8 +531,8 @@ const submitForm = async () => {
     await loadPaymentMethods();
   } catch (error) {
     toastStore.showToast({
-      title: "Save Failed",
-      message: error?.message || "Unable to save payment method.",
+      title: "Gagal Menyimpan Pembayaran",
+      message: error?.message || "Metode pembayaran belum dapat disimpan.",
       type: "error",
     });
   } finally {
@@ -532,8 +549,8 @@ const handlePaymentImageUpload = async (event) => {
 
   if (!allowedTypes.includes(file.type)) {
     toastStore.showToast({
-      title: "Invalid Image",
-      message: "Please upload jpg, jpeg, png, or webp image.",
+      title: "Gambar Tidak Valid",
+      message: "Silakan unggah gambar jpg, jpeg, png, atau webp.",
       type: "error",
     });
 
@@ -545,8 +562,8 @@ const handlePaymentImageUpload = async (event) => {
 
   if (file.size > maxSize) {
     toastStore.showToast({
-      title: "Image Too Large",
-      message: "Maximum image size is 5MB.",
+      title: "Gambar Terlalu Besar",
+      message: "Ukuran gambar maksimal 5 MB.",
       type: "error",
     });
 
@@ -562,14 +579,14 @@ const handlePaymentImageUpload = async (event) => {
     form.qr_image_url = uploadedImage.image_url || "";
 
     toastStore.showToast({
-      title: "Image Uploaded",
-      message: "Payment image has been uploaded successfully.",
+      title: "Gambar Berhasil Diunggah",
+      message: "Gambar pembayaran berhasil diunggah.",
       type: "success",
     });
   } catch (error) {
     toastStore.showToast({
-      title: "Upload Failed",
-      message: error?.message || "Failed to upload payment image.",
+      title: "Unggah Gambar Gagal",
+      message: error?.message || "Gambar pembayaran belum dapat diunggah.",
       type: "error",
     });
   } finally {
@@ -579,7 +596,9 @@ const handlePaymentImageUpload = async (event) => {
 };
 
 const deleteMethod = async (method) => {
-  const isConfirmed = window.confirm(`Delete payment method "${method.name}"?`);
+  const isConfirmed = window.confirm(
+    `Hapus metode pembayaran "${method.name}"?`,
+  );
 
   if (!isConfirmed) return;
 
@@ -587,16 +606,16 @@ const deleteMethod = async (method) => {
     await paymentMethodService.deletePaymentMethod(method.id);
 
     toastStore.showToast({
-      title: "Payment Deleted",
-      message: "Payment method has been deleted.",
+      title: "Metode Pembayaran Dihapus",
+      message: "Metode pembayaran berhasil dihapus.",
       type: "info",
     });
 
     await loadPaymentMethods();
   } catch (error) {
     toastStore.showToast({
-      title: "Delete Failed",
-      message: error?.message || "Unable to delete payment method.",
+      title: "Gagal Menghapus Pembayaran",
+      message: error?.message || "Metode pembayaran belum dapat dihapus.",
       type: "error",
     });
   }

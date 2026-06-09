@@ -36,21 +36,21 @@
           :class="route.path === '/' ? 'text-luxe-espresso' : 'text-luxe-brown'"
           class="hover:text-luxe-espresso transition"
         >
-          {{ content("navbar.home", "Home") }}
+          {{ content("navbar.home", "Beranda") }}
         </RouterLink>
 
         <button
           @click="goToProducts"
           class="text-luxe-brown hover:text-luxe-espresso transition"
         >
-          {{ content("navbar.shop", "Shop") }}
+          {{ content("navbar.shop", "Belanja") }}
         </button>
 
         <button
           @click="goToProducts"
           class="text-luxe-brown hover:text-luxe-espresso transition"
         >
-          {{ content("navbar.collections", "Collections") }}
+          {{ content("navbar.collections", "Koleksi") }}
         </button>
 
         <RouterLink
@@ -106,7 +106,7 @@
             class="hidden sm:flex items-center gap-2 border border-luxe-sand text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-cream transition"
           >
             <span>👤</span>
-            <span class="text-sm font-medium">Login</span>
+            <span class="text-sm font-medium">Masuk</span>
           </RouterLink>
 
           <button
@@ -147,7 +147,7 @@
               @click="isAccountMenuOpen = false"
               class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
             >
-              My Orders
+              Pesanan Saya
             </RouterLink>
 
             <RouterLink
@@ -155,7 +155,7 @@
               @click="isAccountMenuOpen = false"
               class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
             >
-              My Addresses
+              Alamat Saya
             </RouterLink>
 
             <RouterLink
@@ -164,7 +164,7 @@
               @click="isAccountMenuOpen = false"
               class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
             >
-              Admin Orders
+              Pesanan Admin
             </RouterLink>
 
             <RouterLink
@@ -173,7 +173,7 @@
               @click="isAccountMenuOpen = false"
               class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
             >
-              Admin Payments
+              Pembayaran Admin
             </RouterLink>
 
             <RouterLink
@@ -182,7 +182,7 @@
               @click="isAccountMenuOpen = false"
               class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
             >
-              Admin Shipping
+              Pengiriman Admin
             </RouterLink>
 
             <RouterLink
@@ -191,7 +191,7 @@
               @click="isAccountMenuOpen = false"
               class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
             >
-              Admin Vouchers
+              Voucher Admin
             </RouterLink>
 
             <RouterLink
@@ -200,7 +200,7 @@
               @click="isAccountMenuOpen = false"
               class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
             >
-              Admin Products
+              Produk Admin
             </RouterLink>
 
             <RouterLink
@@ -209,7 +209,7 @@
               @click="isAccountMenuOpen = false"
               class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
             >
-              Website Content
+              Konten Website
             </RouterLink>
 
             <button
@@ -217,7 +217,7 @@
               type="button"
               class="w-full text-left px-4 py-3 rounded-2xl text-red-600 hover:bg-red-50 transition"
             >
-              Logout
+              Keluar
             </button>
           </div>
         </div>
@@ -271,21 +271,21 @@
           @click="isMobileMenuOpen = false"
           class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
-          {{ content("navbar.home", "Home") }}
+          {{ content("navbar.home", "Beranda") }}
         </RouterLink>
 
         <button
           @click="goToProductsFromMobile"
           class="text-left px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
-          {{ content("navbar.shop", "Shop") }}
+          {{ content("navbar.shop", "Belanja") }}
         </button>
 
         <button
           @click="goToProductsFromMobile"
           class="text-left px-5 py-4 rounded-2xl hover:bg-luxe-cream transition"
         >
-          {{ content("navbar.collections", "Collections") }}
+          {{ content("navbar.collections", "Koleksi") }}
         </button>
 
         <RouterLink
@@ -311,7 +311,7 @@
             @click="isMobileMenuOpen = false"
             class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
           >
-            Login / Register
+            Masuk / Daftar
           </RouterLink>
 
           <template v-else>
@@ -330,7 +330,7 @@
               @click="isMobileMenuOpen = false"
               class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
             >
-              My Orders
+              Pesanan Saya
             </RouterLink>
 
             <RouterLink
@@ -338,7 +338,7 @@
               @click="isMobileMenuOpen = false"
               class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
             >
-              My Addresses
+              Alamat Saya
             </RouterLink>
 
             <RouterLink
@@ -347,7 +347,7 @@
               @click="isMobileMenuOpen = false"
               class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
             >
-              Admin Orders
+              Pesanan Admin
             </RouterLink>
 
             <RouterLink
@@ -356,7 +356,7 @@
               @click="isMobileMenuOpen = false"
               class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
             >
-              Admin Payments
+              Pembayaran Admin
             </RouterLink>
 
             <RouterLink
@@ -365,7 +365,7 @@
               @click="isMobileMenuOpen = false"
               class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
             >
-              Admin Shipping
+              Pengiriman Admin
             </RouterLink>
 
             <RouterLink
@@ -374,7 +374,7 @@
               @click="isMobileMenuOpen = false"
               class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
             >
-              Admin Vouchers
+              Voucher Admin
             </RouterLink>
 
             <RouterLink
@@ -383,7 +383,7 @@
               @click="isMobileMenuOpen = false"
               class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
             >
-              Admin Products
+              Produk Admin
             </RouterLink>
 
             <RouterLink
@@ -392,7 +392,7 @@
               @click="isMobileMenuOpen = false"
               class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
             >
-              Website Content
+              Konten Website
             </RouterLink>
 
             <button
@@ -400,7 +400,7 @@
               type="button"
               class="w-full text-left px-5 py-4 rounded-2xl text-red-600 hover:bg-red-50 transition"
             >
-              Logout
+              Keluar
             </button>
           </template>
         </div>

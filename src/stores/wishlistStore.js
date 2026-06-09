@@ -12,7 +12,7 @@ const getStoredUserId = () => {
 
     return user?.id || null;
   } catch (error) {
-    console.error("Failed to load auth user for wishlist:", error);
+    console.error("Gagal memuat data pengguna untuk wishlist:", error);
     return null;
   }
 };
@@ -47,7 +47,7 @@ const loadWishlistFromStorage = (storageKey) => {
 
     return [];
   } catch (error) {
-    console.error("Failed to load wishlist from sessionStorage:", error);
+    console.error("Gagal memuat wishlist dari sessionStorage:", error);
     return [];
   }
 };

@@ -9,7 +9,7 @@ const loadUserFromStorage = () => {
     const savedUser = sessionStorage.getItem(AUTH_USER_KEY);
     return savedUser ? JSON.parse(savedUser) : null;
   } catch (error) {
-    console.error("Failed to load auth user:", error);
+    console.error("Gagal memuat data pengguna:", error);
     return null;
   }
 };
@@ -139,7 +139,7 @@ export const useAuthStore = defineStore("auth", {
         }
       } catch (error) {
         if (error?.status !== 401) {
-          console.error("Failed to logout:", error);
+          console.error("Gagal keluar dari akun:", error);
         }
       } finally {
         this.clearAuth();

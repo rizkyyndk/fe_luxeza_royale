@@ -15,7 +15,7 @@ const fallbackSvg = `
       LUXEZA ROYALE
     </text>
     <text x="450" y="870" text-anchor="middle" font-family="Arial" font-size="20" fill="#111111" opacity="0.25">
-      Image unavailable
+      Gambar belum tersedia
     </text>
   </svg>
 `;
@@ -29,7 +29,7 @@ const props = defineProps({
   },
   alt: {
     type: String,
-    default: "Product image",
+    default: "Gambar produk",
   },
 });
 

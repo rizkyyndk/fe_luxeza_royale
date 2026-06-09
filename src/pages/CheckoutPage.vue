@@ -14,18 +14,19 @@
             <p class="text-6xl mb-6">🛒</p>
 
             <h1 class="text-4xl md:text-5xl font-bold mb-4">
-              No selected items
+              Belum Ada Item Dipilih
             </h1>
 
             <p class="text-luxe-brown/75 mb-8">
-              Please select at least one item from your cart before checkout.
+              Pilih minimal satu produk dari keranjang sebelum melanjutkan
+              checkout.
             </p>
 
             <RouterLink
               to="/"
               class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full inline-block hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
             >
-              Back to Collection
+              Kembali ke Koleksi
             </RouterLink>
           </div>
         </div>
@@ -39,12 +40,12 @@
             </p>
 
             <h1 class="text-4xl md:text-5xl font-bold mb-4">
-              Shipping Information
+              Informasi Pengiriman
             </h1>
 
             <p class="text-luxe-brown/75 mb-10 leading-7">
-              Complete your shipping details to place an order through Luxeza
-              Royale backend system.
+              Lengkapi detail pengiriman agar pesanan Luxeza Royale Anda dapat
+              diproses dengan rapi.
             </p>
 
             <form class="space-y-6" @submit.prevent="placeOrder">
@@ -53,7 +54,7 @@
                 <input
                   v-model="form.fullName"
                   type="text"
-                  placeholder="Full Name"
+                  placeholder="Nama Lengkap"
                   class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition shadow-sm"
                 />
 
@@ -67,7 +68,7 @@
                 <input
                   v-model="form.email"
                   type="email"
-                  placeholder="Email Address"
+                  placeholder="Alamat Email"
                   class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-6 py-5 outline-none focus:border-luxe-royal transition shadow-sm"
                 />
 
@@ -106,7 +107,7 @@
                 </p>
               </div>
 
-              <!-- SAVED ADDRESSES -->
+              <!-- Alamat Tersimpan -->
               <div
                 v-if="authStore.token"
                 class="bg-luxe-cream border border-luxe-sand/70 rounded-[2rem] p-5 md:p-6 space-y-5"
@@ -118,17 +119,17 @@
                     <p
                       class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2"
                     >
-                      Saved Addresses
+                      Alamat Tersimpan
                     </p>
 
                     <h3 class="text-2xl font-bold text-luxe-espresso">
-                      Choose Delivery Address
+                      Pilih Alamat Pengiriman
                     </h3>
                   </div>
 
                   <p class="text-sm text-luxe-brown/65">
-                    Use your primary address or save a new one for the next
-                    order.
+                    Gunakan alamat utama atau simpan alamat baru untuk pesanan
+                    berikutnya.
                   </p>
                 </div>
 
@@ -136,7 +137,7 @@
                   v-if="isLoadingAddresses"
                   class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-5 text-luxe-brown/70"
                 >
-                  Loading saved addresses...
+                  Memuat alamat tersimpan...
                 </div>
 
                 <div
@@ -150,8 +151,8 @@
                   v-else-if="savedAddresses.length === 0"
                   class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-5 text-luxe-brown/70"
                 >
-                  You do not have saved addresses yet. Fill the address form
-                  below and save it for your next order.
+                  Anda belum memiliki alamat tersimpan. Isi formulir alamat di
+                  bawah ini dan simpan untuk pesanan berikutnya.
                 </div>
 
                 <div v-else class="grid md:grid-cols-2 gap-4">
@@ -194,7 +195,7 @@
                         "
                         class="text-xs px-3 py-1 rounded-full whitespace-nowrap"
                       >
-                        Primary
+                        Utama
                       </span>
                     </div>
 
@@ -224,7 +225,7 @@
                     @click="showChangeAddress"
                     class="flex-1 border border-luxe-sand bg-luxe-ivory text-luxe-espresso px-5 py-4 rounded-2xl hover:bg-white hover:border-luxe-royal transition"
                   >
-                    Change Address
+                    Ganti Alamat
                   </button>
 
                   <button
@@ -232,7 +233,7 @@
                     @click="useNewAddress"
                     class="flex-1 bg-luxe-espresso text-luxe-ivory px-5 py-4 rounded-2xl hover:bg-luxe-royal transition"
                   >
-                    Use New Address
+                    Gunakan Alamat Baru
                   </button>
                 </div>
 
@@ -251,8 +252,8 @@
                     postalCode: form.postalCode,
                     addressDetail: form.addressDetail,
                   }"
-                  title="Selected Delivery Address"
-                  eyebrow="Current Checkout Address"
+                  title="Alamat Pengiriman Dipilih"
+                  eyebrow="Alamat Checkout Saat Ini"
                 />
 
                 <div class="flex flex-col sm:flex-row gap-3">
@@ -266,7 +267,7 @@
                     />
 
                     <span class="text-sm text-luxe-espresso">
-                      Save this address for next order
+                      Simpan alamat ini untuk pesanan berikutnya
                     </span>
                   </label>
 
@@ -281,7 +282,7 @@
                     />
 
                     <span class="text-sm text-luxe-espresso">
-                      Set as primary address
+                      Jadikan alamat utama
                     </span>
                   </label>
                 </div>
@@ -299,16 +300,17 @@
                     <p
                       class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2"
                     >
-                      Shipping Address
+                      Alamat Pengiriman
                     </p>
 
                     <h3 class="text-2xl font-bold text-luxe-espresso">
-                      Delivery Destination
+                      Tujuan Pengiriman
                     </h3>
                   </div>
 
                   <p class="text-sm text-luxe-brown/65">
-                    Select region step by step for accurate shipping details.
+                    Pilih wilayah secara bertahap agar detail pengiriman lebih
+                    akurat.
                   </p>
                 </div>
 
@@ -317,14 +319,14 @@
                     <label
                       class="block text-sm font-medium text-luxe-brown/75 mb-2"
                     >
-                      Address Label
+                      Label Alamat
                     </label>
 
                     <input
                       v-model="form.addressLabel"
                       @input="markAddressAsCustom"
                       type="text"
-                      placeholder="Example: Rumah, Kantor, Kos"
+                      placeholder="Contoh: Rumah, Kantor, Kos"
                       class="w-full border border-luxe-sand rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
                     />
                   </div>
@@ -332,11 +334,11 @@
                   <!-- PROVINCE -->
                   <SearchableSelect
                     v-model="form.provinceId"
-                    label="Province"
+                    label="Provinsi"
                     :options="provinces"
                     :loading="isLoadingProvinces"
-                    placeholder="Select Province"
-                    search-placeholder="Search province..."
+                    placeholder="Pilih Provinsi"
+                    search-placeholder="Cari provinsi..."
                     :error="errors.province"
                     @change="handleProvinceChange"
                   />
@@ -344,12 +346,12 @@
                   <!-- CITY -->
                   <SearchableSelect
                     v-model="form.cityId"
-                    label="City / Regency"
+                    label="Kota / Kabupaten"
                     :options="cities"
                     :loading="isLoadingCities"
                     :disabled="!form.provinceId || isLoadingCities"
-                    placeholder="Select City / Regency"
-                    search-placeholder="Search city or regency..."
+                    placeholder="Pilih Kota / Kabupaten"
+                    search-placeholder="Cari kota atau kabupaten..."
                     :error="errors.city"
                     @change="handleCityChange"
                   />
@@ -357,12 +359,12 @@
                   <!-- DISTRICT -->
                   <SearchableSelect
                     v-model="form.districtId"
-                    label="District / Kecamatan"
+                    label="Kecamatan"
                     :options="districts"
                     :loading="isLoadingDistricts"
                     :disabled="!form.cityId || isLoadingDistricts"
-                    placeholder="Select District / Kecamatan"
-                    search-placeholder="Search district..."
+                    placeholder="Pilih Kecamatan"
+                    search-placeholder="Cari kecamatan..."
                     :error="errors.district"
                     @change="handleDistrictChange"
                   />
@@ -370,12 +372,12 @@
                   <!-- VILLAGE -->
                   <SearchableSelect
                     v-model="form.villageId"
-                    label="Village / Kelurahan"
+                    label="Kelurahan / Desa"
                     :options="villages"
                     :loading="isLoadingVillages"
                     :disabled="!form.districtId || isLoadingVillages"
-                    placeholder="Select Village / Kelurahan"
-                    search-placeholder="Search village..."
+                    placeholder="Pilih Kelurahan / Desa"
+                    search-placeholder="Cari kelurahan atau desa..."
                     :error="errors.village"
                     @change="handleVillageChange"
                   />
@@ -393,7 +395,7 @@
                       @input="handleNumericInput('rt')"
                       type="text"
                       inputmode="numeric"
-                      placeholder="Example: 001"
+                      placeholder="Contoh: 001"
                       class="w-full border border-luxe-sand rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
                     />
 
@@ -415,7 +417,7 @@
                       @input="handleNumericInput('rw')"
                       type="text"
                       inputmode="numeric"
-                      placeholder="Example: 002"
+                      placeholder="Contoh: 002"
                       class="w-full border border-luxe-sand rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
                     />
 
@@ -429,7 +431,7 @@
                     <label
                       class="block text-sm font-medium text-luxe-brown/75 mb-2"
                     >
-                      Postal Code
+                      Kode Pos
                     </label>
 
                     <input
@@ -437,7 +439,7 @@
                       @input="handleNumericInput('postalCode')"
                       type="text"
                       inputmode="numeric"
-                      placeholder="Example: 12710"
+                      placeholder="Contoh: 12710"
                       class="w-full border border-luxe-sand rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
                     />
 
@@ -454,12 +456,12 @@
                     <label
                       class="block text-sm font-medium text-luxe-brown/75 mb-2"
                     >
-                      Address Detail
+                      Detail Alamat
                     </label>
 
                     <textarea
                       v-model="form.addressDetail"
-                      placeholder="Street name, house number, building, floor, landmark"
+                      placeholder="Nama jalan, nomor rumah, gedung, lantai, atau patokan alamat"
                       rows="5"
                       class="w-full border border-luxe-sand rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition resize-none bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
                     ></textarea>
@@ -487,14 +489,14 @@
                   class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-5"
                 >
                   <p class="text-sm font-semibold text-luxe-espresso mb-2">
-                    Selected Region
+                    Wilayah Dipilih
                   </p>
 
                   <p class="text-sm text-luxe-brown/75 leading-6">
-                    {{ form.village || "Village" }},
-                    {{ form.district || "District" }},
-                    {{ form.city || "City" }},
-                    {{ form.province || "Province" }}
+                    {{ form.village || "Kelurahan/Desa" }},
+                    {{ form.district || "Kecamatan" }},
+                    {{ form.city || "Kota/Kabupaten" }},
+                    {{ form.province || "Provinsi" }}
                   </p>
                 </div>
               </div>
@@ -510,7 +512,7 @@
                     v-if="isFreeShippingUnlocked"
                     class="text-xs bg-luxe-espresso text-luxe-ivory px-4 py-2 rounded-full"
                   >
-                    Free shipping unlocked
+                    Gratis ongkir aktif
                   </span>
                 </div>
 
@@ -671,7 +673,7 @@
                         <p class="font-bold whitespace-nowrap">
                           {{
                             isFreeShippingUnlocked
-                              ? "Free"
+                              ? "Gratis"
                               : formatCurrency(rate.cost)
                           }}
                         </p>
@@ -700,7 +702,7 @@
                 >
                   <div class="flex items-center justify-between gap-4 mb-3">
                     <p class="text-sm font-semibold text-luxe-espresso">
-                      Free Shipping Progress
+                      Progress Gratis Ongkir
                     </p>
 
                     <p class="text-xs text-luxe-brown/70">
@@ -733,14 +735,14 @@
               <!-- PAYMENT METHOD -->
               <div>
                 <label class="block text-sm text-luxe-brown/75 mb-3">
-                  Payment Method
+                  Metode Pembayaran
                 </label>
 
                 <div
                   v-if="isLoadingPaymentMethods"
                   class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 text-luxe-brown/75"
                 >
-                  Loading payment methods...
+                  Memuat metode pembayaran...
                 </div>
 
                 <div
@@ -754,7 +756,7 @@
                   v-else-if="paymentMethods.length === 0"
                   class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 text-luxe-brown/75"
                 >
-                  No active payment method available. Please contact admin.
+                  Belum ada metode pembayaran aktif. Silakan hubungi admin.
                 </div>
 
                 <div v-else>
@@ -805,11 +807,11 @@
             >
               <div class="flex items-center justify-between mb-10">
                 <h2 class="text-3xl font-bold text-luxe-espresso">
-                  Order Summary
+                  Ringkasan Pesanan
                 </h2>
 
                 <span class="text-sm text-luxe-brown/70">
-                  {{ cartStore.selectedTotalItems }} selected item
+                  {{ cartStore.selectedTotalItems }} item dipilih
                 </span>
               </div>
 
@@ -832,11 +834,11 @@
                     </h3>
 
                     <p class="text-luxe-brown/70 text-sm mt-1">
-                      Size: {{ item.size }}
+                      Ukuran: {{ item.size }}
                     </p>
 
                     <p class="text-luxe-brown/70 text-sm">
-                      Qty: {{ item.quantity }}
+                      Jumlah: {{ item.quantity }}
                     </p>
                   </div>
 
@@ -849,7 +851,7 @@
               <!-- VOUCHER -->
               <div class="mb-8 border-t border-luxe-sand pt-6">
                 <label class="block text-sm text-luxe-brown/75 mb-3">
-                  Voucher Code
+                  Kode Voucher
                 </label>
 
                 <div
@@ -860,7 +862,7 @@
                     v-model="voucherCode"
                     @keyup.enter="applyVoucher"
                     type="text"
-                    placeholder="Enter voucher code"
+                    placeholder="Masukkan kode voucher"
                     class="flex-1 border border-luxe-sand rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50"
                   />
 
@@ -869,7 +871,7 @@
                     type="button"
                     class="bg-luxe-espresso text-luxe-ivory px-6 py-4 rounded-full hover:bg-luxe-royal hover:scale-105 transition"
                   >
-                    Apply
+                    Terapkan
                   </button>
                 </div>
 
@@ -884,11 +886,12 @@
 
                     <p class="text-sm text-luxe-brown/70 mt-1">
                       <span v-if="appliedVoucher.discountType === 'percentage'">
-                        {{ appliedVoucher.discountValue }}% off
+                        {{ appliedVoucher.discountValue }}% potongan
                       </span>
 
                       <span v-else>
-                        {{ formatCurrency(appliedVoucher.discountAmount) }} off
+                        {{ formatCurrency(appliedVoucher.discountAmount) }}
+                        potongan
                       </span>
                     </p>
                   </div>
@@ -898,7 +901,7 @@
                     type="button"
                     class="text-sm text-luxe-brown/60 hover:text-luxe-espresso transition"
                   >
-                    Remove
+                    Hapus
                   </button>
                 </div>
 
@@ -907,7 +910,7 @@
                 </p>
 
                 <p v-else class="text-luxe-brown/60 text-sm mt-3">
-                  Try code:
+                  Coba kode:
                   <span class="font-semibold text-luxe-royal"> LRDISC10 </span>
                 </p>
               </div>
@@ -927,7 +930,7 @@
                   class="flex items-center justify-between"
                 >
                   <span class="text-luxe-brown/70">
-                    Discount
+                    Diskon
                     <span v-if="appliedVoucher">
                       ({{ appliedVoucher.code }})
                     </span>
@@ -939,7 +942,7 @@
                 </div>
 
                 <div class="flex items-center justify-between">
-                  <span class="text-luxe-brown/70">Shipping</span>
+                  <span class="text-luxe-brown/70">Ongkir</span>
 
                   <span class="font-semibold">
                     {{ shippingLabel }}
@@ -977,9 +980,9 @@
                   {{
                     isSubmitting
                       ? isUploadingPaymentProof
-                        ? "Uploading Payment Proof..."
-                        : "Processing Order..."
-                      : "Place Order"
+                        ? "Mengunggah Bukti Pembayaran..."
+                        : "Memproses Pesanan..."
+                      : "Buat Pesanan"
                   }}
                 </span>
               </button>
@@ -988,7 +991,7 @@
                 v-if="!isFormValid"
                 class="text-center text-sm text-luxe-brown/60 mt-4"
               >
-                Complete shipping information to place order.
+                Lengkapi informasi pengiriman untuk membuat pesanan.
               </p>
             </div>
           </div>
@@ -1124,8 +1127,8 @@ const useNewAddress = () => {
   setAsPrimaryAddress.value = savedAddresses.value.length === 0;
 
   toastStore.showToast({
-    title: "New Address",
-    message: "Please fill in your new delivery address.",
+    title: "Alamat Baru",
+    message: "Silakan lengkapi alamat pengiriman baru Anda.",
     type: "info",
   });
 };
@@ -1262,8 +1265,8 @@ const applySavedAddress = async (address) => {
   isAddressFormVisible.value = false;
 
   toastStore.showToast({
-    title: "Address Selected",
-    message: `${address.label} has been applied to checkout.`,
+    title: "Alamat Dipilih",
+    message: `${address.label} telah digunakan untuk checkout.`,
     type: "success",
   });
 };
@@ -1311,16 +1314,16 @@ const loadSavedAddresses = async () => {
       addressBookError.value = "";
 
       toastStore.showToast({
-        title: "Session Expired",
-        message: "Please login again to use your saved addresses.",
+        title: "Sesi Berakhir",
+        message:
+          "Silakan masuk kembali untuk menggunakan alamat tersimpan Anda.",
         type: "info",
       });
 
       return;
     }
 
-    addressBookError.value =
-      error?.message || "Failed to load saved addresses.";
+    addressBookError.value = error?.message || "Gagal memuat alamat tersimpan.";
   } finally {
     isLoadingAddresses.value = false;
   }
@@ -1344,9 +1347,9 @@ const saveCurrentAddressToBook = async () => {
         }));
       } catch (error) {
         toastStore.showToast({
-          title: "Primary Address Not Updated",
+          title: "Alamat Utama Tidak Diperbarui",
           message:
-            "Order was created, but primary address could not be updated.",
+            "Pesanan berhasil dibuat, tetapi alamat utama belum dapat diperbarui.",
           type: "info",
         });
       }
@@ -1368,16 +1371,16 @@ const saveCurrentAddressToBook = async () => {
     }
 
     toastStore.showToast({
-      title: "Address Saved",
-      message: "This address has been saved to your address book.",
+      title: "Alamat Tersimpan",
+      message: "Alamat ini telah disimpan ke daftar alamat Anda.",
       type: "success",
     });
   } catch (error) {
     toastStore.showToast({
-      title: "Address Not Saved",
+      title: "Alamat Tidak Tersimpan",
       message:
         error?.message ||
-        "Your order was created, but this address could not be saved.",
+        "Pesanan berhasil dibuat, tetapi alamat ini belum dapat disimpan.",
       type: "info",
     });
   } finally {
@@ -1488,7 +1491,7 @@ const loadCheckoutDraft = () => {
       }
     });
   } catch (error) {
-    console.error("Failed to load checkout draft:", error);
+    console.error("Gagal memuat draft checkout:", error);
   }
 };
 
@@ -1804,7 +1807,9 @@ const shippingCost = computed(() => {
 const shippingLabel = computed(() => {
   if (!selectedShippingMethod.value) return "-";
 
-  return shippingCost.value === 0 ? "Free" : formatCurrency(shippingCost.value);
+  return shippingCost.value === 0
+    ? "Gratis"
+    : formatCurrency(shippingCost.value);
 });
 
 watch(
@@ -1881,7 +1886,7 @@ const loadProvinces = async () => {
   try {
     provinces.value = await regionService.getProvinces();
   } catch (error) {
-    regionError.value = error?.message || "Failed to load provinces.";
+    regionError.value = error?.message || "Gagal memuat data provinsi.";
   } finally {
     isLoadingProvinces.value = false;
   }
@@ -1900,7 +1905,7 @@ const loadCities = async (provinceId) => {
   try {
     cities.value = await regionService.getCities(provinceId);
   } catch (error) {
-    regionError.value = error?.message || "Failed to load cities.";
+    regionError.value = error?.message || "Gagal memuat data kota/kabupaten.";
   } finally {
     isLoadingCities.value = false;
   }
@@ -1918,7 +1923,7 @@ const loadDistricts = async (cityId) => {
   try {
     districts.value = await regionService.getDistricts(cityId);
   } catch (error) {
-    regionError.value = error?.message || "Failed to load districts.";
+    regionError.value = error?.message || "Gagal memuat data kecamatan.";
   } finally {
     isLoadingDistricts.value = false;
   }
@@ -1935,7 +1940,7 @@ const loadVillages = async (districtId) => {
   try {
     villages.value = await regionService.getVillages(districtId);
   } catch (error) {
-    regionError.value = error?.message || "Failed to load villages.";
+    regionError.value = error?.message || "Gagal memuat data kelurahan/desa.";
   } finally {
     isLoadingVillages.value = false;
   }
@@ -2008,10 +2013,11 @@ const handlePaymentProofChange = (event) => {
   ];
 
   if (!allowedTypes.includes(file.type)) {
-    paymentProofError.value = "Payment proof must be JPG, PNG, WEBP, or PDF.";
+    paymentProofError.value =
+      "Bukti pembayaran harus berupa file JPG, PNG, WEBP, atau PDF.";
 
     toastStore.showToast({
-      title: "Invalid File",
+      title: "File Tidak Valid",
       message: paymentProofError.value,
       type: "error",
     });
@@ -2022,10 +2028,10 @@ const handlePaymentProofChange = (event) => {
   const maxSize = 5 * 1024 * 1024;
 
   if (file.size > maxSize) {
-    paymentProofError.value = "Maximum payment proof size is 5 MB.";
+    paymentProofError.value = "Ukuran bukti pembayaran maksimal 5 MB.";
 
     toastStore.showToast({
-      title: "File Too Large",
+      title: "File Terlalu Besar",
       message: paymentProofError.value,
       type: "error",
     });
@@ -2061,10 +2067,10 @@ const loadPaymentMethods = async () => {
       form.paymentMethod = "";
     }
   } catch (error) {
-    console.error("Failed to load payment methods:", error);
+    console.error("Gagal memuat metode pembayaran:", error);
 
     paymentMethodError.value =
-      error?.message || "Failed to load payment methods.";
+      error?.message || "Gagal memuat metode pembayaran.";
   } finally {
     isLoadingPaymentMethods.value = false;
   }
@@ -2157,51 +2163,51 @@ const validateForm = () => {
   const validationErrors = {};
 
   if (!form.fullName.trim()) {
-    validationErrors.fullName = "Full name is required.";
+    validationErrors.fullName = "Nama lengkap wajib diisi.";
   }
 
   if (!form.email.trim()) {
-    validationErrors.email = "Email address is required.";
+    validationErrors.email = "Alamat email wajib diisi.";
   } else if (!isValidEmail(form.email)) {
-    validationErrors.email = "Please enter a valid email address.";
+    validationErrors.email = "Masukkan alamat email yang valid.";
   }
 
   if (!form.phone.trim()) {
-    validationErrors.phone = "Phone number is required.";
+    validationErrors.phone = "Nomor telepon wajib diisi.";
   } else if (form.phone.length < 8) {
-    validationErrors.phone = "Phone number is too short.";
+    validationErrors.phone = "Nomor telepon terlalu pendek.";
   }
 
   if (!form.province.trim()) {
-    validationErrors.province = "Province is required.";
+    validationErrors.province = "Provinsi wajib dipilih.";
   }
 
   if (!form.city.trim()) {
-    validationErrors.city = "City or regency is required.";
+    validationErrors.city = "Kota atau kabupaten wajib dipilih.";
   }
 
   if (!form.district.trim()) {
-    validationErrors.district = "District is required.";
+    validationErrors.district = "Kecamatan wajib dipilih.";
   }
 
   if (!form.village.trim()) {
-    validationErrors.village = "Village is required.";
+    validationErrors.village = "Kelurahan atau desa wajib dipilih.";
   }
 
   if (!form.rt.trim()) {
-    validationErrors.rt = "RT is required.";
+    validationErrors.rt = "RT wajib diisi.";
   }
 
   if (!form.rw.trim()) {
-    validationErrors.rw = "RW is required.";
+    validationErrors.rw = "RW wajib diisi.";
   }
 
   if (!form.postalCode.trim()) {
-    validationErrors.postalCode = "Postal code is required.";
+    validationErrors.postalCode = "Kode pos wajib diisi.";
   }
 
   if (!form.addressDetail.trim()) {
-    validationErrors.addressDetail = "Address detail is required.";
+    validationErrors.addressDetail = "Detail alamat wajib diisi.";
   }
 
   if (!selectedShippingDestination.value?.id) {
@@ -2213,7 +2219,7 @@ const validateForm = () => {
   }
 
   if (!form.paymentMethod) {
-    validationErrors.paymentMethod = "Payment method is required.";
+    validationErrors.paymentMethod = "Metode pembayaran wajib dipilih.";
   }
 
   errors.value = validationErrors;
@@ -2231,12 +2237,13 @@ const applyVoucher = async () => {
   voucherError.value = "";
 
   if (!voucherCode.value.trim()) {
-    voucherError.value = "Please enter voucher code.";
+    voucherError.value = "Masukkan kode voucher terlebih dahulu.";
     return;
   }
 
   if (cartStore.selectedTotalPrice <= 0) {
-    voucherError.value = "Voucher can only be used when selected item exists.";
+    voucherError.value =
+      "Voucher hanya dapat digunakan jika ada item yang dipilih.";
     return;
   }
 
@@ -2251,17 +2258,17 @@ const applyVoucher = async () => {
     voucherError.value = "";
 
     toastStore.showToast({
-      title: "Voucher Applied",
-      message: `${voucher.code} has been applied successfully.`,
+      title: "Voucher Berhasil Digunakan",
+      message: `${voucher.code} berhasil diterapkan pada pesanan Anda.`,
       type: "success",
     });
   } catch (error) {
     appliedVoucher.value = null;
-    voucherError.value = error?.message || "Invalid voucher code.";
+    voucherError.value = error?.message || "Kode voucher tidak valid.";
 
     toastStore.showToast({
-      title: "Invalid Voucher",
-      message: error?.message || "The voucher code you entered is not valid.",
+      title: "Voucher Tidak Valid",
+      message: error?.message || "Kode voucher yang Anda masukkan tidak valid.",
       type: "error",
     });
   }
@@ -2273,8 +2280,8 @@ const removeVoucher = () => {
   voucherError.value = "";
 
   toastStore.showToast({
-    title: "Voucher Removed",
-    message: "Your voucher has been removed from this order.",
+    title: "Voucher Dihapus",
+    message: "Voucher telah dihapus dari pesanan ini.",
     type: "info",
   });
 };
@@ -2298,8 +2305,8 @@ const placeOrder = async () => {
 
   if (!form.paymentMethod) {
     toastStore.showToast({
-      title: "Payment Method Required",
-      message: "Please select a payment method before placing your order.",
+      title: "Metode Pembayaran Wajib Dipilih",
+      message: "Silakan pilih metode pembayaran sebelum membuat pesanan.",
       type: "error",
     });
 
@@ -2429,8 +2436,8 @@ const placeOrder = async () => {
     cartStore.removeSelectedItems();
 
     toastStore.showToast({
-      title: "Order Placed",
-      message: `Order ${order.orderNumber} has been created successfully.`,
+      title: "Pesanan Berhasil Dibuat",
+      message: `Pesanan ${order.orderNumber} berhasil dibuat.`,
       type: "success",
       duration: 3500,
     });
@@ -2446,8 +2453,8 @@ const placeOrder = async () => {
       cartStore.removeItem(stockError.product_id, stockError.size);
 
       toastStore.showToast({
-        title: "Stock Not Available",
-        message: `${stockError.product_name} size ${stockError.size} is out of stock and has been removed from your cart.`,
+        title: "Stok Tidak Tersedia",
+        message: `${stockError.product_name} ukuran ${stockError.size} sedang habis dan telah dihapus dari keranjang Anda.`,
         type: "error",
         duration: 5000,
       });
@@ -2456,8 +2463,9 @@ const placeOrder = async () => {
     }
 
     toastStore.showToast({
-      title: "Order Failed",
-      message: error?.message || "Failed to create order. Please try again.",
+      title: "Pesanan Gagal Dibuat",
+      message:
+        error?.message || "Pesanan belum dapat dibuat. Silakan coba lagi.",
       type: "error",
       duration: 4000,
     });

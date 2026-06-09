@@ -10,15 +10,15 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-              Admin Panel
+              Panel Admin
             </p>
 
             <h1 class="text-4xl md:text-5xl font-bold mb-4 text-luxe-espresso">
-              Vouchers
+              Voucher
             </h1>
 
             <p class="text-luxe-brown/75 max-w-xl leading-7">
-              Manage discount vouchers for Luxeza Royale checkout.
+              Kelola voucher diskon untuk proses checkout Luxeza Royale.
             </p>
           </div>
 
@@ -26,7 +26,7 @@
             @click="resetForm"
             class="bg-luxe-espresso text-luxe-ivory px-6 py-3 rounded-full hover:bg-luxe-royal transition w-fit"
           >
-            Add Voucher
+            Tambah Voucher
           </button>
         </div>
 
@@ -41,7 +41,7 @@
                 <input
                   v-model="filters.search"
                   type="text"
-                  placeholder="Search voucher code..."
+                  placeholder="Cari kode voucher..."
                   class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                   @keyup.enter="loadVouchers"
                 />
@@ -49,21 +49,21 @@
                 <LuxeSelect
                   v-model="filters.status"
                   :options="voucherStatusFilterOptions"
-                  placeholder="All Status"
+                  placeholder="Semua Status"
                 />
 
                 <button
                   @click="loadVouchers"
                   class="bg-luxe-espresso text-luxe-ivory px-6 py-3 rounded-full hover:bg-luxe-royal transition"
                 >
-                  Filter
+                  Terapkan
                 </button>
 
                 <button
                   @click="clearFilters"
                   class="border border-luxe-sand text-luxe-espresso px-6 py-3 rounded-full hover:bg-luxe-cream transition"
                 >
-                  Reset
+                  Atur Ulang
                 </button>
               </div>
             </div>
@@ -72,14 +72,14 @@
               v-if="isLoading"
               class="bg-luxe-cream border border-luxe-sand/60 rounded-[2rem] p-8 text-luxe-brown/75"
             >
-              Loading vouchers...
+              Memuat voucher...
             </div>
 
             <div
               v-else-if="vouchers.length === 0"
               class="bg-luxe-cream border border-luxe-sand/60 rounded-[2rem] p-8 text-luxe-brown/75"
             >
-              No voucher found.
+              Voucher belum tersedia.
             </div>
 
             <template v-else>
@@ -107,19 +107,19 @@
                         "
                         class="px-3 py-1 rounded-full text-xs font-semibold"
                       >
-                        {{ voucher.isActive ? "Active" : "Inactive" }}
+                        {{ voucher.isActive ? "Aktif" : "Tidak Aktif" }}
                       </span>
                     </div>
 
                     <p class="text-sm text-luxe-brown/75 mb-2">
-                      Discount:
+                      Diskon:
                       <span class="font-semibold text-luxe-espresso">
                         {{ formatDiscount(voucher) }}
                       </span>
                     </p>
 
                     <p class="text-sm text-luxe-brown/75 mb-2">
-                      Valid:
+                      Berlaku:
                       <span class="font-semibold text-luxe-espresso">
                         {{ formatDate(voucher.validFrom) }} -
                         {{ formatDate(voucher.validUntil) }}
@@ -127,11 +127,11 @@
                     </p>
 
                     <p class="text-sm text-luxe-brown/75 mb-2">
-                      Usage:
+                      Penggunaan:
                       <span class="font-semibold text-luxe-espresso">
                         {{ voucher.usedCount }}
                         /
-                        {{ voucher.usageLimit ?? "Unlimited" }}
+                        {{ voucher.usageLimit ?? "Tanpa Batas" }}
                       </span>
                     </p>
                   </div>
@@ -141,14 +141,14 @@
                       @click="editVoucher(voucher)"
                       class="border border-luxe-sand text-luxe-espresso px-4 py-2 rounded-full hover:bg-luxe-cream transition"
                     >
-                      Edit
+                      Ubah
                     </button>
 
                     <button
                       @click="deleteVoucher(voucher)"
                       class="border border-red-200 text-red-600 px-4 py-2 rounded-full hover:bg-red-50 transition"
                     >
-                      Delete
+                      Hapus
                     </button>
                   </div>
                 </div>
@@ -161,13 +161,13 @@
             class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-6 h-fit shadow-[0_18px_60px_rgba(92,56,36,0.10)] sticky top-28"
           >
             <h2 class="text-2xl font-bold text-luxe-espresso mb-6">
-              {{ form.id ? "Edit Voucher" : "Add Voucher" }}
+              {{ form.id ? "Ubah Voucher" : "Tambah Voucher" }}
             </h2>
 
             <form class="space-y-5" @submit.prevent="submitForm">
               <div>
                 <label class="block text-sm text-luxe-brown/75 mb-2">
-                  Voucher Code
+                  Kode Voucher
                 </label>
 
                 <input
@@ -178,25 +178,25 @@
                 />
 
                 <p class="text-xs text-luxe-brown/60 mt-2">
-                  Code will be saved in uppercase.
+                  Kode akan disimpan dalam huruf kapital.
                 </p>
               </div>
 
               <div>
                 <label class="block text-sm text-luxe-brown/75 mb-2">
-                  Discount Type
+                  Jenis Diskon
                 </label>
 
                 <LuxeSelect
                   v-model="form.discount_type"
                   :options="discountTypeOptions"
-                  placeholder="Select discount type"
+                  placeholder="Pilih jenis diskon"
                 />
               </div>
 
               <div>
                 <label class="block text-sm text-luxe-brown/75 mb-2">
-                  Discount Value
+                  Nilai Diskon
                 </label>
 
                 <input
@@ -206,8 +206,8 @@
                   :max="form.discount_type === 'percent' ? 100 : null"
                   :placeholder="
                     form.discount_type === 'percent'
-                      ? 'Example: 10'
-                      : 'Example: 50000'
+                      ? 'Contoh: 10'
+                      : 'Contoh: 50000'
                   "
                   class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                 />
@@ -215,8 +215,8 @@
                 <p class="text-xs text-luxe-brown/60 mt-2">
                   {{
                     form.discount_type === "percent"
-                      ? "Use percent value between 1 - 100."
-                      : "Use fixed amount in Rupiah."
+                      ? "Gunakan nilai persen antara 1 - 100."
+                      : "Gunakan nominal tetap dalam Rupiah."
                   }}
                 </p>
               </div>
@@ -224,7 +224,7 @@
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm text-luxe-brown/75 mb-2">
-                    Valid From
+                    Berlaku Mulai
                   </label>
 
                   <input
@@ -236,7 +236,7 @@
 
                 <div>
                   <label class="block text-sm text-luxe-brown/75 mb-2">
-                    Valid Until
+                    Berlaku Sampai
                   </label>
 
                   <input
@@ -250,7 +250,7 @@
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm text-luxe-brown/75 mb-2">
-                    Usage Limit
+                    Batas Penggunaan
                   </label>
 
                   <input
@@ -262,13 +262,13 @@
                   />
 
                   <p class="text-xs text-luxe-brown/60 mt-2">
-                    Leave empty for unlimited.
+                    Kosongkan jika voucher tidak memiliki batas penggunaan.
                   </p>
                 </div>
 
                 <div>
                   <label class="block text-sm text-luxe-brown/75 mb-2">
-                    Used Count
+                    Sudah Digunakan
                   </label>
 
                   <input
@@ -288,7 +288,7 @@
                 <LuxeSelect
                   v-model="form.is_active"
                   :options="voucherStatusOptions"
-                  placeholder="Select status"
+                  placeholder="Pilih status"
                 />
               </div>
 
@@ -299,10 +299,10 @@
               >
                 {{
                   isSubmitting
-                    ? "Saving..."
+                    ? "Menyimpan..."
                     : form.id
-                      ? "Update Voucher"
-                      : "Create Voucher"
+                      ? "Perbarui Voucher"
+                      : "Buat Voucher"
                 }}
               </button>
 
@@ -312,7 +312,7 @@
                 @click="resetForm"
                 class="w-full border border-luxe-sand text-luxe-espresso py-4 rounded-full hover:bg-luxe-cream transition"
               >
-                Cancel Edit
+                Batal Ubah
               </button>
             </form>
           </div>
@@ -348,37 +348,37 @@ const filters = reactive({
 
 const voucherStatusFilterOptions = [
   {
-    label: "All Status",
+    label: "Semua Status",
     value: "",
   },
   {
-    label: "Active",
+    label: "Aktif",
     value: "active",
   },
   {
-    label: "Inactive",
+    label: "Tidak Aktif",
     value: "inactive",
   },
 ];
 
 const voucherStatusOptions = [
   {
-    label: "Active",
+    label: "Aktif",
     value: true,
   },
   {
-    label: "Inactive",
+    label: "Tidak Aktif",
     value: false,
   },
 ];
 
 const discountTypeOptions = [
   {
-    label: "Fixed Amount",
+    label: "Nominal Tetap",
     value: "amount",
   },
   {
-    label: "Percentage",
+    label: "Persentase",
     value: "percent",
   },
 ];
@@ -449,8 +449,8 @@ const loadVouchers = async () => {
     vouchers.value = await adminVoucherService.getAdminVouchers(params);
   } catch (error) {
     toastStore.showToast({
-      title: "Failed to Load Vouchers",
-      message: error?.message || "Unable to load vouchers.",
+      title: "Gagal Memuat Voucher",
+      message: error?.message || "Voucher belum dapat dimuat.",
       type: "error",
     });
   } finally {
@@ -506,18 +506,18 @@ const buildPayload = () => {
 
 const validateForm = () => {
   if (!form.code.trim()) {
-    return "Voucher code is required.";
+    return "Kode voucher wajib diisi.";
   }
 
   if (!form.discount_value || Number(form.discount_value) <= 0) {
-    return "Discount value must be greater than 0.";
+    return "Nilai diskon harus lebih dari 0.";
   }
 
   if (
     form.discount_type === "percent" &&
     (Number(form.discount_value) < 1 || Number(form.discount_value) > 100)
   ) {
-    return "Percent discount must be between 1 and 100.";
+    return "Diskon persentase harus berada antara 1 sampai 100.";
   }
 
   if (form.valid_from && form.valid_until) {
@@ -525,7 +525,7 @@ const validateForm = () => {
     const validUntil = new Date(form.valid_until);
 
     if (validUntil < validFrom) {
-      return "Valid until must be after valid from.";
+      return "Tanggal berlaku sampai harus setelah tanggal berlaku mulai.";
     }
   }
 
@@ -534,11 +534,11 @@ const validateForm = () => {
     form.usage_limit !== null &&
     Number(form.usage_limit) < 1
   ) {
-    return "Usage limit must be at least 1.";
+    return "Batas penggunaan minimal 1.";
   }
 
   if (Number(form.used_count || 0) < 0) {
-    return "Used count cannot be negative.";
+    return "Jumlah penggunaan tidak boleh bernilai negatif.";
   }
 
   return "";
@@ -549,7 +549,7 @@ const submitForm = async () => {
 
   if (validationMessage) {
     toastStore.showToast({
-      title: "Validation Error",
+      title: "Data Belum Valid",
       message: validationMessage,
       type: "error",
     });
@@ -566,16 +566,16 @@ const submitForm = async () => {
       await adminVoucherService.updateVoucher(form.id, payload);
 
       toastStore.showToast({
-        title: "Voucher Updated",
-        message: "Voucher has been updated successfully.",
+        title: "Voucher Diperbarui",
+        message: "Voucher berhasil diperbarui.",
         type: "success",
       });
     } else {
       await adminVoucherService.createVoucher(payload);
 
       toastStore.showToast({
-        title: "Voucher Created",
-        message: "Voucher has been created successfully.",
+        title: "Voucher Dibuat",
+        message: "Voucher baru berhasil dibuat.",
         type: "success",
       });
     }
@@ -584,8 +584,8 @@ const submitForm = async () => {
     await loadVouchers();
   } catch (error) {
     toastStore.showToast({
-      title: "Save Failed",
-      message: error?.message || "Unable to save voucher.",
+      title: "Gagal Menyimpan Voucher",
+      message: error?.message || "Voucher belum dapat disimpan.",
       type: "error",
     });
   } finally {
@@ -594,7 +594,7 @@ const submitForm = async () => {
 };
 
 const deleteVoucher = async (voucher) => {
-  const isConfirmed = window.confirm(`Delete voucher "${voucher.code}"?`);
+  const isConfirmed = window.confirm(`Hapus voucher "${voucher.code}"?`);
 
   if (!isConfirmed) return;
 
@@ -602,16 +602,16 @@ const deleteVoucher = async (voucher) => {
     await adminVoucherService.deleteVoucher(voucher.id);
 
     toastStore.showToast({
-      title: "Voucher Deleted",
-      message: "Voucher has been deleted.",
+      title: "Voucher Dihapus",
+      message: "Voucher berhasil dihapus.",
       type: "info",
     });
 
     await loadVouchers();
   } catch (error) {
     toastStore.showToast({
-      title: "Delete Failed",
-      message: error?.message || "Unable to delete voucher.",
+      title: "Gagal Menghapus Voucher",
+      message: error?.message || "Voucher belum dapat dihapus.",
       type: "error",
     });
   }

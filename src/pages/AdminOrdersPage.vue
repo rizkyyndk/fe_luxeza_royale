@@ -11,16 +11,16 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-              Admin Panel
+              Panel Admin
             </p>
 
             <h1 class="text-4xl md:text-5xl font-bold mb-4 text-luxe-espresso">
-              Manage Orders
+              Kelola Pesanan
             </h1>
 
             <p class="text-luxe-brown/75 max-w-xl leading-7">
-              Manage Luxeza Royale customer orders, update payment status, and
-              control manual order processing flow.
+              Kelola pesanan customer Luxeza Royale, verifikasi pembayaran, dan
+              atur alur pemrosesan pesanan secara manual.
             </p>
           </div>
 
@@ -28,7 +28,7 @@
             @click="loadOrders"
             class="border border-luxe-espresso text-luxe-espresso px-6 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition w-fit"
           >
-            Refresh Orders
+            Muat Ulang Pesanan
           </button>
         </div>
 
@@ -40,13 +40,13 @@
             <!-- SEARCH -->
             <div>
               <label class="block text-sm text-luxe-brown/75 mb-2">
-                Search Order
+                Cari Pesanan
               </label>
 
               <input
                 v-model="searchKeyword"
                 type="text"
-                placeholder="Order number, customer, email, phone..."
+                placeholder="Nomor pesanan, customer, email, nomor telepon..."
                 class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition shadow-sm"
               />
             </div>
@@ -60,33 +60,33 @@
               <LuxeSelect
                 v-model="statusFilter"
                 :options="statusOptions"
-                placeholder="Select status"
+                placeholder="Pilih status"
               />
             </div>
 
             <!-- PERIOD -->
             <div>
               <label class="block text-sm text-luxe-brown/75 mb-2">
-                Period
+                Periode
               </label>
 
               <LuxeSelect
                 v-model="periodFilter"
                 :options="periodOptions"
-                placeholder="Select period"
+                placeholder="Pilih periode"
               />
             </div>
 
             <!-- SORT -->
             <div>
               <label class="block text-sm text-luxe-brown/75 mb-2">
-                Sort
+                Urutkan
               </label>
 
               <LuxeSelect
                 v-model="sortOrder"
                 :options="sortOptions"
-                placeholder="Select sort"
+                placeholder="Pilih urutan"
               />
             </div>
           </div>
@@ -98,7 +98,7 @@
           >
             <div>
               <label class="block text-sm text-luxe-brown/75 mb-2">
-                Start Date
+                Tanggal Mulai
               </label>
 
               <input
@@ -110,7 +110,7 @@
 
             <div>
               <label class="block text-sm text-luxe-brown/75 mb-2">
-                End Date
+                Tanggal Akhir
               </label>
 
               <input
@@ -126,15 +126,15 @@
             class="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-luxe-sand/60 pt-5"
           >
             <p class="text-sm text-luxe-brown/75">
-              Showing
+              Menampilkan
               <span class="font-semibold text-luxe-espresso">
                 {{ filteredOrders.length }}
               </span>
-              of
+              dari
               <span class="font-semibold text-luxe-espresso">
                 {{ orders.length }}
               </span>
-              orders
+              pesanan
             </p>
 
             <button
@@ -147,7 +147,7 @@
               "
               class="border px-5 py-2 rounded-full text-sm transition w-fit"
             >
-              Reset Filters
+              Atur Ulang Filter
             </button>
           </div>
         </div>
@@ -161,11 +161,11 @@
             <p class="text-6xl mb-6">⏳</p>
 
             <h2 class="text-3xl md:text-4xl font-bold mb-4 text-luxe-espresso">
-              Loading orders...
+              Memuat pesanan...
             </h2>
 
             <p class="text-luxe-brown/75">
-              Please wait while we load admin order data.
+              Mohon tunggu, data pesanan admin sedang dimuat.
             </p>
           </div>
         </div>
@@ -179,7 +179,7 @@
             <p class="text-6xl mb-6">⚠️</p>
 
             <h2 class="text-3xl md:text-4xl font-bold mb-4 text-red-700">
-              Failed to load orders
+              Pesanan belum dapat dimuat
             </h2>
 
             <p class="text-red-500 mb-8">
@@ -190,7 +190,7 @@
               @click="loadOrders"
               class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full inline-block hover:bg-luxe-royal hover:scale-105 transition"
             >
-              Try Again
+              Coba Lagi
             </button>
           </div>
         </div>
@@ -204,11 +204,11 @@
             <p class="text-6xl mb-6">📦</p>
 
             <h2 class="text-3xl md:text-4xl font-bold mb-4 text-luxe-espresso">
-              No orders yet
+              Belum ada pesanan
             </h2>
 
             <p class="text-luxe-brown/75">
-              Customer orders will appear here after checkout.
+              Pesanan customer akan tampil di sini setelah checkout.
             </p>
           </div>
         </div>
@@ -222,18 +222,18 @@
             <p class="text-6xl mb-6">🔎</p>
 
             <h2 class="text-3xl md:text-4xl font-bold mb-4 text-luxe-espresso">
-              No matching orders
+              Pesanan tidak ditemukan
             </h2>
 
             <p class="text-luxe-brown/75 mb-8">
-              Try changing your status, period, or search keyword.
+              Coba ubah status, periode, atau kata kunci pencarian.
             </p>
 
             <button
               @click="resetFilters"
               class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full inline-block hover:bg-luxe-royal hover:scale-105 transition"
             >
-              Reset Filters
+              Atur Ulang Filter
             </button>
           </div>
         </div>
@@ -250,7 +250,7 @@
               class="p-6 md:p-8 bg-luxe-espresso text-luxe-ivory flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5"
             >
               <div>
-                <p class="text-sm text-luxe-sand mb-2">Order Number</p>
+                <p class="text-sm text-luxe-sand mb-2">Nomor Pesanan</p>
 
                 <h2 class="text-2xl md:text-3xl font-bold">
                   {{ order.orderNumber }}
@@ -280,8 +280,8 @@
                 <!-- CUSTOMER / ADDRESS -->
                 <AddressSummaryCard
                   :customer="order.customer || {}"
-                  title="Customer & Shipping Address"
-                  eyebrow="Order Recipient"
+                  title="Customer & Alamat Pengiriman"
+                  eyebrow="Penerima Pesanan"
                   class="mb-6"
                 />
 
@@ -293,11 +293,11 @@
                   <p
                     class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2"
                   >
-                    Shipping Courier
+                    Kurir Pengiriman
                   </p>
 
                   <h3 class="text-xl font-bold text-luxe-espresso mb-5">
-                    Delivery Detail
+                    Detail Pengiriman
                   </h3>
 
                   <div class="space-y-3">
@@ -305,7 +305,7 @@
                       v-if="getShippingCourierLabel(order)"
                       class="flex justify-between gap-4"
                     >
-                      <span class="text-luxe-brown/70">Courier</span>
+                      <span class="text-luxe-brown/70">Kurir</span>
 
                       <span class="font-semibold text-luxe-espresso text-right">
                         {{ getShippingCourierLabel(order) }}
@@ -316,7 +316,7 @@
                       v-if="getShippingDestinationLabel(order)"
                       class="flex justify-between gap-4"
                     >
-                      <span class="text-luxe-brown/70">Destination</span>
+                      <span class="text-luxe-brown/70">Tujuan</span>
 
                       <span
                         class="font-semibold text-luxe-espresso text-right max-w-[320px]"
@@ -329,7 +329,9 @@
                       v-if="getShippingEtdLabel(order)"
                       class="flex justify-between gap-4"
                     >
-                      <span class="text-luxe-brown/70">Estimated Delivery</span>
+                      <span class="text-luxe-brown/70">
+                        Estimasi Pengiriman
+                      </span>
 
                       <span class="font-semibold text-luxe-espresso text-right">
                         {{ getShippingEtdLabel(order) }}
@@ -337,12 +339,12 @@
                     </div>
 
                     <div class="flex justify-between gap-4">
-                      <span class="text-luxe-brown/70">Shipping Cost</span>
+                      <span class="text-luxe-brown/70">Biaya Ongkir</span>
 
                       <span class="font-semibold text-luxe-espresso text-right">
                         {{
                           Number(order.shippingCost || 0) === 0
-                            ? "Free"
+                            ? "Gratis"
                             : formatCurrency(order.shippingCost)
                         }}
                       </span>
@@ -354,7 +356,7 @@
                 <div>
                   <div class="mb-6 flex items-center justify-between gap-4">
                     <h3 class="text-2xl font-bold text-luxe-espresso">
-                      Ordered Items
+                      Item Pesanan
                     </h3>
 
                     <p class="text-sm text-luxe-brown/70">
@@ -382,11 +384,11 @@
                         </h4>
 
                         <p class="text-sm text-luxe-brown/70 mt-1">
-                          Size: {{ item.size || "-" }}
+                          Ukuran: {{ item.size || "-" }}
                         </p>
 
                         <p class="text-sm text-luxe-brown/70">
-                          Qty: {{ item.quantity }}
+                          Jumlah: {{ item.quantity }}
                         </p>
                       </div>
 
@@ -403,7 +405,7 @@
                 class="bg-luxe-ivory border border-luxe-sand/60 rounded-3xl p-6 h-fit shadow-[0_16px_45px_rgba(92,56,36,0.10)]"
               >
                 <h3 class="text-2xl font-bold mb-6 text-luxe-espresso">
-                  Admin Summary
+                  Ringkasan Admin
                 </h3>
 
                 <div class="space-y-4">
@@ -425,20 +427,20 @@
                     v-if="order.discountAmount > 0"
                     class="flex justify-between gap-4"
                   >
-                    <span class="text-luxe-brown/70">Discount</span>
+                    <span class="text-luxe-brown/70">Diskon</span>
                     <span class="font-semibold text-green-600">
                       -{{ formatCurrency(order.discountAmount) }}
                     </span>
                   </div>
 
                   <div class="flex justify-between gap-4">
-                    <span class="text-luxe-brown/70">Shipping</span>
+                    <span class="text-luxe-brown/70">Ongkir</span>
 
                     <div class="text-right">
                       <p class="font-semibold text-luxe-espresso">
                         {{
                           Number(order.shippingCost || 0) === 0
-                            ? "Free"
+                            ? "Gratis"
                             : formatCurrency(order.shippingCost)
                         }}
                       </p>
@@ -460,7 +462,7 @@
                   </div>
 
                   <div class="flex justify-between gap-4">
-                    <span class="text-luxe-brown/70">Payment</span>
+                    <span class="text-luxe-brown/70">Pembayaran</span>
                     <span class="font-semibold text-right text-luxe-espresso">
                       {{ formatPaymentMethod(order.paymentMethod) }}
                     </span>
@@ -473,22 +475,22 @@
                     <div class="flex items-start justify-between gap-4 mb-4">
                       <div>
                         <p class="text-sm font-semibold text-luxe-espresso">
-                          Payment Proof
+                          Bukti Pembayaran
                         </p>
 
                         <p
                           v-if="order.paymentProofUrl"
                           class="text-xs text-luxe-brown/70 mt-1 leading-5"
                         >
-                          Customer has uploaded payment proof. Please verify
-                          before marking as paid.
+                          Customer telah mengunggah bukti pembayaran. Silakan
+                          periksa sebelum menandai pesanan sebagai lunas.
                         </p>
 
                         <p
                           v-else
                           class="text-xs text-luxe-brown/70 mt-1 leading-5"
                         >
-                          Customer has not uploaded payment proof yet.
+                          Customer belum mengunggah bukti pembayaran.
                         </p>
                       </div>
 
@@ -496,14 +498,14 @@
                         v-if="order.paymentProofUrl"
                         class="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold"
                       >
-                        Review
+                        Perlu Dicek
                       </span>
 
                       <span
                         v-else
                         class="bg-red-50 text-red-700 px-3 py-1 rounded-full text-xs font-semibold"
                       >
-                        No Proof
+                        Belum Ada Bukti
                       </span>
                     </div>
 
@@ -516,7 +518,7 @@
                       >
                         <img
                           :src="order.paymentProofUrl"
-                          alt="Payment proof"
+                          alt="Bukti pembayaran"
                           class="w-full max-w-[220px] h-[220px] object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-ivory"
                         />
                       </a>
@@ -525,7 +527,7 @@
                         v-if="order.paymentProofUploadedAt"
                         class="text-xs text-luxe-brown/60 mt-3"
                       >
-                        Uploaded at
+                        Diunggah pada
                         {{ formatDate(order.paymentProofUploadedAt) }}
                       </p>
 
@@ -535,7 +537,7 @@
                         rel="noopener noreferrer"
                         class="inline-block mt-4 text-sm font-semibold text-luxe-espresso hover:text-luxe-royal transition"
                       >
-                        Open Full Image
+                        Buka Gambar Penuh
                       </a>
                     </div>
                   </div>
@@ -548,20 +550,20 @@
                     <div class="flex items-start justify-between gap-4 mb-4">
                       <div>
                         <p class="text-sm font-semibold text-luxe-espresso">
-                          Shipping Receipt
+                          Resi Pengiriman
                         </p>
 
                         <p
                           v-if="canManageShippingReceipt(order)"
                           class="text-xs text-luxe-brown/70 mt-1 leading-5"
                         >
-                          Input tracking number and upload receipt photo after
-                          the payment has been verified.
+                          Masukkan nomor resi dan unggah foto resi setelah
+                          pembayaran berhasil diverifikasi.
                         </p>
 
                         <p v-else class="text-xs text-red-600 mt-1 leading-5">
-                          Ubah status order menjadi Processing terlebih dahulu
-                          sebelum upload resi.
+                          Ubah status pesanan menjadi Sedang Diproses terlebih
+                          dahulu sebelum mengunggah resi.
                         </p>
                       </div>
 
@@ -569,7 +571,7 @@
                         v-if="order.trackingNumber"
                         class="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-semibold"
                       >
-                        Added
+                        Tersedia
                       </span>
 
                       <span
@@ -583,7 +585,7 @@
                     <div class="space-y-4">
                       <div>
                         <label class="block text-xs text-luxe-brown/75 mb-2">
-                          Courier
+                          Kurir
                         </label>
 
                         <input
@@ -596,7 +598,7 @@
 
                       <div>
                         <label class="block text-xs text-luxe-brown/75 mb-2">
-                          Tracking Number / Nomor Resi
+                          Nomor Resi
                         </label>
 
                         <input
@@ -605,7 +607,7 @@
                               .trackingNumber
                           "
                           type="text"
-                          placeholder="Example: JNE1234567890"
+                          placeholder="Contoh: JNE1234567890"
                           :disabled="
                             !canManageShippingReceipt(order) ||
                             uploadingShippingReceiptOrderCode ===
@@ -617,7 +619,7 @@
 
                       <div>
                         <label class="block text-xs text-luxe-brown/75 mb-2">
-                          Upload Receipt Photo
+                          Unggah Foto Resi
                         </label>
 
                         <input
@@ -640,7 +642,7 @@
                           "
                           class="text-xs text-luxe-brown/60 mt-2"
                         >
-                          Selected:
+                          File dipilih:
                           {{ shippingReceiptForms[order.orderNumber].fileName }}
                         </p>
                       </div>
@@ -654,7 +656,7 @@
                         >
                           <img
                             :src="order.shippingReceiptUrl"
-                            alt="Shipping receipt"
+                            alt="Foto resi pengiriman"
                             class="w-full max-w-[220px] h-[220px] object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-ivory"
                           />
                         </a>
@@ -663,7 +665,7 @@
                           v-if="order.shippingReceiptUploadedAt"
                           class="text-xs text-luxe-brown/60 mt-3"
                         >
-                          Uploaded at
+                          Diunggah pada
                           {{ formatDate(order.shippingReceiptUploadedAt) }}
                         </p>
 
@@ -673,7 +675,7 @@
                           rel="noopener noreferrer"
                           class="inline-block mt-4 text-sm font-semibold text-luxe-espresso hover:text-luxe-royal transition"
                         >
-                          Open Full Receipt
+                          Buka Foto Resi
                         </a>
                       </div>
 
@@ -690,10 +692,10 @@
                         {{
                           uploadingShippingReceiptOrderCode ===
                           order.orderNumber
-                            ? "Saving Receipt..."
+                            ? "Menyimpan Resi..."
                             : order.shippingReceiptUrl
-                              ? "Update Shipping Receipt"
-                              : "Save Shipping Receipt"
+                              ? "Perbarui Resi Pengiriman"
+                              : "Simpan Resi Pengiriman"
                         }}
                       </button>
                     </div>
@@ -712,7 +714,7 @@
                 <!-- STATUS ACTIONS -->
                 <div class="mt-6 border-t border-luxe-sand/60 pt-6">
                   <p class="text-sm font-semibold mb-3 text-luxe-espresso">
-                    Update Order Status
+                    Perbarui Status Pesanan
                   </p>
 
                   <div class="grid grid-cols-2 gap-3">
@@ -736,7 +738,7 @@
                     v-if="updatingOrderCode === order.orderNumber"
                     class="text-xs text-luxe-brown/70 mt-3"
                   >
-                    Updating order status...
+                    Memperbarui status pesanan...
                   </p>
                 </div>
               </div>
@@ -783,70 +785,70 @@ const customEndDate = ref("");
 
 const periodOptions = [
   {
-    label: "All Time",
+    label: "Semua Waktu",
     value: "all",
   },
   {
-    label: "Today",
+    label: "Hari Ini",
     value: "today",
   },
   {
-    label: "Last 7 Days",
+    label: "7 Hari Terakhir",
     value: "last-7-days",
   },
   {
-    label: "Last 30 Days",
+    label: "30 Hari Terakhir",
     value: "last-30-days",
   },
   {
-    label: "Custom Date",
+    label: "Tanggal Khusus",
     value: "custom",
   },
 ];
 
 const sortOptions = [
   {
-    label: "Newest First",
+    label: "Terbaru Dulu",
     value: "newest",
   },
   {
-    label: "Oldest First",
+    label: "Terlama Dulu",
     value: "oldest",
   },
 ];
 
 const statusOptions = [
-  { label: "All Status", value: "all" },
-  { label: "Pending", value: "pending" },
+  { label: "Semua Status", value: "all" },
+  { label: "Menunggu Pembayaran", value: "pending" },
   {
-    label: "Payment Submitted",
+    label: "Bukti Pembayaran Dikirim",
     value: "payment_submitted",
   },
-  { label: "Paid", value: "paid" },
-  { label: "Processing", value: "processing" },
-  { label: "Shipped", value: "shipped" },
-  { label: "Completed", value: "completed" },
-  { label: "Cancelled", value: "cancelled" },
+  { label: "Pembayaran Diterima", value: "paid" },
+  { label: "Sedang Diproses", value: "processing" },
+  { label: "Dikirim", value: "shipped" },
+  { label: "Selesai", value: "completed" },
+  { label: "Dibatalkan", value: "cancelled" },
 ];
 
 const statusActions = [
   {
-    label: "Mark Paid",
+    label: "Tandai Lunas",
     value: "paid",
     variant: "default",
   },
   {
-    label: "Processing",
+    label: "Proses Pesanan",
     value: "processing",
     variant: "default",
   },
   {
-    label: "Completed",
+    label: "Selesaikan",
     value: "completed",
     variant: "primary",
   },
   {
-    label: "Cancel",
+    label: "Batalkan",
     value: "cancelled",
     variant: "danger",
   },
@@ -929,15 +931,15 @@ const loadOrders = async () => {
     orders.value = adminOrders;
     syncShippingReceiptForms(adminOrders);
   } catch (error) {
-    console.error("Failed to load admin orders:", error);
+    console.error("Gagal memuat pesanan admin:", error);
 
     orderErrorMessage.value =
       error?.response?.data?.message ||
       error?.message ||
-      "Failed to load admin order data.";
+      "Data pesanan admin belum dapat dimuat.";
 
     toastStore.showToast({
-      title: "Failed to Load Orders",
+      title: "Gagal Memuat Pesanan",
       message: orderErrorMessage.value,
       type: "error",
     });
@@ -976,7 +978,7 @@ const isStatusActionDisabled = (order, nextStatus) => {
 
 const getStatusButtonLabel = (action, order) => {
   if (action.value === "paid" && order.status === "payment_submitted") {
-    return "Verify & Mark Paid";
+    return "Verifikasi & Tandai Lunas";
   }
 
   return action.label;
@@ -998,31 +1000,31 @@ const getStatusFlowHint = (order) => {
   const status = String(order.status || "pending").toLowerCase();
 
   if (status === "pending") {
-    return "Menunggu user upload bukti pembayaran. Admin hanya bisa cancel order pada tahap ini.";
+    return "Menunggu customer mengunggah bukti pembayaran. Pada tahap ini admin hanya dapat membatalkan pesanan.";
   }
 
   if (status === "payment_submitted") {
-    return "Bukti pembayaran sudah diupload. Admin perlu verifikasi, lalu klik Verify & Mark Paid.";
+    return "Bukti pembayaran sudah diunggah. Admin perlu memeriksa bukti tersebut, lalu klik Verifikasi & Tandai Lunas.";
   }
 
   if (status === "paid") {
-    return "Pembayaran sudah valid. Klik Processing untuk mulai proses packing.";
+    return "Pembayaran sudah valid. Klik Proses Pesanan untuk mulai proses packing.";
   }
 
   if (status === "processing") {
-    return "Order sedang diproses. Upload nomor resi dan foto resi, lalu status akan otomatis menjadi Shipped.";
+    return "Pesanan sedang diproses. Masukkan nomor resi dan unggah foto resi, lalu status akan otomatis menjadi Dikirim.";
   }
 
   if (status === "shipped") {
-    return "Order sudah dikirim dan resi sudah tersedia. Klik Completed setelah pesanan selesai atau diterima customer.";
+    return "Pesanan sudah dikirim dan nomor resi tersedia. Klik Selesaikan setelah pesanan diterima customer.";
   }
 
   if (status === "completed") {
-    return "Order sudah selesai. Tidak ada aksi status berikutnya.";
+    return "Pesanan sudah selesai. Tidak ada aksi status berikutnya.";
   }
 
   if (status === "cancelled") {
-    return "Order sudah dibatalkan. Tidak ada aksi status berikutnya.";
+    return "Pesanan sudah dibatalkan. Tidak ada aksi status berikutnya.";
   }
 
   return "";
@@ -1044,16 +1046,16 @@ const updateOrderStatus = async (order, status) => {
     );
 
     toastStore.showToast({
-      title: "Order Updated",
-      message: `Order ${order.orderNumber} has been updated to ${formatStatus(
+      title: "Pesanan Berhasil Diperbarui",
+      message: `Pesanan ${order.orderNumber} berhasil diperbarui menjadi ${formatStatus(
         status,
       )}.`,
       type: "success",
     });
   } catch (error) {
     toastStore.showToast({
-      title: "Update Failed",
-      message: error?.message || "Failed to update order status.",
+      title: "Gagal Memperbarui Pesanan",
+      message: error?.message || "Status pesanan belum dapat diperbarui.",
       type: "error",
     });
   } finally {
@@ -1120,8 +1122,9 @@ const submitShippingReceipt = async (order) => {
 
   if (!canManageShippingReceipt(order)) {
     toastStore.showToast({
-      title: "Cannot Upload Receipt",
-      message: "Mark this order as paid before uploading shipping receipt.",
+      title: "Resi Belum Dapat Diunggah",
+      message:
+        "Ubah status pesanan menjadi Sedang Diproses sebelum mengunggah resi.",
       type: "error",
     });
 
@@ -1130,8 +1133,8 @@ const submitShippingReceipt = async (order) => {
 
   if (!form.trackingNumber.trim()) {
     toastStore.showToast({
-      title: "Tracking Number Required",
-      message: "Please input the shipping tracking number first.",
+      title: "Nomor Resi Wajib Diisi",
+      message: "Silakan masukkan nomor resi pengiriman terlebih dahulu.",
       type: "error",
     });
 
@@ -1140,8 +1143,8 @@ const submitShippingReceipt = async (order) => {
 
   if (!order.shippingReceiptUrl && !form.shippingReceipt) {
     toastStore.showToast({
-      title: "Receipt Photo Required",
-      message: "Please upload the shipping receipt photo first.",
+      title: "Foto Resi Wajib Diunggah",
+      message: "Silakan unggah foto resi pengiriman terlebih dahulu.",
       type: "error",
     });
 
@@ -1167,14 +1170,14 @@ const submitShippingReceipt = async (order) => {
     };
 
     toastStore.showToast({
-      title: "Shipping Receipt Saved",
-      message: `Shipping receipt for order ${orderNumber} has been saved.`,
+      title: "Resi Pengiriman Tersimpan",
+      message: `Resi pengiriman untuk pesanan ${orderNumber} berhasil disimpan.`,
       type: "success",
     });
   } catch (error) {
     toastStore.showToast({
-      title: "Upload Failed",
-      message: error?.message || "Failed to upload shipping receipt.",
+      title: "Unggah Resi Gagal",
+      message: error?.message || "Resi pengiriman belum dapat diunggah.",
       type: "error",
     });
   } finally {
@@ -1344,16 +1347,17 @@ const hasShippingDetail = (order) => {
 };
 
 const formatStatus = (status) => {
-  if (!status) return "Pending";
+  const statusMap = {
+    pending: "Menunggu Pembayaran",
+    payment_submitted: "Bukti Pembayaran Dikirim",
+    paid: "Pembayaran Diterima",
+    processing: "Sedang Diproses",
+    shipped: "Dikirim",
+    completed: "Selesai",
+    cancelled: "Dibatalkan",
+  };
 
-  if (status === "payment_submitted") {
-    return "Payment Submitted";
-  }
-
-  return status
-    .split(/[-_]/)
-    .join(" ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+  return statusMap[status] || "Menunggu Pembayaran";
 };
 
 const getStatusClass = (status) => {

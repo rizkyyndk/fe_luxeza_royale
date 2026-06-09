@@ -17,17 +17,17 @@
         </div>
 
         <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-          Order Created
+          Pesanan Dibuat
         </p>
 
         <h1 class="text-4xl md:text-5xl font-bold mb-5 text-luxe-espresso">
-          Thank you for your order
+          Terima kasih atas pesanan Anda
         </h1>
 
         <p class="text-luxe-brown/75 leading-7 mb-8 max-w-2xl mx-auto">
-          Your Luxeza Royale order has been successfully created through the
-          backend system. Please complete your payment based on the selected
-          payment method.
+          Pesanan Luxeza Royale Anda berhasil dibuat. Silakan selesaikan
+          pembayaran sesuai metode yang dipilih agar pesanan dapat segera
+          diproses.
         </p>
 
         <!-- ORDER SUMMARY -->
@@ -36,7 +36,7 @@
           class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-6 text-left mb-8 space-y-4"
         >
           <div class="flex justify-between gap-4">
-            <span class="text-luxe-brown/70">Order Number</span>
+            <span class="text-luxe-brown/70">Nomor Pesanan</span>
             <span class="font-semibold text-luxe-espresso text-right">
               {{ lastOrder.orderNumber || lastOrder.order_code || "-" }}
             </span>
@@ -52,7 +52,7 @@
           </div>
 
           <div class="flex justify-between gap-4">
-            <span class="text-luxe-brown/70">Customer</span>
+            <span class="text-luxe-brown/70">Pelanggan</span>
             <span class="font-semibold text-luxe-espresso text-right">
               {{ lastOrder.customer?.fullName || "-" }}
             </span>
@@ -70,7 +70,7 @@
             v-if="Number(lastOrder.discountAmount || 0) > 0"
             class="flex justify-between gap-4"
           >
-            <span class="text-luxe-brown/70">Discount</span>
+            <span class="text-luxe-brown/70">Diskon</span>
 
             <span class="font-semibold text-green-600">
               -{{ formatCurrency(lastOrder.discountAmount) }}
@@ -78,13 +78,13 @@
           </div>
 
           <div class="flex justify-between gap-4">
-            <span class="text-luxe-brown/70">Shipping</span>
+            <span class="text-luxe-brown/70">Ongkir</span>
 
             <div class="text-right">
               <p class="font-semibold text-luxe-espresso">
                 {{
                   Number(lastOrder.shippingCost || 0) === 0
-                    ? "Free"
+                    ? "Gratis"
                     : formatCurrency(lastOrder.shippingCost)
                 }}
               </p>
@@ -106,7 +106,7 @@
           </div>
 
           <div class="flex justify-between gap-4">
-            <span class="text-luxe-brown/70">Payment</span>
+            <span class="text-luxe-brown/70">Pembayaran</span>
 
             <span class="font-semibold text-luxe-espresso text-right">
               {{ formatPaymentMethod(lastOrder.paymentMethod) }}
@@ -116,7 +116,7 @@
           <div
             class="border-t border-luxe-sand/60 pt-5 flex justify-between gap-4"
           >
-            <span class="text-lg text-luxe-espresso">Total Payment</span>
+            <span class="text-lg text-luxe-espresso">Total Pembayaran</span>
 
             <span class="text-2xl font-bold text-luxe-espresso">
               {{ formatCurrency(lastOrder.total || 0) }}
@@ -128,8 +128,8 @@
         <AddressSummaryCard
           v-if="lastOrder"
           :customer="lastOrder.customer || {}"
-          title="Shipping Address"
-          eyebrow="Delivery Information"
+          title="Alamat Pengiriman"
+          eyebrow="Informasi Pengiriman"
           class="text-left mb-8"
         />
 
@@ -139,16 +139,16 @@
           class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-6 text-left mb-8 shadow-sm"
         >
           <p class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2">
-            Shipping Courier
+            Kurir Pengiriman
           </p>
 
           <h2 class="text-xl font-bold text-luxe-espresso mb-5">
-            Delivery Service
+            Layanan Pengiriman
           </h2>
 
           <div class="space-y-3">
             <div v-if="shippingCourierLabel" class="flex justify-between gap-4">
-              <span class="text-luxe-brown/70">Courier</span>
+              <span class="text-luxe-brown/70">Kurir</span>
 
               <span class="font-semibold text-luxe-espresso text-right">
                 {{ shippingCourierLabel }}
@@ -159,7 +159,7 @@
               v-if="shippingDestinationLabel"
               class="flex justify-between gap-4"
             >
-              <span class="text-luxe-brown/70">Destination</span>
+              <span class="text-luxe-brown/70">Tujuan</span>
 
               <span
                 class="font-semibold text-luxe-espresso text-right max-w-[320px]"
@@ -169,7 +169,7 @@
             </div>
 
             <div v-if="shippingEtdLabel" class="flex justify-between gap-4">
-              <span class="text-luxe-brown/70">Estimated Delivery</span>
+              <span class="text-luxe-brown/70">Estimasi Pengiriman</span>
 
               <span class="font-semibold text-luxe-espresso text-right">
                 {{ shippingEtdLabel }}
@@ -177,12 +177,12 @@
             </div>
 
             <div class="flex justify-between gap-4">
-              <span class="text-luxe-brown/70">Shipping Cost</span>
+              <span class="text-luxe-brown/70">Biaya Ongkir</span>
 
               <span class="font-semibold text-luxe-espresso text-right">
                 {{
                   Number(lastOrder.shippingCost || 0) === 0
-                    ? "Free"
+                    ? "Gratis"
                     : formatCurrency(lastOrder.shippingCost)
                 }}
               </span>
@@ -230,13 +230,13 @@
                   class="mt-5 bg-luxe-cream border border-luxe-sand/50 rounded-3xl p-5"
                 >
                   <p class="text-sm font-semibold text-luxe-espresso mb-2">
-                    QRIS Note
+                    Catatan QRIS
                   </p>
 
                   <p class="text-sm text-luxe-brown/75 leading-6">
-                    Please pay exactly according to the Total Payment amount. If
-                    your QRIS expires, repeat checkout or contact admin for a
-                    new QRIS.
+                    Silakan bayar sesuai nominal Total Pembayaran. Jika QRIS
+                    kedaluwarsa, lakukan checkout ulang atau hubungi admin untuk
+                    mendapatkan QRIS baru.
                   </p>
                 </div>
               </div>
@@ -254,14 +254,14 @@
                   </div>
 
                   <div class="flex justify-between gap-4">
-                    <span class="text-luxe-brown/70">Account Name</span>
+                    <span class="text-luxe-brown/70">Nama Rekening</span>
                     <span class="font-semibold text-luxe-espresso text-right">
                       {{ paymentMethodData.accountName }}
                     </span>
                   </div>
 
                   <div class="flex justify-between gap-4">
-                    <span class="text-luxe-brown/70">Account Number</span>
+                    <span class="text-luxe-brown/70">Nomor Rekening</span>
                     <span class="font-semibold text-luxe-espresso text-right">
                       {{ paymentMethodData.accountNumber }}
                     </span>
@@ -276,9 +276,9 @@
               <!-- FALLBACK -->
               <div v-else>
                 <p class="text-luxe-brown/75 leading-7 mt-4">
-                  Please complete your payment using the selected method. After
-                  payment, save the receipt and send it to the admin for manual
-                  confirmation.
+                  Silakan selesaikan pembayaran menggunakan metode yang telah
+                  dipilih. Setelah pembayaran berhasil, simpan bukti pembayaran
+                  dan unggah pada halaman ini untuk proses konfirmasi admin.
                 </p>
               </div>
             </div>
@@ -297,16 +297,16 @@
               <p
                 class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2"
               >
-                Payment Confirmation
+                Konfirmasi Pembayaran
               </p>
 
               <h2 class="text-xl font-bold text-luxe-espresso mb-2">
-                Upload Payment Proof
+                Unggah Bukti Pembayaran
               </h2>
 
               <p class="text-luxe-brown/75 leading-7">
-                Upload your transfer receipt or QRIS payment screenshot.
-                Accepted file: JPG, PNG, or WEBP image only. Maximum size 5 MB.
+                Unggah struk transfer atau tangkapan layar pembayaran QRIS. File
+                yang diterima: JPG, PNG, atau WEBP. Ukuran maksimal 5 MB.
               </p>
             </div>
 
@@ -314,14 +314,14 @@
               v-if="lastOrder.hasPaymentProof"
               class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-semibold w-fit"
             >
-              Proof Submitted
+              Bukti Terkirim
             </span>
 
             <span
               v-else
               class="bg-amber-50 text-amber-700 px-4 py-2 rounded-full text-sm font-semibold w-fit"
             >
-              Waiting for Proof
+              Menunggu Bukti
             </span>
           </div>
 
@@ -331,7 +331,7 @@
             class="mt-6 bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5"
           >
             <p class="text-sm font-semibold text-luxe-espresso mb-4">
-              Uploaded Payment Proof
+              Bukti Pembayaran Terunggah
             </p>
 
             <a
@@ -342,7 +342,7 @@
             >
               <img
                 :src="lastOrder.paymentProofUrl"
-                alt="Payment proof"
+                alt="Bukti pembayaran"
                 class="w-44 h-44 object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-ivory"
               />
             </a>
@@ -362,11 +362,11 @@
               >
                 <div>
                   <p class="font-semibold text-luxe-espresso mb-1">
-                    Select payment proof image
+                    Pilih gambar bukti pembayaran
                   </p>
 
                   <p class="text-sm text-luxe-brown/70">
-                    JPG, PNG, or WEBP only.
+                    Hanya file JPG, PNG, atau WEBP.
                   </p>
                 </div>
 
@@ -380,7 +380,7 @@
                     @change="handlePaymentProofChange"
                   />
 
-                  Choose Image
+                  Pilih Gambar
                 </label>
               </div>
 
@@ -404,14 +404,14 @@
                     type="button"
                     class="text-red-600 hover:text-red-700 text-sm font-semibold"
                   >
-                    Remove
+                    Hapus
                   </button>
                 </div>
 
                 <img
                   v-if="paymentProofPreview"
                   :src="paymentProofPreview"
-                  alt="Payment proof preview"
+                  alt="Pratinjau bukti pembayaran"
                   class="mt-4 w-44 h-44 object-cover rounded-2xl border border-luxe-sand/60 bg-luxe-cream"
                 />
 
@@ -423,8 +423,8 @@
                 >
                   {{
                     isUploadingPaymentProof
-                      ? "Uploading Proof..."
-                      : "Submit Payment Proof"
+                      ? "Mengunggah Bukti..."
+                      : "Kirim Bukti Pembayaran"
                   }}
                 </button>
               </div>
@@ -444,14 +444,14 @@
             to="/"
             class="inline-block bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
           >
-            Continue Shopping
+            Lanjut Belanja
           </RouterLink>
 
           <RouterLink
             to="/orders"
             class="inline-block border border-luxe-espresso text-luxe-espresso px-8 py-4 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition"
           >
-            View Order History
+            Lihat Riwayat Pesanan
           </RouterLink>
         </div>
       </div>
@@ -477,7 +477,7 @@ const loadLastOrder = () => {
     const savedOrder = sessionStorage.getItem("lastOrder");
     return savedOrder ? JSON.parse(savedOrder) : null;
   } catch (error) {
-    console.error("Failed to load last order:", error);
+    console.error("Gagal memuat pesanan terakhir:", error);
     return null;
   }
 };
@@ -520,10 +520,11 @@ const handlePaymentProofChange = (event) => {
   const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
 
   if (!allowedTypes.includes(file.type)) {
-    paymentProofError.value = "Payment proof must be JPG, PNG, or WEBP image.";
+    paymentProofError.value =
+      "Bukti pembayaran harus berupa gambar JPG, PNG, atau WEBP.";
 
     toastStore.showToast({
-      title: "Invalid File",
+      title: "File Tidak Valid",
       message: paymentProofError.value,
       type: "error",
     });
@@ -534,10 +535,10 @@ const handlePaymentProofChange = (event) => {
   const maxSize = 5 * 1024 * 1024;
 
   if (file.size > maxSize) {
-    paymentProofError.value = "Maximum payment proof size is 5 MB.";
+    paymentProofError.value = "Ukuran bukti pembayaran maksimal 5 MB.";
 
     toastStore.showToast({
-      title: "File Too Large",
+      title: "File Terlalu Besar",
       message: paymentProofError.value,
       type: "error",
     });
@@ -580,17 +581,17 @@ const uploadPaymentProof = async () => {
     paymentProofPreview.value = "";
 
     toastStore.showToast({
-      title: "Payment Proof Uploaded",
+      title: "Bukti Pembayaran Terkirim",
       message:
-        "Your payment proof has been submitted and is waiting for admin review.",
+        "Bukti pembayaran Anda berhasil dikirim dan sedang menunggu konfirmasi admin.",
       type: "success",
     });
   } catch (error) {
     paymentProofError.value =
-      error?.message || "Failed to upload payment proof.";
+      error?.message || "Gagal mengunggah bukti pembayaran.";
 
     toastStore.showToast({
-      title: "Upload Failed",
+      title: "Unggah Bukti Gagal",
       message: paymentProofError.value,
       type: "error",
     });
@@ -679,15 +680,16 @@ const hasShippingDetail = computed(() => {
 });
 
 const formatStatus = (status) => {
-  if (!status) return "Pending";
+  const statusMap = {
+    pending: "Menunggu Pembayaran",
+    payment_submitted: "Bukti Pembayaran Dikirim",
+    paid: "Pembayaran Diterima",
+    processing: "Sedang Diproses",
+    shipped: "Dikirim",
+    completed: "Selesai",
+    cancelled: "Dibatalkan",
+  };
 
-  if (status === "payment_submitted") {
-    return "Payment Submitted";
-  }
-
-  return status
-    .split(/[-_]/)
-    .join(" ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+  return statusMap[status] || "Menunggu Pembayaran";
 };
 </script>

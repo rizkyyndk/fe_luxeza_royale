@@ -34,6 +34,7 @@
         <button
           @click="toastStore.removeToast(toast.id)"
           class="text-luxe-brown/60 hover:text-luxe-espresso transition text-xl leading-none"
+          aria-label="Tutup notifikasi"
         >
           ×
         </button>

@@ -16,23 +16,23 @@
         </div>
 
         <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-          Page Not Found
+          Halaman Tidak Ditemukan
         </p>
 
         <h1 class="text-4xl md:text-5xl font-bold mb-5 text-luxe-espresso">
-          This page is not available
+          Halaman ini tidak tersedia
         </h1>
 
         <p class="text-luxe-brown/75 leading-7 mb-8">
-          The page you are looking for does not exist, may have been moved, or
-          is no longer available in Luxeza Royale.
+          Halaman yang Anda cari tidak ditemukan, mungkin telah dipindahkan,
+          atau sudah tidak tersedia di Luxeza Royale.
         </p>
 
         <RouterLink
           to="/"
           class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full inline-block hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
         >
-          Back to Home
+          Kembali ke Beranda
         </RouterLink>
       </div>
     </section>

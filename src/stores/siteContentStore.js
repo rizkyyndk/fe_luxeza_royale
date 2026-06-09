@@ -48,9 +48,10 @@ export const useSiteContentStore = defineStore("siteContent", () => {
       contents.value = await siteContentService.getPublicContents();
       hasLoaded.value = true;
     } catch (error) {
-      console.error("Failed to load site contents:", error);
+      console.error("Gagal memuat konten website:", error);
 
-      errorMessage.value = error?.message || "Failed to load website contents.";
+      errorMessage.value =
+        error?.message || "Konten website belum dapat dimuat.";
     } finally {
       isLoading.value = false;
     }
@@ -64,10 +65,10 @@ export const useSiteContentStore = defineStore("siteContent", () => {
       contents.value = await siteContentService.getAdminContents();
       hasLoaded.value = true;
     } catch (error) {
-      console.error("Failed to load admin site contents:", error);
+      console.error("Gagal memuat konten website admin:", error);
 
       errorMessage.value =
-        error?.message || "Failed to load admin website contents.";
+        error?.message || "Konten website admin belum dapat dimuat.";
 
       throw error;
     } finally {

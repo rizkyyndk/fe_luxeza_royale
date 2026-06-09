@@ -15,12 +15,12 @@
             </p>
 
             <h1 class="text-4xl md:text-5xl font-bold mb-4 text-luxe-espresso">
-              Saved Luxury Pieces
+              Koleksi Favorit Anda
             </h1>
 
             <p class="text-luxe-brown/75 max-w-xl leading-7">
-              Your favorite Luxeza Royale products are saved here. Review them
-              anytime before adding them to your cart.
+              Produk Luxeza Royale pilihan Anda tersimpan di sini. Lihat kembali
+              kapan saja sebelum menambahkannya ke keranjang.
             </p>
           </div>
 
@@ -29,7 +29,7 @@
             @click="wishlistStore.clearWishlist()"
             class="border border-luxe-espresso text-luxe-espresso px-6 py-3 rounded-full hover:bg-luxe-espresso hover:text-luxe-ivory transition w-fit"
           >
-            Clear Wishlist
+            Hapus Semua Wishlist
           </button>
         </div>
 
@@ -42,18 +42,19 @@
             <p class="text-6xl mb-6 text-luxe-espresso">♡</p>
 
             <h2 class="text-3xl md:text-4xl font-bold mb-4 text-luxe-espresso">
-              Your wishlist is empty
+              Wishlist Anda masih kosong
             </h2>
 
             <p class="text-luxe-brown/75 mb-8">
-              Start saving your favorite luxury products.
+              Simpan produk favorit Anda dan temukan kembali koleksi pilihan
+              dengan lebih mudah.
             </p>
 
             <RouterLink
               to="/"
               class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full inline-block hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
             >
-              Explore Collection
+              Jelajahi Koleksi
             </RouterLink>
           </div>
         </div>

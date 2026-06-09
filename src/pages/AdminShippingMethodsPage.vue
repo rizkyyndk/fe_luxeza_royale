@@ -10,16 +10,16 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-              Admin Panel
+              Panel Admin
             </p>
 
             <h1 class="text-4xl md:text-5xl font-bold mb-4 text-luxe-espresso">
-              Shipping Methods
+              Metode Pengiriman
             </h1>
 
             <p class="text-luxe-brown/75 max-w-xl leading-7">
-              Manage delivery methods, shipping costs, descriptions, status, and
-              display order for Luxeza Royale checkout.
+              Kelola metode pengiriman, biaya ongkir, deskripsi, status, dan
+              urutan tampil untuk proses checkout Luxeza Royale.
             </p>
           </div>
 
@@ -28,7 +28,7 @@
             type="button"
             class="bg-luxe-espresso text-luxe-ivory px-6 py-3 rounded-full hover:bg-luxe-royal transition w-fit"
           >
-            Add Shipping Method
+            Tambah Metode Pengiriman
           </button>
         </div>
 
@@ -39,14 +39,14 @@
               v-if="isLoading"
               class="bg-luxe-cream border border-luxe-sand/60 rounded-[2rem] p-8 text-luxe-brown/75"
             >
-              Loading shipping methods...
+              Memuat metode pengiriman...
             </div>
 
             <div
               v-else-if="shippingMethods.length === 0"
               class="bg-luxe-cream border border-luxe-sand/60 rounded-[2rem] p-8 text-luxe-brown/75"
             >
-              No shipping method found.
+              Metode pengiriman belum tersedia.
             </div>
 
             <div
@@ -74,17 +74,17 @@
                       "
                       class="px-3 py-1 rounded-full text-xs font-semibold"
                     >
-                      {{ method.isActive ? "Active" : "Inactive" }}
+                      {{ method.isActive ? "Aktif" : "Tidak Aktif" }}
                     </span>
                   </div>
 
                   <p class="text-sm text-luxe-brown/75 mb-2">
-                    Code:
+                    Kode:
                     <span class="font-semibold">{{ method.code }}</span>
                   </p>
 
                   <p class="text-sm text-luxe-brown/75 mb-2">
-                    Description:
+                    Deskripsi:
                     <span class="font-semibold">
                       {{ method.description || "-" }}
                     </span>
@@ -94,7 +94,7 @@
                     <div
                       class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-4"
                     >
-                      <p class="text-luxe-brown/60 text-sm mb-1">Cost</p>
+                      <p class="text-luxe-brown/60 text-sm mb-1">Biaya</p>
                       <p class="text-xl font-bold text-luxe-espresso">
                         {{ formatCurrency(method.cost) }}
                       </p>
@@ -103,7 +103,9 @@
                     <div
                       class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-4"
                     >
-                      <p class="text-luxe-brown/60 text-sm mb-1">Sort Order</p>
+                      <p class="text-luxe-brown/60 text-sm mb-1">
+                        Urutan Tampil
+                      </p>
                       <p class="text-xl font-bold text-luxe-espresso">
                         {{ method.sortOrder }}
                       </p>
@@ -117,7 +119,7 @@
                     type="button"
                     class="border border-luxe-sand text-luxe-espresso px-4 py-2 rounded-full hover:bg-luxe-cream transition"
                   >
-                    Edit
+                    Ubah
                   </button>
 
                   <button
@@ -125,7 +127,7 @@
                     type="button"
                     class="border border-red-200 text-red-600 px-4 py-2 rounded-full hover:bg-red-50 transition"
                   >
-                    Delete
+                    Hapus
                   </button>
                 </div>
               </div>
@@ -137,13 +139,15 @@
             class="bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-6 h-fit shadow-[0_18px_60px_rgba(92,56,36,0.10)] sticky top-28"
           >
             <h2 class="text-2xl font-bold text-luxe-espresso mb-6">
-              {{ form.id ? "Edit Shipping Method" : "Add Shipping Method" }}
+              {{
+                form.id ? "Ubah Metode Pengiriman" : "Tambah Metode Pengiriman"
+              }}
             </h2>
 
             <form class="space-y-5" @submit.prevent="submitForm">
               <div>
                 <label class="block text-sm text-luxe-brown/75 mb-2">
-                  Code
+                  Kode
                 </label>
 
                 <input
@@ -154,40 +158,40 @@
                 />
 
                 <p class="text-xs text-luxe-brown/60 mt-2 leading-5">
-                  Code is used by checkout. Example: standard, express,
-                  same-day.
+                  Kode digunakan oleh sistem checkout. Contoh: standard,
+                  express, same-day.
                 </p>
               </div>
 
               <div>
                 <label class="block text-sm text-luxe-brown/75 mb-2">
-                  Name
+                  Nama Metode
                 </label>
 
                 <input
                   v-model="form.name"
                   type="text"
-                  placeholder="Standard Delivery"
+                  placeholder="Pengiriman Standar"
                   class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                 />
               </div>
 
               <div>
                 <label class="block text-sm text-luxe-brown/75 mb-2">
-                  Description
+                  Deskripsi
                 </label>
 
                 <input
                   v-model="form.description"
                   type="text"
-                  placeholder="2-4 working days"
+                  placeholder="2-4 hari kerja"
                   class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-2xl px-5 py-4 outline-none focus:border-luxe-royal transition"
                 />
               </div>
 
               <div>
                 <label class="block text-sm text-luxe-brown/75 mb-2">
-                  Cost
+                  Biaya
                 </label>
 
                 <input
@@ -208,13 +212,13 @@
                   <LuxeSelect
                     v-model="form.is_active"
                     :options="statusOptions"
-                    placeholder="Select status"
+                    placeholder="Pilih status"
                   />
                 </div>
 
                 <div>
                   <label class="block text-sm text-luxe-brown/75 mb-2">
-                    Sort Order
+                    Urutan Tampil
                   </label>
 
                   <input
@@ -233,10 +237,10 @@
               >
                 {{
                   isSubmitting
-                    ? "Saving..."
+                    ? "Menyimpan..."
                     : form.id
-                      ? "Update Shipping Method"
-                      : "Create Shipping Method"
+                      ? "Perbarui Metode Pengiriman"
+                      : "Buat Metode Pengiriman"
                 }}
               </button>
 
@@ -246,7 +250,7 @@
                 @click="resetForm"
                 class="w-full border border-luxe-sand text-luxe-espresso py-4 rounded-full hover:bg-luxe-cream transition"
               >
-                Cancel Edit
+                Batal Ubah
               </button>
             </form>
           </div>
@@ -278,11 +282,11 @@ const isSubmitting = ref(false);
 
 const statusOptions = [
   {
-    label: "Active",
+    label: "Aktif",
     value: true,
   },
   {
-    label: "Inactive",
+    label: "Tidak Aktif",
     value: false,
   },
 ];
@@ -311,8 +315,8 @@ const loadShippingMethods = async () => {
       await shippingMethodService.getAdminShippingMethods();
   } catch (error) {
     toastStore.showToast({
-      title: "Failed to Load Shipping Methods",
-      message: error?.message || "Unable to load shipping methods.",
+      title: "Gagal Memuat Pengiriman",
+      message: error?.message || "Metode pengiriman belum dapat dimuat.",
       type: "error",
     });
   } finally {
@@ -349,8 +353,8 @@ const buildPayload = () => {
 const validateForm = () => {
   if (!form.name.trim()) {
     toastStore.showToast({
-      title: "Name Required",
-      message: "Shipping method name is required.",
+      title: "Nama Metode Wajib Diisi",
+      message: "Silakan masukkan nama metode pengiriman.",
       type: "error",
     });
 
@@ -359,8 +363,8 @@ const validateForm = () => {
 
   if (Number(form.cost || 0) < 0) {
     toastStore.showToast({
-      title: "Invalid Cost",
-      message: "Shipping cost cannot be negative.",
+      title: "Biaya Tidak Valid",
+      message: "Biaya pengiriman tidak boleh bernilai negatif.",
       type: "error",
     });
 
@@ -384,16 +388,16 @@ const submitForm = async () => {
       await shippingMethodService.updateShippingMethod(form.id, payload);
 
       toastStore.showToast({
-        title: "Shipping Method Updated",
-        message: "Shipping method has been updated successfully.",
+        title: "Metode Pengiriman Diperbarui",
+        message: "Metode pengiriman berhasil diperbarui.",
         type: "success",
       });
     } else {
       await shippingMethodService.createShippingMethod(payload);
 
       toastStore.showToast({
-        title: "Shipping Method Created",
-        message: "Shipping method has been created successfully.",
+        title: "Metode Pengiriman Dibuat",
+        message: "Metode pengiriman baru berhasil dibuat.",
         type: "success",
       });
     }
@@ -402,12 +406,12 @@ const submitForm = async () => {
     await loadShippingMethods();
   } catch (error) {
     toastStore.showToast({
-      title: "Save Failed",
+      title: "Gagal Menyimpan Pengiriman",
       message:
         error?.errors?.code?.[0] ||
         error?.errors?.name?.[0] ||
         error?.message ||
-        "Failed to save shipping method.",
+        "Metode pengiriman belum dapat disimpan.",
       type: "error",
     });
   } finally {
@@ -417,7 +421,7 @@ const submitForm = async () => {
 
 const deleteMethod = async (method) => {
   const confirmed = window.confirm(
-    `Delete shipping method "${method.name}"? This action cannot be undone.`,
+    `Hapus metode pengiriman "${method.name}"? Tindakan ini tidak dapat dibatalkan.`,
   );
 
   if (!confirmed) return;
@@ -426,8 +430,8 @@ const deleteMethod = async (method) => {
     await shippingMethodService.deleteShippingMethod(method.id);
 
     toastStore.showToast({
-      title: "Shipping Method Deleted",
-      message: "Shipping method has been deleted successfully.",
+      title: "Metode Pengiriman Dihapus",
+      message: "Metode pengiriman berhasil dihapus.",
       type: "success",
     });
 
@@ -438,8 +442,8 @@ const deleteMethod = async (method) => {
     await loadShippingMethods();
   } catch (error) {
     toastStore.showToast({
-      title: "Delete Failed",
-      message: error?.message || "Failed to delete shipping method.",
+      title: "Gagal Menghapus Pengiriman",
+      message: error?.message || "Metode pengiriman belum dapat dihapus.",
       type: "error",
     });
   }

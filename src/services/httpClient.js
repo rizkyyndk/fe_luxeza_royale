@@ -70,7 +70,7 @@ const handleResponse = async (response) => {
 
     throw {
       status: response.status,
-      message: data?.message || "Request failed",
+      message: data?.message || "Permintaan belum dapat diproses.",
       errors: data?.errors || null,
       data,
     };

@@ -60,7 +60,7 @@
             v-if="filteredOptions.length === 0"
             class="px-5 py-5 text-sm text-luxe-brown/60 text-center"
           >
-            No result found.
+            Data tidak ditemukan.
           </div>
         </div>
       </div>
@@ -90,11 +90,11 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: "Select option",
+    default: "Pilih opsi",
   },
   searchPlaceholder: {
     type: String,
-    default: "Search...",
+    default: "Cari...",
   },
   disabled: {
     type: Boolean,
@@ -123,7 +123,7 @@ const selectedOption = computed(() => {
 });
 
 const selectedLabel = computed(() => {
-  if (props.loading) return "Loading...";
+  if (props.loading) return "Memuat...";
   return selectedOption.value?.name || "";
 });
 

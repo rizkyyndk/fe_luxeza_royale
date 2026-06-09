@@ -20,14 +20,39 @@ const normalizeImageUrl = (url) => {
 const normalizeProduct = (product) => {
   if (!product) return null;
 
+  const toBoolean = (value) => {
+    return value === true || value === 1 || value === "1";
+  };
+
   const images = Array.isArray(product.images)
     ? product.images.map((image) => ({
         id: image.id,
         imageUrl: normalizeImageUrl(image.image_url),
         rawImageUrl: image.image_url,
-        isPrimary: Boolean(image.is_primary),
+        isPrimary: toBoolean(image.is_primary),
       }))
     : [];
+
+  const sizes = Array.isArray(product.sizes)
+    ? product.sizes.map((size) => ({
+        id: size.id,
+        size: size.size,
+        price: Number(size.price ?? product.price ?? 0),
+        stock: Number(size.stock ?? 0),
+        sortOrder: Number(size.sort_order ?? 0),
+        isActive: toBoolean(size.is_active),
+      }))
+    : [];
+
+  const activeSizes = sizes.filter((size) => size.isActive);
+
+  const totalSizeStock = activeSizes.reduce((total, size) => {
+    return total + Number(size.stock ?? 0);
+  }, 0);
+
+  const hasSizes = sizes.length > 0;
+
+  const displayStock = hasSizes ? totalSizeStock : Number(product.stock ?? 0);
 
   const primaryImage =
     product.primary_image?.image_url ||
@@ -38,44 +63,43 @@ const normalizeProduct = (product) => {
   return {
     id: product.id,
     categoryId: product.category_id || null,
-    categoryName: product.category?.name || "Uncategorized",
+    categoryName: product.category?.name || "Tanpa Kategori",
     categoryIsActive: product.category_id
-      ? Boolean(product.category?.is_active)
+      ? toBoolean(product.category?.is_active)
       : true,
     isVisibleToCustomer:
-      Boolean(product.is_active) &&
-      (!product.category_id || Boolean(product.category?.is_active)),
-    customerHiddenReason: !product.is_active
-      ? "Product Inactive"
-      : product.category_id && !product.category?.is_active
+      toBoolean(product.is_active) &&
+      (!product.category_id || toBoolean(product.category?.is_active)),
+    customerHiddenReason: !toBoolean(product.is_active)
+      ? "Produk Tidak Aktif"
+      : product.category_id && !toBoolean(product.category?.is_active)
         ? "Kategori Tidak Aktif"
         : "",
     name: product.name,
     slug: product.slug,
     description: product.description || "",
     price: Number(product.price || 0),
-    stock: Number(product.stock || 0),
+
+    // penting: stock yang tampil di admin
+    stock: displayStock,
+
+    // tambahan supaya aman untuk kebutuhan debug / form edit
+    rawStock: Number(product.stock ?? 0),
+    totalSizeStock,
+    hasSizes,
+
     weightGram: Number(product.weight_gram || 1000),
-    isActive: Boolean(product.is_active),
+    isActive: toBoolean(product.is_active),
     image: normalizeImageUrl(primaryImage),
     images,
-    sizes: Array.isArray(product.sizes)
-      ? product.sizes.map((size) => ({
-          id: size.id,
-          size: size.size,
-          price: Number(size.price ?? product.price ?? 0),
-          stock: Number(size.stock || 0),
-          sortOrder: Number(size.sort_order || 0),
-          isActive: Boolean(size.is_active),
-        }))
-      : [],
+    sizes,
     attributes: Array.isArray(product.attributes)
       ? product.attributes.map((attribute) => ({
           id: attribute.id,
           label: attribute.label,
           value: attribute.value,
           sortOrder: Number(attribute.sort_order || 0),
-          isActive: Boolean(attribute.is_active),
+          isActive: toBoolean(attribute.is_active),
         }))
       : [],
     createdAt: product.created_at,
@@ -104,6 +128,7 @@ const normalizeCategory = (category) => {
     raw: category,
   };
 };
+
 const getApiBaseUrl = () => {
   return (import.meta.env.VITE_API_BASE_URL || "/api").replace(/\/$/, "");
 };
@@ -144,6 +169,7 @@ export const adminProductService = {
       `/admin/categories/${categoryId}`,
       payload,
     );
+
     const data = unwrapData(response, null);
 
     return normalizeCategory(data);
@@ -188,7 +214,7 @@ export const adminProductService = {
 
     if (!response.ok || result?.success === false) {
       const error = new Error(
-        result?.message || "Failed to upload product image.",
+        result?.message || "Gambar produk belum dapat diunggah.",
       );
 
       error.status = response.status;
@@ -213,6 +239,7 @@ export const adminProductService = {
       `/admin/products/${productId}`,
       payload,
     );
+
     const data = unwrapData(response, null);
 
     return normalizeProduct(data);

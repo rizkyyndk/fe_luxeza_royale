@@ -18,13 +18,13 @@
       >
         <div>
           <p class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-1">
-            Shopping Bag
+            Tas Belanja
           </p>
 
-          <h2 class="text-2xl font-bold">Your Cart</h2>
+          <h2 class="text-2xl font-bold">Keranjang Anda</h2>
 
           <p class="text-sm text-luxe-brown/70 mt-1">
-            {{ cartStore.totalItems }} item in cart
+            {{ cartStore.totalItems }} item di keranjang
           </p>
         </div>
 
@@ -43,17 +43,17 @@
       >
         <p class="text-5xl mb-5">🛒</p>
 
-        <h3 class="text-xl font-semibold mb-2">Your cart is empty</h3>
+        <h3 class="text-xl font-semibold mb-2">Keranjang masih kosong</h3>
 
         <p class="text-luxe-brown/70 mb-8 leading-7">
-          Discover our luxury collection and add your favorite pieces.
+          Temukan koleksi Luxeza Royale dan tambahkan produk favorit Anda.
         </p>
 
         <button
           @click="goToProducts"
           class="bg-luxe-espresso text-luxe-ivory px-8 py-4 rounded-full hover:bg-luxe-royal hover:scale-105 transition shadow-lg shadow-luxe-brown/20"
         >
-          Start Shopping
+          Mulai Belanja
         </button>
       </div>
 
@@ -68,17 +68,19 @@
             <div
               class="bg-luxe-ivory rounded-3xl p-4 border border-luxe-sand/50 shadow-sm"
             >
-              <p class="text-xs text-luxe-brown/70 mb-1">Selected Items</p>
+              <p class="text-xs text-luxe-brown/70 mb-1">Item Dipilih</p>
 
               <p
                 class="text-base sm:text-xl font-bold whitespace-nowrap tracking-[-0.04em]"
-              ></p>
+              >
+                {{ cartStore.selectedTotalItems }} item
+              </p>
             </div>
 
             <div
               class="bg-luxe-ivory rounded-3xl p-4 border border-luxe-sand/50 shadow-sm"
             >
-              <p class="text-xs text-luxe-brown/70 mb-1">Selected Total</p>
+              <p class="text-xs text-luxe-brown/70 mb-1">Total Dipilih</p>
 
               <p
                 class="text-base sm:text-xl font-bold whitespace-nowrap tracking-[-0.03em]"
@@ -93,7 +95,7 @@
             class="bg-luxe-ivory rounded-3xl p-4 border border-luxe-sand/50 shadow-sm"
           >
             <div class="flex items-center justify-between gap-4 mb-3">
-              <p class="text-sm font-semibold">Free Shipping Progress</p>
+              <p class="text-sm font-semibold">Progress Gratis Ongkir</p>
 
               <p class="text-xs text-luxe-brown/70">
                 {{ freeShippingProgress }}%
@@ -111,12 +113,12 @@
 
             <p class="text-xs text-luxe-brown/70 leading-5">
               <span v-if="remainingForFreeShipping > 0">
-                Add {{ formatPrice(remainingForFreeShipping) }} more selected
-                items to get free shipping.
+                Tambahkan {{ formatPrice(remainingForFreeShipping) }} lagi dari
+                item yang dipilih untuk mendapatkan gratis ongkir.
               </span>
 
               <span v-else>
-                Congratulations, your selected items qualify for free shipping.
+                Selamat, item yang dipilih sudah memenuhi syarat gratis ongkir.
               </span>
             </p>
           </div>
@@ -137,7 +139,7 @@
             />
 
             <span class="text-sm font-semibold text-luxe-espresso">
-              Select all items
+              Pilih semua item
             </span>
           </label>
 
@@ -146,7 +148,7 @@
             @click="cartStore.removeSelectedItems()"
             class="shrink-0 min-h-[44px] px-3 py-2 rounded-2xl text-xs font-medium text-red-500 hover:bg-red-50 transition"
           >
-            Remove
+            Hapus
           </button>
         </div>
 
@@ -192,19 +194,20 @@
                       v-if="item.selected"
                       class="inline-flex mt-2 text-[10px] uppercase tracking-[2px] bg-luxe-espresso text-luxe-ivory px-2 py-1 rounded-full"
                     >
-                      Selected
+                      Dipilih
                     </span>
                   </div>
+
                   <p class="text-luxe-brown/70 text-sm">
                     {{ formatPrice(item.price) }}
                   </p>
 
                   <p class="text-sm text-luxe-brown/70 mt-1">
-                    Size: {{ item.size }}
+                    Ukuran: {{ item.size }}
                   </p>
 
                   <p class="text-sm text-luxe-brown/70 mt-1">
-                    Stock: {{ item.stock }}
+                    Stok: {{ item.stock }}
                   </p>
                 </div>
 
@@ -264,7 +267,7 @@
         >
           <div class="space-y-3 mb-6">
             <div class="flex items-center justify-between">
-              <span class="text-luxe-brown/70"> Selected subtotal </span>
+              <span class="text-luxe-brown/70"> Subtotal Dipilih </span>
 
               <span class="font-semibold">
                 {{ formatPrice(cartStore.selectedTotalPrice) }}
@@ -272,7 +275,7 @@
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-luxe-brown/70"> Estimated shipping </span>
+              <span class="text-luxe-brown/70"> Estimasi Ongkir </span>
 
               <span class="font-semibold">
                 {{ estimatedShippingLabel }}
@@ -282,7 +285,7 @@
             <div
               class="flex items-center justify-between border-t border-luxe-sand/60 pt-4"
             >
-              <span class="text-lg"> Estimated total </span>
+              <span class="text-lg"> Estimasi Total </span>
 
               <span class="text-2xl font-bold">
                 {{ formatPrice(estimatedCartTotal) }}
@@ -307,7 +310,7 @@
             @click="cartStore.clearCart()"
             class="w-full mt-4 text-sm text-luxe-brown/70 hover:text-luxe-espresso transition"
           >
-            Clear Cart
+            Kosongkan Keranjang
           </button>
         </div>
       </div>
@@ -374,7 +377,7 @@ const estimatedShippingLabel = computed(() => {
   if (!cartStore.hasSelectedItems) return "-";
 
   return estimatedShipping.value === 0
-    ? "Free"
+    ? "Gratis"
     : formatPrice(estimatedShipping.value);
 });
 
@@ -384,10 +387,10 @@ const estimatedCartTotal = computed(() => {
 
 const checkoutButtonText = computed(() => {
   if (!cartStore.hasSelectedItems) {
-    return "Select Items to Checkout";
+    return "Pilih Item untuk Checkout";
   }
 
-  return `Checkout ${cartStore.selectedTotalItems} Selected Item`;
+  return `Checkout ${cartStore.selectedTotalItems} Item Dipilih`;
 });
 
 const formatPrice = (value) => {

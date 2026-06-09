@@ -50,14 +50,14 @@
         <p class="text-luxe-brown/80 leading-8 mb-8">
           {{
             product.description ||
-            "Premium luxury fashion piece from Luxeza Royale collection."
+            "Koleksi fashion premium dari Luxeza Royale untuk tampilan modern yang elegan."
           }}
         </p>
 
         <!-- SIZE -->
         <div class="mb-8">
           <div class="flex items-center justify-between mb-4">
-            <p class="font-semibold text-luxe-espresso">Select Size</p>
+            <p class="font-semibold text-luxe-espresso">Pilih Ukuran</p>
 
             <p class="text-sm text-luxe-brown/65">
               {{ selectedStockLabel }}
@@ -96,7 +96,7 @@
 
         <!-- QUANTITY -->
         <div class="mb-8">
-          <p class="font-semibold mb-4 text-luxe-espresso">Quantity</p>
+          <p class="font-semibold mb-4 text-luxe-espresso">Jumlah</p>
 
           <div
             class="inline-flex items-center gap-6 border border-luxe-sand bg-luxe-ivory rounded-full px-6 py-3 shadow-sm"
@@ -133,7 +133,7 @@
             "
             class="w-full py-5 rounded-full text-lg transition"
           >
-            {{ isOutOfStock ? "Out of Stock" : "Add To Cart" }}
+            {{ isOutOfStock ? "Stok Habis" : "Tambah ke Keranjang" }}
           </button>
 
           <button
@@ -147,8 +147,8 @@
           >
             {{
               wishlistStore.isInWishlist(product.id)
-                ? "Saved to Wishlist"
-                : "Add to Wishlist"
+                ? "Tersimpan di Wishlist"
+                : "Simpan ke Wishlist"
             }}
           </button>
 
@@ -157,7 +157,7 @@
             @click="closeModal"
             class="w-full text-center py-5 rounded-full text-lg bg-luxe-cream border border-luxe-sand/60 text-luxe-espresso hover:bg-luxe-espresso hover:text-luxe-ivory transition"
           >
-            View Full Details
+            Lihat Detail Lengkap
           </RouterLink>
         </div>
       </div>
@@ -270,14 +270,14 @@ const selectedStock = computed(() => {
 
 const selectedStockLabel = computed(() => {
   if (availableSizes.value.length > 0 && !selectedSize.value) {
-    return `${totalAvailableStock.value} item available`;
+    return `${totalAvailableStock.value} item tersedia`;
   }
 
   if (selectedStock.value <= 0) {
-    return "Out of stock";
+    return "Stok habis";
   }
 
-  return `${selectedStock.value} item available`;
+  return `${selectedStock.value} item tersedia`;
 });
 
 const isSelectedSizeOutOfStock = computed(() => {
@@ -301,9 +301,9 @@ const isLowStock = computed(() => {
 });
 
 const stockStatus = computed(() => {
-  if (isOutOfStock.value) return "Out of Stock";
-  if (isLowStock.value) return "Low Stock";
-  return "In Stock";
+  if (isOutOfStock.value) return "Stok Habis";
+  if (isLowStock.value) return "Stok Terbatas";
+  return "Tersedia";
 });
 
 const stockStatusClass = computed(() => {
@@ -325,8 +325,8 @@ const closeModal = () => {
 const selectSize = (sizeOption) => {
   if (sizeOption.stock <= 0) {
     toastStore.showToast({
-      title: "Size Out of Stock",
-      message: `Size ${sizeOption.size} is currently out of stock.`,
+      title: "Ukuran Tidak Tersedia",
+      message: `Ukuran ${sizeOption.size} sedang habis.`,
       type: "info",
     });
 
@@ -341,8 +341,8 @@ const selectSize = (sizeOption) => {
 const increaseQuantity = () => {
   if (quantity.value >= selectedStock.value) {
     toastStore.showToast({
-      title: "Stock Limit Reached",
-      message: `Only ${selectedStock.value} item available for this size.`,
+      title: "Batas Stok Tercapai",
+      message: `Hanya ${selectedStock.value} item tersedia untuk ukuran ini.`,
       type: "info",
     });
 
@@ -361,8 +361,8 @@ const decreaseQuantity = () => {
 const addToCart = () => {
   if (isOutOfStock.value) {
     toastStore.showToast({
-      title: "Out of Stock",
-      message: "This product is currently unavailable.",
+      title: "Stok Habis",
+      message: "Produk ini sedang tidak tersedia.",
       type: "error",
     });
 
@@ -370,11 +370,12 @@ const addToCart = () => {
   }
 
   if (availableSizes.value.length > 0 && !selectedSize.value) {
-    errorMessage.value = "Please select a size before adding to cart.";
+    errorMessage.value =
+      "Pilih ukuran terlebih dahulu sebelum menambahkan produk ke keranjang.";
 
     toastStore.showToast({
-      title: "Size Required",
-      message: "Please select a size before adding this item.",
+      title: "Pilih Ukuran",
+      message: "Silakan pilih ukuran sebelum menambahkan produk ini.",
       type: "error",
     });
 
@@ -382,11 +383,11 @@ const addToCart = () => {
   }
 
   if (isSelectedSizeOutOfStock.value) {
-    errorMessage.value = "Selected size is out of stock.";
+    errorMessage.value = "Ukuran yang dipilih sedang habis.";
 
     toastStore.showToast({
-      title: "Out of Stock",
-      message: "Please select another size.",
+      title: "Stok Habis",
+      message: "Silakan pilih ukuran lain.",
       type: "error",
     });
 
@@ -397,7 +398,7 @@ const addToCart = () => {
     {
       ...props.product,
       price: selectedPrice.value,
-      size: selectedSize.value || "One Size",
+      size: selectedSize.value || "Ukuran Standar",
       stock: selectedStock.value,
       selectedSizePrice: selectedPrice.value,
     },
@@ -407,9 +408,9 @@ const addToCart = () => {
   uiStore.openCart();
 
   toastStore.showToast({
-    title: "Added to Cart",
-    message: `${props.product.title} • Size ${
-      selectedSize.value || "One Size"
+    title: "Ditambahkan ke Keranjang",
+    message: `${props.product.title} • Ukuran ${
+      selectedSize.value || "Ukuran Standar"
     }`,
     type: "success",
   });
@@ -434,7 +435,7 @@ const toggleWishlist = () => {
   });
 
   toastStore.showToast({
-    title: wasSaved ? "Removed from Wishlist" : "Saved to Wishlist",
+    title: wasSaved ? "Dihapus dari Wishlist" : "Tersimpan di Wishlist",
     message: props.product.title,
     type: wasSaved ? "info" : "success",
   });

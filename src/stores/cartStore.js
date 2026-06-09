@@ -12,7 +12,7 @@ const getStoredUserId = () => {
 
     return user?.id || null;
   } catch (error) {
-    console.error("Failed to load auth user for cart:", error);
+    console.error("Gagal memuat data pengguna untuk keranjang:", error);
     return null;
   }
 };
@@ -47,7 +47,7 @@ const loadCartFromStorage = (storageKey) => {
 
     return [];
   } catch (error) {
-    console.error("Failed to load cart from sessionStorage:", error);
+    console.error("Gagal memuat keranjang dari sessionStorage:", error);
     return [];
   }
 };
@@ -176,6 +176,7 @@ export const useCartStore = defineStore("cart", {
         existingProduct.price = Number(
           product.price || existingProduct.price || 0,
         );
+
         existingProduct.stock = product.stock;
 
         const nextQuantity = existingProduct.quantity + requestedQuantity;

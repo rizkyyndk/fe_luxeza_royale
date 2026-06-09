@@ -11,16 +11,16 @@
         >
           <div>
             <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-4">
-              Admin Panel
+              Panel Admin
             </p>
 
             <h1 class="text-4xl md:text-5xl font-bold mb-4 text-luxe-espresso">
-              Website Content
+              Konten Website
             </h1>
 
             <p class="text-luxe-brown/75 max-w-2xl leading-7">
-              Manage website text, labels, descriptions, footer content, and
-              CMS-based visual content without editing frontend code.
+              Kelola teks website, label, deskripsi, konten footer, dan visual
+              berbasis CMS tanpa perlu mengubah kode frontend.
             </p>
           </div>
 
@@ -30,7 +30,7 @@
             type="button"
             class="bg-luxe-espresso text-luxe-ivory px-7 py-4 rounded-full hover:bg-luxe-royal disabled:opacity-60 transition shadow-lg shadow-luxe-brown/20"
           >
-            {{ isLoading ? "Loading..." : "Refresh Content" }}
+            {{ isLoading ? "Memuat..." : "Muat Ulang Konten" }}
           </button>
         </div>
 
@@ -40,26 +40,26 @@
         >
           <div>
             <label class="block text-sm text-luxe-brown/75 mb-2">
-              Search Content
+              Cari Konten
             </label>
 
             <input
               v-model="searchKeyword"
               type="text"
-              placeholder="Search by key, label, section, or value..."
+              placeholder="Cari berdasarkan key, label, bagian, atau isi konten..."
               class="w-full border border-luxe-sand bg-luxe-ivory text-luxe-espresso placeholder:text-luxe-brown/50 rounded-full px-5 py-4 outline-none focus:border-luxe-royal transition shadow-sm"
             />
           </div>
 
           <div>
             <label class="block text-sm text-luxe-brown/75 mb-2">
-              Section
+              Bagian
             </label>
 
             <LuxeSelect
               v-model="sectionFilter"
               :options="sectionOptions"
-              placeholder="All Sections"
+              placeholder="Semua Bagian"
             />
           </div>
         </div>
@@ -69,7 +69,7 @@
           v-if="isLoading"
           class="bg-luxe-cream border border-luxe-sand/60 rounded-[2rem] p-10 text-center text-luxe-brown/75"
         >
-          Loading website contents...
+          Memuat konten website...
         </div>
 
         <!-- ERROR -->
@@ -80,7 +80,7 @@
           <p class="text-4xl mb-4">⚠️</p>
 
           <h2 class="text-2xl font-bold text-red-700 mb-3">
-            Failed to Load Content
+            Konten Belum Dapat Dimuat
           </h2>
 
           <p class="text-red-600 mb-6">
@@ -92,7 +92,7 @@
             type="button"
             class="bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-700 transition"
           >
-            Try Again
+            Coba Lagi
           </button>
         </div>
 
@@ -104,11 +104,11 @@
           <p class="text-5xl mb-5">🔎</p>
 
           <h2 class="text-3xl font-bold text-luxe-espresso mb-3">
-            No content found
+            Konten tidak ditemukan
           </h2>
 
           <p class="text-luxe-brown/75 mb-6">
-            Try another keyword or select a different section.
+            Coba gunakan kata kunci lain atau pilih bagian yang berbeda.
           </p>
 
           <button
@@ -116,7 +116,7 @@
             type="button"
             class="bg-luxe-espresso text-luxe-ivory px-6 py-3 rounded-full hover:bg-luxe-royal transition"
           >
-            Reset Filters
+            Atur Ulang Filter
           </button>
         </div>
 
@@ -132,7 +132,7 @@
               class="bg-luxe-espresso text-luxe-ivory px-6 md:px-8 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
             >
               <div>
-                <p class="text-sm text-luxe-sand mb-1">Content Section</p>
+                <p class="text-sm text-luxe-sand mb-1">Bagian Konten</p>
 
                 <h2 class="text-2xl md:text-3xl font-bold">
                   {{ formatSectionName(group.section) }}
@@ -165,7 +165,7 @@
                       <span
                         class="text-xs px-3 py-1 rounded-full bg-luxe-cream text-luxe-brown/75 border border-luxe-sand/60"
                       >
-                        {{ item.inputType }}
+                        {{ formatInputType(item.inputType) }}
                       </span>
 
                       <span
@@ -176,7 +176,7 @@
                         "
                         class="text-xs px-3 py-1 rounded-full"
                       >
-                        {{ item.isPublic ? "Public" : "Hidden" }}
+                        {{ item.isPublic ? "Publik" : "Tersembunyi" }}
                       </span>
                     </div>
 
@@ -192,7 +192,9 @@
                     class="bg-luxe-espresso text-luxe-ivory px-5 py-3 rounded-full hover:bg-luxe-royal disabled:opacity-60 transition w-fit"
                   >
                     {{
-                      savingIds.includes(item.id) ? "Saving..." : "Save Changes"
+                      savingIds.includes(item.id)
+                        ? "Menyimpan..."
+                        : "Simpan Perubahan"
                     }}
                   </button>
                 </div>
@@ -201,7 +203,7 @@
                   <!-- VALUE -->
                   <div>
                     <label class="block text-sm text-luxe-brown/75 mb-2">
-                      Content Value
+                      Isi Konten
                     </label>
 
                     <textarea
@@ -227,7 +229,7 @@
                       class="mt-4 space-y-3"
                     >
                       <p class="text-xs text-luxe-brown/60 leading-5">
-                        Example: /app/logo/luxeza-logo.png or full image URL.
+                        Contoh: /app/logo/luxeza-logo.png atau URL gambar penuh.
                       </p>
 
                       <div class="flex flex-col sm:flex-row gap-3">
@@ -249,8 +251,8 @@
 
                           {{
                             uploadingIds.includes(item.id)
-                              ? "Uploading..."
-                              : "Upload Image"
+                              ? "Mengunggah..."
+                              : "Unggah Gambar"
                           }}
                         </label>
 
@@ -260,7 +262,7 @@
                           type="button"
                           class="inline-flex items-center justify-center border border-red-200 text-red-600 px-5 py-3 rounded-full hover:bg-red-50 transition w-fit"
                         >
-                          Clear Image
+                          Hapus Gambar
                         </button>
                       </div>
                     </div>
@@ -270,7 +272,7 @@
                   <div class="space-y-4">
                     <div>
                       <label class="block text-sm text-luxe-brown/75 mb-2">
-                        Sort Order
+                        Urutan Tampil
                       </label>
 
                       <input
@@ -290,7 +292,7 @@
                       />
 
                       <span class="text-sm font-medium text-luxe-espresso">
-                        Show publicly
+                        Tampilkan untuk publik
                       </span>
                     </label>
                   </div>
@@ -302,7 +304,7 @@
                   class="mt-5 bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5"
                 >
                   <p class="text-sm font-semibold text-luxe-espresso mb-4">
-                    Image Preview
+                    Pratinjau Gambar
                   </p>
 
                   <img
@@ -348,7 +350,7 @@ const sectionFilter = ref("all");
 const sectionOptions = computed(() => {
   return [
     {
-      label: "All Sections",
+      label: "Semua Bagian",
       value: "all",
     },
     ...availableSections.value.map((section) => ({
@@ -376,10 +378,10 @@ const loadContents = async () => {
 
     localContents.value = siteContentStore.contents.map(cloneContent);
   } catch (error) {
-    errorMessage.value = error?.message || "Failed to load website contents.";
+    errorMessage.value = error?.message || "Konten website belum dapat dimuat.";
 
     toastStore.showToast({
-      title: "Failed to Load Content",
+      title: "Gagal Memuat Konten",
       message: errorMessage.value,
       type: "error",
     });
@@ -444,10 +446,49 @@ const groupedFilteredContents = computed(() => {
 });
 
 const formatSectionName = (section) => {
-  return String(section || "General")
+  const sectionMap = {
+    general: "Umum",
+    home: "Beranda",
+    hero: "Hero",
+    products: "Produk",
+    product: "Produk",
+    categories: "Kategori",
+    category: "Kategori",
+    editorial: "Editorial",
+    footer: "Footer",
+    navbar: "Navigasi",
+    navigation: "Navigasi",
+    checkout: "Checkout",
+    payment: "Pembayaran",
+    shipping: "Pengiriman",
+    order: "Pesanan",
+    orders: "Pesanan",
+    auth: "Akun",
+    account: "Akun",
+  };
+
+  const key = String(section || "general").toLowerCase();
+
+  if (sectionMap[key]) {
+    return sectionMap[key];
+  }
+
+  return String(section || "Umum")
     .split("_")
     .join(" ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
+const formatInputType = (inputType) => {
+  const typeMap = {
+    text: "Teks",
+    textarea: "Paragraf",
+    image: "Gambar",
+    url: "URL",
+    number: "Angka",
+  };
+
+  return typeMap[inputType] || inputType;
 };
 
 const previewImage = (url) => {
@@ -469,8 +510,8 @@ const handleImageUpload = async (event, item) => {
 
   if (!file.type.startsWith("image/")) {
     toastStore.showToast({
-      title: "Invalid File",
-      message: "Please upload an image file.",
+      title: "File Tidak Valid",
+      message: "Silakan unggah file gambar.",
       type: "error",
     });
 
@@ -481,8 +522,8 @@ const handleImageUpload = async (event, item) => {
 
   if (file.size > maxSize) {
     toastStore.showToast({
-      title: "File Too Large",
-      message: "Maximum image size is 3 MB.",
+      title: "File Terlalu Besar",
+      message: "Ukuran gambar maksimal 3 MB.",
       type: "error",
     });
 
@@ -499,7 +540,7 @@ const handleImageUpload = async (event, item) => {
     const imageUrl = uploaded?.image_url || uploaded?.url || "";
 
     if (!imageUrl) {
-      throw new Error("Image URL was not returned by server.");
+      throw new Error("URL gambar tidak dikembalikan oleh server.");
     }
 
     item.value = imageUrl;
@@ -507,8 +548,8 @@ const handleImageUpload = async (event, item) => {
     await saveContent(item);
   } catch (error) {
     toastStore.showToast({
-      title: "Upload Failed",
-      message: error?.message || "Failed to upload image.",
+      title: "Unggah Gambar Gagal",
+      message: error?.message || "Gambar belum dapat diunggah.",
       type: "error",
     });
   } finally {
@@ -535,14 +576,14 @@ const saveContent = async (item) => {
     );
 
     toastStore.showToast({
-      title: "Content Updated",
-      message: `${item.label} has been updated successfully.`,
+      title: "Konten Berhasil Diperbarui",
+      message: `${item.label} berhasil diperbarui.`,
       type: "success",
     });
   } catch (error) {
     toastStore.showToast({
-      title: "Update Failed",
-      message: error?.message || "Failed to update content.",
+      title: "Gagal Memperbarui Konten",
+      message: error?.message || "Konten belum dapat diperbarui.",
       type: "error",
     });
   } finally {

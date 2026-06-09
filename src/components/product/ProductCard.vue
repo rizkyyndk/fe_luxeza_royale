@@ -44,7 +44,7 @@
         type="button"
         class="absolute z-20 left-5 right-5 bottom-5 bg-luxe-ivory/95 backdrop-blur-xl text-luxe-espresso py-4 rounded-full font-medium shadow-lg border border-luxe-sand/60 translate-y-0 opacity-100 md:translate-y-6 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 hover:bg-luxe-espresso hover:text-luxe-ivory transition duration-300"
       >
-        Quick View
+        Lihat Cepat
       </button>
     </div>
 
@@ -186,15 +186,15 @@ const isLowStock = computed(() => {
 });
 
 const stockLabel = computed(() => {
-  if (isOutOfStock.value) return "Out of Stock";
-  if (isLowStock.value) return "Low Stock";
-  return "In Stock";
+  if (isOutOfStock.value) return "Stok Habis";
+  if (isLowStock.value) return "Stok Terbatas";
+  return "Tersedia";
 });
 
 const stockText = computed(() => {
-  if (typeof props.stock !== "number") return "Available";
-  if (props.stock <= 0) return "Unavailable";
-  return `${props.stock} left`;
+  if (typeof props.stock !== "number") return "Tersedia";
+  if (props.stock <= 0) return "Tidak tersedia";
+  return `${props.stock} tersisa`;
 });
 
 const stockBadgeClass = computed(() => {
@@ -220,7 +220,7 @@ const toggleWishlist = () => {
   });
 
   toastStore.showToast({
-    title: wasSaved ? "Removed from Wishlist" : "Saved to Wishlist",
+    title: wasSaved ? "Dihapus dari Wishlist" : "Tersimpan di Wishlist",
     message: props.title,
     type: wasSaved ? "info" : "success",
   });

@@ -13,7 +13,7 @@
             {{
               content(
                 "footer.tagline",
-                "Minimalist luxury fashion e-commerce experience built for modern premium lifestyle and future full-stack integration.",
+                "Fashion mewah minimalis untuk gaya modern yang elegan, simple, dan berkelas.",
               )
             }}
           </p>
@@ -21,18 +21,18 @@
 
         <!-- MENU -->
         <div>
-          <h3 class="font-semibold mb-5">Explore</h3>
+          <h3 class="font-semibold mb-5">Jelajahi</h3>
 
           <ul class="space-y-3 text-luxe-sand">
             <li>
               <RouterLink to="/" class="hover:text-white transition">
-                {{ content("navbar.home", "Home") }}
+                {{ content("navbar.home", "Beranda") }}
               </RouterLink>
             </li>
 
             <li>
               <a href="/#products" class="hover:text-white transition">
-                {{ content("navbar.shop", "Shop") }}
+                {{ content("navbar.shop", "Belanja") }}
               </a>
             </li>
 
@@ -44,7 +44,7 @@
 
             <li>
               <RouterLink to="/orders" class="hover:text-white transition">
-                {{ content("navbar.orders", "Orders") }}
+                {{ content("navbar.orders", "Pesanan") }}
               </RouterLink>
             </li>
 
@@ -58,7 +58,7 @@
 
         <!-- INFO -->
         <div>
-          <h3 class="font-semibold mb-5">Project</h3>
+          <h3 class="font-semibold mb-5">Dikembangkan Oleh</h3>
 
           <ul class="space-y-3 text-luxe-sand">
             <li>Rylora Tech</li>
@@ -73,13 +73,13 @@
           {{
             content(
               "footer.copyright",
-              "© 2026 Luxeza Royale. Full-stack e-commerce project.",
+              "© 2026 Luxeza Royale. Seluruh hak cipta dilindungi.",
             )
           }}
         </p>
 
         <p class="text-luxe-sand/80 text-sm">
-          Designed with warm brown and ivory luxury aesthetic.
+          Dirancang dengan nuansa cokelat hangat dan ivory yang elegan.
         </p>
       </div>
     </div>

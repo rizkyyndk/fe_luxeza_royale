@@ -20,7 +20,7 @@ async function request(endpoint, options = {}) {
     if (!response.ok) {
       throw {
         status: response.status,
-        message: data.message || "API request failed",
+        message: data.message || "Permintaan API belum dapat diproses.",
         errors: data.errors || null,
         data,
       };

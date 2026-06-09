@@ -7,7 +7,7 @@
       <div class="max-w-7xl mx-auto">
         <div class="mb-10">
           <p class="uppercase tracking-[4px] text-sm text-luxe-brown mb-3">
-            Account
+            Akun
           </p>
 
           <div
@@ -15,11 +15,12 @@
           >
             <div>
               <h1 class="text-4xl md:text-5xl font-bold text-luxe-espresso">
-                My Addresses
+                Alamat Saya
               </h1>
 
               <p class="text-luxe-brown/70 mt-4 leading-7 max-w-2xl">
-                Manage your saved delivery addresses for faster checkout.
+                Kelola alamat pengiriman Anda agar proses checkout berikutnya
+                menjadi lebih cepat dan nyaman.
               </p>
             </div>
 
@@ -28,7 +29,7 @@
               @click="startCreate"
               class="bg-luxe-espresso text-luxe-ivory px-7 py-4 rounded-full hover:bg-luxe-royal hover:scale-[1.02] transition shadow-lg shadow-luxe-brown/20"
             >
-              + Add New Address
+              + Tambah Alamat Baru
             </button>
           </div>
         </div>
@@ -38,18 +39,18 @@
           class="bg-luxe-cream border border-luxe-sand/70 rounded-[2rem] p-8 text-center"
         >
           <h2 class="text-2xl font-bold text-luxe-espresso mb-3">
-            Please login first
+            Silakan masuk terlebih dahulu
           </h2>
 
           <p class="text-luxe-brown/70 mb-6">
-            You need to login to manage your saved addresses.
+            Anda perlu masuk untuk mengelola alamat tersimpan.
           </p>
 
           <RouterLink
             to="/login"
             class="inline-block bg-luxe-espresso text-luxe-ivory px-7 py-4 rounded-full hover:bg-luxe-royal transition"
           >
-            Login
+            Masuk
           </RouterLink>
         </div>
 
@@ -60,7 +61,7 @@
               v-if="isLoadingAddresses"
               class="bg-luxe-cream border border-luxe-sand/70 rounded-[2rem] p-8 text-luxe-brown/70"
             >
-              Loading addresses...
+              Memuat alamat tersimpan...
             </div>
 
             <div
@@ -77,11 +78,12 @@
               <p class="text-5xl mb-5">📍</p>
 
               <h2 class="text-2xl font-bold text-luxe-espresso mb-3">
-                No saved address yet
+                Belum ada alamat tersimpan
               </h2>
 
               <p class="text-luxe-brown/70">
-                Add your first delivery address to make checkout faster.
+                Tambahkan alamat pengiriman pertama Anda agar checkout lebih
+                cepat.
               </p>
             </div>
 
@@ -103,14 +105,14 @@
                       v-if="address.isPrimary"
                       class="text-xs bg-luxe-espresso text-luxe-ivory px-3 py-1 rounded-full"
                     >
-                      Primary
+                      Utama
                     </span>
                   </div>
 
                   <AddressSummaryCard
                     :customer="addressToCustomer(address)"
-                    title="Delivery Address"
-                    eyebrow="Saved Address"
+                    title="Alamat Pengiriman"
+                    eyebrow="Alamat Tersimpan"
                   />
                 </div>
 
@@ -120,7 +122,7 @@
                     @click="startEdit(address)"
                     class="flex-1 border border-luxe-sand text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-cream transition"
                   >
-                    Edit
+                    Ubah
                   </button>
 
                   <button
@@ -129,7 +131,7 @@
                     @click="setPrimary(address)"
                     class="flex-1 border border-luxe-sand text-luxe-espresso px-5 py-3 rounded-full hover:bg-luxe-cream transition"
                   >
-                    Set Primary
+                    Jadikan Utama
                   </button>
 
                   <button
@@ -137,7 +139,7 @@
                     @click="deleteAddress(address)"
                     class="flex-1 border border-red-100 text-red-500 px-5 py-3 rounded-full hover:bg-red-50 transition"
                   >
-                    Delete
+                    Hapus
                   </button>
                 </div>
               </div>
@@ -152,11 +154,11 @@
               <p
                 class="uppercase tracking-[3px] text-xs text-luxe-brown/70 mb-2"
               >
-                {{ editingAddressId ? "Edit Address" : "New Address" }}
+                {{ editingAddressId ? "Ubah Alamat" : "Alamat Baru" }}
               </p>
 
               <h2 class="text-2xl font-bold text-luxe-espresso">
-                {{ editingAddressId ? "Update Address" : "Add Address" }}
+                {{ editingAddressId ? "Perbarui Alamat" : "Tambah Alamat" }}
               </h2>
             </div>
 
@@ -165,7 +167,7 @@
                 <label
                   class="block text-sm font-medium text-luxe-brown/75 mb-2"
                 >
-                  Address Label
+                  Label Alamat
                 </label>
 
                 <input
@@ -184,13 +186,13 @@
                 <label
                   class="block text-sm font-medium text-luxe-brown/75 mb-2"
                 >
-                  Recipient Name
+                  Nama Penerima
                 </label>
 
                 <input
                   v-model="form.recipientName"
                   type="text"
-                  placeholder="Recipient name"
+                  placeholder="Nama penerima"
                   class="input-field"
                 />
 
@@ -203,7 +205,7 @@
                 <label
                   class="block text-sm font-medium text-luxe-brown/75 mb-2"
                 >
-                  Phone Number
+                  Nomor Telepon
                 </label>
 
                 <div class="flex">
@@ -230,47 +232,47 @@
 
               <SearchableSelect
                 v-model="form.provinceId"
-                label="Province"
+                label="Provinsi"
                 :options="provinces"
                 :loading="isLoadingProvinces"
-                placeholder="Select Province"
-                search-placeholder="Search province..."
+                placeholder="Pilih Provinsi"
+                search-placeholder="Cari provinsi..."
                 :error="errors.province"
                 @change="handleProvinceChange"
               />
 
               <SearchableSelect
                 v-model="form.cityId"
-                label="City / Regency"
+                label="Kota / Kabupaten"
                 :options="cities"
                 :loading="isLoadingCities"
                 :disabled="!form.provinceId || isLoadingCities"
-                placeholder="Select City / Regency"
-                search-placeholder="Search city..."
+                placeholder="Pilih Kota / Kabupaten"
+                search-placeholder="Cari kota atau kabupaten..."
                 :error="errors.city"
                 @change="handleCityChange"
               />
 
               <SearchableSelect
                 v-model="form.districtId"
-                label="District / Kecamatan"
+                label="Kecamatan"
                 :options="districts"
                 :loading="isLoadingDistricts"
                 :disabled="!form.cityId || isLoadingDistricts"
-                placeholder="Select District / Kecamatan"
-                search-placeholder="Search district..."
+                placeholder="Pilih Kecamatan"
+                search-placeholder="Cari kecamatan..."
                 :error="errors.district"
                 @change="handleDistrictChange"
               />
 
               <SearchableSelect
                 v-model="form.villageId"
-                label="Village / Kelurahan"
+                label="Kelurahan / Desa"
                 :options="villages"
                 :loading="isLoadingVillages"
                 :disabled="!form.districtId || isLoadingVillages"
-                placeholder="Select Village / Kelurahan"
-                search-placeholder="Search village..."
+                placeholder="Pilih Kelurahan / Desa"
+                search-placeholder="Cari kelurahan atau desa..."
                 :error="errors.village"
                 @change="handleVillageChange"
               />
@@ -323,7 +325,7 @@
                 <label
                   class="block text-sm font-medium text-luxe-brown/75 mb-2"
                 >
-                  Postal Code
+                  Kode Pos
                 </label>
 
                 <input
@@ -344,13 +346,13 @@
                 <label
                   class="block text-sm font-medium text-luxe-brown/75 mb-2"
                 >
-                  Address Detail
+                  Detail Alamat
                 </label>
 
                 <textarea
                   v-model="form.addressDetail"
                   rows="4"
-                  placeholder="Street name, house number, building, landmark"
+                  placeholder="Nama jalan, nomor rumah, gedung, atau patokan alamat"
                   class="input-field resize-none"
                 ></textarea>
 
@@ -369,7 +371,7 @@
                 />
 
                 <span class="text-sm text-luxe-espresso">
-                  Set as primary address
+                  Jadikan alamat utama
                 </span>
               </label>
 
@@ -381,10 +383,10 @@
                 >
                   {{
                     isSubmitting
-                      ? "Saving..."
+                      ? "Menyimpan..."
                       : editingAddressId
-                        ? "Update"
-                        : "Save"
+                        ? "Perbarui"
+                        : "Simpan"
                   }}
                 </button>
 
@@ -393,7 +395,7 @@
                   @click="resetForm"
                   class="border border-luxe-sand text-luxe-espresso px-6 py-4 rounded-full hover:bg-luxe-ivory transition"
                 >
-                  Clear
+                  Bersihkan
                 </button>
               </div>
             </form>
@@ -525,7 +527,7 @@ const loadAddresses = async () => {
       return;
     }
 
-    addressError.value = error?.message || "Failed to load addresses.";
+    addressError.value = error?.message || "Gagal memuat alamat tersimpan.";
   } finally {
     isLoadingAddresses.value = false;
   }
@@ -626,24 +628,53 @@ const handleVillageChange = () => {
 const validateForm = () => {
   const validationErrors = {};
 
-  if (!form.label.trim()) validationErrors.label = "Address label is required.";
-  if (!form.recipientName.trim())
-    validationErrors.recipientName = "Recipient name is required.";
-  if (!form.phone.trim()) validationErrors.phone = "Phone number is required.";
-  if (form.phone.trim() && form.phone.length < 8)
-    validationErrors.phone = "Phone number is too short.";
-  if (!form.province.trim())
-    validationErrors.province = "Province is required.";
-  if (!form.city.trim()) validationErrors.city = "City is required.";
-  if (!form.district.trim())
-    validationErrors.district = "District is required.";
-  if (!form.village.trim()) validationErrors.village = "Village is required.";
-  if (!form.rt.trim()) validationErrors.rt = "RT is required.";
-  if (!form.rw.trim()) validationErrors.rw = "RW is required.";
-  if (!form.postalCode.trim())
-    validationErrors.postalCode = "Postal code is required.";
-  if (!form.addressDetail.trim())
-    validationErrors.addressDetail = "Address detail is required.";
+  if (!form.label.trim()) {
+    validationErrors.label = "Label alamat wajib diisi.";
+  }
+
+  if (!form.recipientName.trim()) {
+    validationErrors.recipientName = "Nama penerima wajib diisi.";
+  }
+
+  if (!form.phone.trim()) {
+    validationErrors.phone = "Nomor telepon wajib diisi.";
+  }
+
+  if (form.phone.trim() && form.phone.length < 8) {
+    validationErrors.phone = "Nomor telepon terlalu pendek.";
+  }
+
+  if (!form.province.trim()) {
+    validationErrors.province = "Provinsi wajib dipilih.";
+  }
+
+  if (!form.city.trim()) {
+    validationErrors.city = "Kota atau kabupaten wajib dipilih.";
+  }
+
+  if (!form.district.trim()) {
+    validationErrors.district = "Kecamatan wajib dipilih.";
+  }
+
+  if (!form.village.trim()) {
+    validationErrors.village = "Kelurahan atau desa wajib dipilih.";
+  }
+
+  if (!form.rt.trim()) {
+    validationErrors.rt = "RT wajib diisi.";
+  }
+
+  if (!form.rw.trim()) {
+    validationErrors.rw = "RW wajib diisi.";
+  }
+
+  if (!form.postalCode.trim()) {
+    validationErrors.postalCode = "Kode pos wajib diisi.";
+  }
+
+  if (!form.addressDetail.trim()) {
+    validationErrors.addressDetail = "Detail alamat wajib diisi.";
+  }
 
   errors.value = validationErrors;
 
@@ -785,16 +816,16 @@ const submitAddress = async () => {
       );
 
       toastStore.showToast({
-        title: "Address Updated",
-        message: "Your address has been updated successfully.",
+        title: "Alamat Berhasil Diperbarui",
+        message: "Alamat Anda berhasil diperbarui.",
         type: "success",
       });
     } else {
       await userAddressService.createAddress(buildPayload());
 
       toastStore.showToast({
-        title: "Address Saved",
-        message: "Your new address has been saved successfully.",
+        title: "Alamat Berhasil Disimpan",
+        message: "Alamat baru Anda berhasil disimpan.",
         type: "success",
       });
     }
@@ -803,8 +834,8 @@ const submitAddress = async () => {
     resetForm();
   } catch (error) {
     toastStore.showToast({
-      title: "Failed to Save Address",
-      message: error?.message || "Please check your address form.",
+      title: "Gagal Menyimpan Alamat",
+      message: error?.message || "Silakan periksa kembali formulir alamat.",
       type: "error",
     });
   } finally {
@@ -813,7 +844,7 @@ const submitAddress = async () => {
 };
 
 const deleteAddress = async (address) => {
-  const confirmed = window.confirm(`Delete address "${address.label}"?`);
+  const confirmed = window.confirm(`Hapus alamat "${address.label}"?`);
 
   if (!confirmed) return;
 
@@ -821,8 +852,8 @@ const deleteAddress = async (address) => {
     await userAddressService.deleteAddress(address.id);
 
     toastStore.showToast({
-      title: "Address Deleted",
-      message: "Address has been deleted successfully.",
+      title: "Alamat Berhasil Dihapus",
+      message: "Alamat telah dihapus dari daftar alamat Anda.",
       type: "success",
     });
 
@@ -830,8 +861,8 @@ const deleteAddress = async (address) => {
     resetForm();
   } catch (error) {
     toastStore.showToast({
-      title: "Failed to Delete Address",
-      message: error?.message || "Please try again.",
+      title: "Gagal Menghapus Alamat",
+      message: error?.message || "Silakan coba lagi.",
       type: "error",
     });
   }
@@ -842,16 +873,16 @@ const setPrimary = async (address) => {
     await userAddressService.setPrimaryAddress(address.id);
 
     toastStore.showToast({
-      title: "Primary Address Updated",
-      message: `${address.label} is now your primary address.`,
+      title: "Alamat Utama Diperbarui",
+      message: `${address.label} sekarang menjadi alamat utama Anda.`,
       type: "success",
     });
 
     await loadAddresses();
   } catch (error) {
     toastStore.showToast({
-      title: "Failed to Update Primary Address",
-      message: error?.message || "Please try again.",
+      title: "Gagal Mengubah Alamat Utama",
+      message: error?.message || "Silakan coba lagi.",
       type: "error",
     });
   }
