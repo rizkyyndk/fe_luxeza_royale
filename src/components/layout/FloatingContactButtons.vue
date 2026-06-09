@@ -2,7 +2,6 @@
   <div v-if="!isHiddenPage">
     <!-- MOBILE FLOATING MENU -->
     <div class="sm:hidden fixed bottom-5 right-4 z-[90]">
-      <!-- OVERLAY TAP AREA -->
       <button
         v-if="isMobileOpen"
         type="button"
@@ -11,7 +10,6 @@
         @click="isMobileOpen = false"
       ></button>
 
-      <!-- MOBILE ACTION PANEL -->
       <Transition name="contact-panel">
         <div
           v-if="isMobileOpen"
@@ -20,7 +18,7 @@
           <div class="px-3 py-2">
             <p class="text-sm font-bold text-luxe-espresso">Butuh bantuan?</p>
             <p class="mt-1 text-xs leading-5 text-luxe-brown/70">
-              Tanya stok produk, GoSend, atau cek katalog terbaru.
+              {{ helperText }}
             </p>
           </div>
 
@@ -51,7 +49,7 @@
               <span class="min-w-0">
                 <span class="block text-sm font-bold">WhatsApp</span>
                 <span class="block text-xs leading-5 text-green-700/80">
-                  Tanya stok / pengiriman GoSend
+                  {{ whatsappLabel }}
                 </span>
               </span>
             </a>
@@ -132,7 +130,7 @@
         <span
           class="mr-3 rounded-full bg-luxe-espresso px-4 py-2 text-xs font-semibold text-luxe-ivory opacity-0 shadow-lg transition group-hover:opacity-100 whitespace-nowrap"
         >
-          Tanya Stok / GoSend
+          {{ whatsappLabel }}
         </span>
 
         <span
@@ -233,14 +231,113 @@ const instagramLink = computed(() => {
   return `https://www.instagram.com/${username}`;
 });
 
+const currentUrl = computed(() => {
+  return `${window.location.origin}${window.location.pathname}#${route.fullPath}`;
+});
+
+const productSlug = computed(() => {
+  const rawId = Array.isArray(route.params.id)
+    ? route.params.id[0]
+    : route.params.id;
+
+  return String(rawId || "").trim();
+});
+
+const formatProductNameFromSlug = (slug) => {
+  if (!slug) return "";
+
+  return slug
+    .replace(/-/g, " ")
+    .replace(/_/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
+const productName = computed(() => {
+  return formatProductNameFromSlug(productSlug.value);
+});
+
+const isProductDetailPage = computed(() => {
+  return route.path.startsWith("/product/");
+});
+
+const isCheckoutPage = computed(() => {
+  return route.path.startsWith("/checkout");
+});
+
+const isWishlistPage = computed(() => {
+  return route.path.startsWith("/wishlist");
+});
+
+const helperText = computed(() => {
+  if (isProductDetailPage.value) {
+    return "Tanya stok produk ini atau pengiriman GoSend.";
+  }
+
+  if (isCheckoutPage.value) {
+    return "Tanya pembayaran atau pengiriman GoSend.";
+  }
+
+  if (isWishlistPage.value) {
+    return "Tanya produk wishlist dan ketersediaan stok.";
+  }
+
+  return "Tanya stok produk, GoSend, atau cek katalog terbaru.";
+});
+
+const whatsappLabel = computed(() => {
+  if (isProductDetailPage.value) {
+    return "Konfirmasi Stok / GoSend";
+  }
+
+  if (isCheckoutPage.value) {
+    return "Tanya GoSend / Checkout";
+  }
+
+  return "Chat WhatsApp";
+});
+
 const whatsappMessage = computed(() => {
-  const currentUrl = window.location.href;
+  if (isProductDetailPage.value) {
+    return [
+      "Halo Luxeza Royale, saya tertarik dengan produk pada link berikut:",
+      "",
+      `Link produk: ${currentUrl.value}`,
+      "",
+      "Saya sudah melihat informasi stok di website, namun ingin konfirmasi apakah produk ini masih tersedia.",
+      "Saya juga ingin bertanya apakah bisa dibantu untuk pengiriman menggunakan GoSend.",
+      "",
+      "Terima kasih.",
+    ].join("\n");
+  }
+
+  if (isCheckoutPage.value) {
+    return [
+      "Halo Luxeza Royale, saya ingin bertanya terkait checkout/pengiriman.",
+      "",
+      `Halaman: ${currentUrl.value}`,
+      "",
+      "Apakah pesanan saya bisa dikirim menggunakan GoSend?",
+      "Mohon info ketersediaan stok dan estimasi pengirimannya.",
+    ].join("\n");
+  }
+
+  if (isWishlistPage.value) {
+    return [
+      "Halo Luxeza Royale, saya ingin bertanya produk yang saya simpan di wishlist.",
+      "",
+      `Halaman wishlist: ${currentUrl.value}`,
+      "",
+      "Mohon info ketersediaan stok dan apakah bisa pengiriman menggunakan GoSend.",
+    ].join("\n");
+  }
 
   return [
     "Halo Luxeza Royale, saya ingin bertanya ketersediaan stok produk.",
     "Saya juga ingin tanya apakah bisa pengiriman menggunakan GoSend.",
     "",
-    `Halaman produk/toko: ${currentUrl}`,
+    `Halaman toko: ${currentUrl.value}`,
   ].join("\n");
 });
 
