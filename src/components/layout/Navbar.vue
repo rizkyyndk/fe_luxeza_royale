@@ -3,29 +3,29 @@
     class="fixed top-0 left-0 w-full max-w-full z-50 bg-luxe-ivory/85 backdrop-blur-xl border-b border-luxe-sand/60 shadow-sm overflow-x-clip"
   >
     <div
-      class="w-full max-w-7xl mx-auto px-3 py-3 sm:px-6 sm:py-5 flex md:grid md:grid-cols-[1fr_auto_1fr] items-center justify-between md:justify-normal gap-2 sm:gap-3 overflow-x-clip"
+      class="w-full max-w-7xl mx-auto px-4 py-3.5 sm:px-6 sm:py-5 flex md:grid md:grid-cols-[1fr_auto_1fr] items-center justify-between md:justify-normal gap-2 sm:gap-3 overflow-x-clip"
     >
       <!-- LOGO -->
       <RouterLink
         to="/"
-        class="flex items-center gap-2 sm:gap-3 group min-w-0 flex-1 md:flex-none overflow-hidden justify-self-start"
+        class="flex items-center gap-2.5 sm:gap-3 group min-w-0 flex-1 md:flex-none overflow-hidden justify-self-start"
       >
         <img
           v-if="cmsImage('navbar.logo.image')"
           :src="cmsImage('navbar.logo.image')"
           :alt="content('navbar.brand.main', 'LUXEZA')"
-          class="w-8 h-8 sm:w-11 sm:h-11 object-contain rounded-xl sm:rounded-2xl bg-luxe-cream border border-luxe-sand/60 p-1 flex-shrink-0"
+          class="w-11 h-11 sm:w-12 sm:h-12 object-contain rounded-xl sm:rounded-2xl bg-luxe-cream border border-luxe-sand/60 p-1 flex-shrink-0"
         />
 
         <div class="flex flex-col leading-none min-w-0 overflow-hidden">
           <span
-            class="text-[15px] sm:text-2xl font-bold tracking-wide text-luxe-espresso group-hover:text-luxe-royal transition truncate max-w-[96px] sm:max-w-none"
+            class="text-[21px] sm:text-2xl font-bold tracking-wide text-luxe-espresso group-hover:text-luxe-royal transition truncate max-w-[140px] sm:max-w-none"
           >
             {{ content("navbar.brand.main", "LUXEZA") }}
           </span>
 
           <span
-            class="text-[8px] sm:text-[10px] tracking-[1.8px] sm:tracking-[4px] text-luxe-gold uppercase truncate max-w-[96px] sm:max-w-none"
+            class="text-[10px] sm:text-[10px] tracking-[3px] sm:tracking-[4px] text-luxe-gold uppercase truncate max-w-[140px] sm:max-w-none mt-1"
           >
             {{ content("navbar.brand.sub", "Royale") }}
           </span>

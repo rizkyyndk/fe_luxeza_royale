@@ -18,7 +18,7 @@
           </p>
 
           <h1
-            class="max-w-full text-[38px] sm:text-5xl md:text-7xl font-bold leading-[1.15] sm:leading-tight mb-8 break-words overflow-hidden"
+            class="max-w-full text-[44px] sm:text-5xl md:text-7xl font-bold leading-[1.12] sm:leading-tight mb-8 break-words overflow-hidden"
           >
             {{
               content(
@@ -28,7 +28,9 @@
             }}
           </h1>
 
-          <p class="max-w-xl text-gray-600 leading-8 mb-10 break-words">
+          <p
+            class="max-w-xl text-[18px] sm:text-base text-gray-600 leading-9 sm:leading-8 mb-10 break-words"
+          >
             {{
               content(
                 "home.hero.subtitle",
