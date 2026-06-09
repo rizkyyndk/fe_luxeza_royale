@@ -20,6 +20,7 @@ import ForgotPasswordPage from "../pages/ForgotPasswordPage.vue";
 import ResetPasswordPage from "../pages/ResetPasswordPage.vue";
 import AdminShippingMethodsPage from "../pages/AdminShippingMethodsPage.vue";
 import AdminVouchersPage from "../pages/AdminVouchersPage.vue";
+import AdminDashboardPage from "../pages/AdminDashboardPage.vue";
 
 const routes = [
   {
@@ -57,6 +58,14 @@ const routes = [
     component: MyAddressesPage,
     meta: {
       requiresAuth: true,
+    },
+  },
+  {
+    path: "/admin/dashboard",
+    component: AdminDashboardPage,
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
     },
   },
   {

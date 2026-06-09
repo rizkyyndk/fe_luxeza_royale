@@ -180,6 +180,15 @@
 
             <RouterLink
               v-if="authStore.isAdmin"
+              to="/admin/dashboard"
+              @click="isAccountMenuOpen = false"
+              class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
+            >
+              Dashboard Admin
+            </RouterLink>
+
+            <RouterLink
+              v-if="authStore.isAdmin"
               to="/admin/orders"
               @click="isAccountMenuOpen = false"
               class="block px-4 py-3 rounded-2xl text-luxe-espresso hover:bg-luxe-cream transition"
@@ -402,6 +411,15 @@
               class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
             >
               Alamat Saya
+            </RouterLink>
+
+            <RouterLink
+              v-if="authStore.isAdmin"
+              to="/admin/dashboard"
+              @click="isMobileMenuOpen = false"
+              class="px-5 py-4 rounded-2xl hover:bg-luxe-cream transition block"
+            >
+              Dashboard Admin
             </RouterLink>
 
             <RouterLink
