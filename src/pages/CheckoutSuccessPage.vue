@@ -4,10 +4,10 @@
     <CartSidebar />
 
     <section
-      class="min-h-screen pt-36 pb-24 px-6 flex items-center justify-center"
+      class="min-h-screen pt-36 pb-24 px-4 sm:px-6 flex items-center justify-center"
     >
       <div
-        class="max-w-3xl w-full bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-8 md:p-12 text-center shadow-[0_24px_90px_rgba(92,56,36,0.16)]"
+        class="max-w-3xl w-full bg-luxe-ivory border border-luxe-sand/70 rounded-[2rem] p-5 sm:p-8 md:p-12 text-center shadow-[0_24px_90px_rgba(92,56,36,0.16)]"
       >
         <!-- SUCCESS ICON -->
         <div
@@ -35,14 +35,18 @@
           v-if="lastOrder"
           class="bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-6 text-left mb-8 space-y-4"
         >
-          <div class="flex justify-between gap-4">
+          <div
+            class="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4"
+          >
             <span class="text-luxe-brown/70">Nomor Pesanan</span>
             <span class="font-semibold text-luxe-espresso text-right">
               {{ lastOrder.orderNumber || lastOrder.order_code || "-" }}
             </span>
           </div>
 
-          <div class="flex justify-between gap-4">
+          <div
+            class="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4"
+          >
             <span class="text-luxe-brown/70">Status</span>
             <span
               class="font-semibold bg-luxe-ivory text-luxe-espresso px-3 py-1 rounded-full text-sm"
@@ -51,7 +55,9 @@
             </span>
           </div>
 
-          <div class="flex justify-between gap-4">
+          <div
+            class="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4"
+          >
             <span class="text-luxe-brown/70">Pelanggan</span>
             <span class="font-semibold text-luxe-espresso text-right">
               {{ lastOrder.customer?.fullName || "-" }}
@@ -77,7 +83,9 @@
             </span>
           </div>
 
-          <div class="flex justify-between gap-4">
+          <div
+            class="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4"
+          >
             <span class="text-luxe-brown/70">Ongkir</span>
 
             <div class="text-right">
@@ -105,7 +113,9 @@
             </div>
           </div>
 
-          <div class="flex justify-between gap-4">
+          <div
+            class="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4"
+          >
             <span class="text-luxe-brown/70">Pembayaran</span>
 
             <span class="font-semibold text-luxe-espresso text-right">
@@ -176,7 +186,9 @@
               </span>
             </div>
 
-            <div class="flex justify-between gap-4">
+            <div
+              class="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4"
+            >
               <span class="text-luxe-brown/70">Biaya Ongkir</span>
 
               <span class="font-semibold text-luxe-espresso text-right">
@@ -194,15 +206,19 @@
         <div
           class="bg-luxe-ivory border border-luxe-sand/70 rounded-3xl p-6 text-left mb-8 shadow-sm"
         >
-          <div class="flex items-start gap-4">
+          <div
+            class="flex flex-col sm:flex-row items-center sm:items-start gap-4"
+          >
             <div
               class="w-11 h-11 rounded-full bg-luxe-cream text-luxe-espresso flex items-center justify-center text-xl shrink-0"
             >
               {{ paymentMethodData?.type === "qris" ? "📱" : "🏦" }}
             </div>
 
-            <div class="flex-1">
-              <h2 class="text-xl font-bold text-luxe-espresso mb-2">
+            <div class="flex-1 w-full min-w-0">
+              <h2
+                class="text-xl font-bold text-luxe-espresso mb-2 text-center sm:text-left"
+              >
                 {{
                   paymentMethodData?.name ||
                   formatPaymentMethod(lastOrder?.paymentMethod)
@@ -244,27 +260,77 @@
               <!-- BANK TRANSFER -->
               <div v-else-if="paymentMethodData?.type === 'bank_transfer'">
                 <div
-                  class="mt-5 bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-5 space-y-3"
+                  class="mt-5 grid grid-cols-1 lg:grid-cols-[0.9fr_1.25fr] gap-4 lg:gap-5"
                 >
-                  <div class="flex justify-between gap-4">
-                    <span class="text-luxe-brown/70">Bank</span>
-                    <span class="font-semibold text-luxe-espresso text-right">
+                  <!-- DESKTOP INFO -->
+                  <div
+                    class="hidden lg:flex bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-6 min-h-[190px] flex-col items-center justify-center text-center"
+                  >
+                    <div
+                      class="w-14 h-14 rounded-full bg-luxe-ivory text-luxe-espresso flex items-center justify-center text-2xl mb-4"
+                    >
+                      🏦
+                    </div>
+
+                    <p
+                      class="uppercase tracking-[3px] text-xs text-luxe-brown/60 mb-2"
+                    >
+                      Transfer Bank
+                    </p>
+
+                    <h3 class="text-2xl font-bold text-luxe-espresso">
                       {{ paymentMethodData.bankName || paymentMethodData.name }}
-                    </span>
+                    </h3>
+
+                    <p
+                      class="text-sm text-luxe-brown/70 mt-3 leading-6 max-w-[240px]"
+                    >
+                      Gunakan detail rekening di samping untuk menyelesaikan
+                      pembayaran.
+                    </p>
                   </div>
 
-                  <div class="flex justify-between gap-4">
-                    <span class="text-luxe-brown/70">Nama Rekening</span>
-                    <span class="font-semibold text-luxe-espresso text-right">
-                      {{ paymentMethodData.accountName }}
-                    </span>
-                  </div>
+                  <!-- ACCOUNT DETAIL -->
+                  <div
+                    class="w-full bg-luxe-cream border border-luxe-sand/60 rounded-3xl p-4 sm:p-5 lg:p-6 space-y-4"
+                  >
+                    <div
+                      class="grid grid-cols-[112px_minmax(0,1fr)] sm:grid-cols-[150px_minmax(0,1fr)] gap-3 items-start"
+                    >
+                      <span class="text-luxe-brown/70">Bank</span>
 
-                  <div class="flex justify-between gap-4">
-                    <span class="text-luxe-brown/70">Nomor Rekening</span>
-                    <span class="font-semibold text-luxe-espresso text-right">
-                      {{ paymentMethodData.accountNumber }}
-                    </span>
+                      <span
+                        class="font-semibold text-luxe-espresso text-right break-words"
+                      >
+                        {{
+                          paymentMethodData.bankName || paymentMethodData.name
+                        }}
+                      </span>
+                    </div>
+
+                    <div
+                      class="grid grid-cols-[112px_minmax(0,1fr)] sm:grid-cols-[150px_minmax(0,1fr)] gap-3 items-start"
+                    >
+                      <span class="text-luxe-brown/70">Nama Rekening</span>
+
+                      <span
+                        class="font-semibold text-luxe-espresso text-right break-words"
+                      >
+                        {{ paymentMethodData.accountName }}
+                      </span>
+                    </div>
+
+                    <div
+                      class="grid grid-cols-[112px_minmax(0,1fr)] sm:grid-cols-[150px_minmax(0,1fr)] gap-3 items-start"
+                    >
+                      <span class="text-luxe-brown/70">Nomor Rekening</span>
+
+                      <span
+                        class="font-semibold text-luxe-espresso text-right break-words"
+                      >
+                        {{ paymentMethodData.accountNumber }}
+                      </span>
+                    </div>
                   </div>
                 </div>
 

@@ -92,6 +92,37 @@
                 </span>
               </span>
             </a>
+
+            <!-- TIKTOK MOBILE -->
+            <a
+              :href="tiktokLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-zinc-950 px-4 py-3 text-white transition active:scale-[0.98]"
+              @click="isMobileOpen = false"
+            >
+              <span
+                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white text-zinc-950"
+              >
+                <svg
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M16.6 3c.29 2.14 1.51 3.42 3.4 3.56v3.13a7.08 7.08 0 0 1-3.36-.94v5.86c0 3.08-2.07 5.39-5.33 5.39-3.04 0-5.31-2.05-5.31-4.93 0-3.11 2.39-5.08 5.72-4.93v3.24c-1.41-.22-2.35.38-2.35 1.56 0 .96.77 1.64 1.82 1.64 1.18 0 1.92-.75 1.92-2.21V3h3.49Z"
+                  />
+                </svg>
+              </span>
+
+              <span class="min-w-0">
+                <span class="block text-sm font-bold">TikTok</span>
+                <span class="block text-xs leading-5 text-white/75">
+                  Lihat video produk, styling, dan update terbaru
+                </span>
+              </span>
+            </a>
           </div>
         </div>
       </Transition>
@@ -112,7 +143,7 @@
         <span v-else class="text-2xl leading-none">×</span>
 
         <span class="text-sm font-bold">
-          {{ isMobileOpen ? "Tutup" : "Chat" }}
+          {{ isMobileOpen ? "Tutup" : "Kontak" }}
         </span>
       </button>
     </div>
@@ -186,6 +217,36 @@
           </svg>
         </span>
       </a>
+
+      <!-- TIKTOK DESKTOP -->
+      <a
+        :href="tiktokLink"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="TikTok Luxeza Royale"
+        class="group relative flex items-center justify-end"
+      >
+        <span
+          class="mr-3 rounded-full bg-luxe-espresso px-4 py-2 text-xs font-semibold text-luxe-ivory opacity-0 shadow-lg transition group-hover:opacity-100 whitespace-nowrap"
+        >
+          TikTok
+        </span>
+
+        <span
+          class="flex h-14 w-14 items-center justify-center rounded-full bg-zinc-950 text-white shadow-[0_12px_35px_rgba(24,24,27,0.35)] transition hover:scale-110"
+        >
+          <svg
+            class="h-7 w-7"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              d="M16.6 3c.29 2.14 1.51 3.42 3.4 3.56v3.13a7.08 7.08 0 0 1-3.36-.94v5.86c0 3.08-2.07 5.39-5.33 5.39-3.04 0-5.31-2.05-5.31-4.93 0-3.11 2.39-5.08 5.72-4.93v3.24c-1.41-.22-2.35.38-2.35 1.56 0 .96.77 1.64 1.82 1.64 1.18 0 1.92-.75 1.92-2.21V3h3.49Z"
+            />
+          </svg>
+        </span>
+      </a>
     </div>
   </div>
 </template>
@@ -229,6 +290,33 @@ const instagramLink = computed(() => {
   const username = value.replace("@", "").replace("/", "");
 
   return `https://www.instagram.com/${username}`;
+});
+
+const tiktokLink = computed(() => {
+  const rawTiktok = content(
+    "contact.tiktok.url",
+    "https://www.tiktok.com/@luxezaroyale.id",
+  );
+
+  const value = String(rawTiktok || "").trim();
+
+  if (!value) return "https://www.tiktok.com/@luxezaroyale.id";
+
+  if (value.startsWith("http://") || value.startsWith("https://")) {
+    return value;
+  }
+
+  if (value.startsWith("www.")) {
+    return `https://${value}`;
+  }
+
+  if (value.includes("tiktok.com")) {
+    return `https://${value}`;
+  }
+
+  const username = value.replace("@", "").replace(/^\/+|\/+$/g, "");
+
+  return `https://www.tiktok.com/@${username}`;
 });
 
 const currentUrl = computed(() => {
@@ -276,14 +364,14 @@ const helperText = computed(() => {
   }
 
   if (isCheckoutPage.value) {
-    return "Tanya pembayaran atau pengiriman GoSend.";
+    return "Tanya pembayaran, GoSend, atau lihat update produk terbaru.";
   }
 
   if (isWishlistPage.value) {
     return "Tanya produk wishlist dan ketersediaan stok.";
   }
 
-  return "Tanya stok produk, GoSend, atau cek katalog terbaru.";
+  return "Tanya stok produk, GoSend, atau lihat katalog dan video terbaru.";
 });
 
 const whatsappLabel = computed(() => {
